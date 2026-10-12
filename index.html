@@ -136,6 +136,7 @@ if(A||r==='produksi'){add('manufaktur','Bahan sudah diserahkan, siap dimulai',P.
 if(A)add('inventori','Pembelian menunggu persetujuan',po.filter(x=>x.st==='draf'&&(x.bu!==me||r==='pemilik')).length);
 if(A||r==='keuangan')add('inventori','Pembelian menunggu konfirmasi keuangan',po.filter(x=>x.st==='disetujui'&&(!x.ap1||x.ap1.u!==me||r==='pemilik'||x.ap1.auto)).length);
 if(A||r==='gudang')add('inventori','Pembelian dikonfirmasi, menunggu barang diterima',po.filter(x=>x.st==='dipesan').length);
+if(A){try{const k=await c.collection('kas').where('st','==','menunggu').get();add('keuangan','Pengeluaran kas menunggu persetujuan',k.docs.filter(d=>d.data().uid!==me||r==='pemilik').length)}catch(e){}}
 TGS=T;TGL=true;rApp()}catch(e){TGL=true;TGS=[];rApp()}}
 async function ldLog(){if(!canLog()){LOGS=[];rLog();return}try{const s=await coRef().collection('log').orderBy('ts','desc').limit(200).get();LOGS=s.docs.map(d=>d.data());rLog()}catch(e){toast(fbe(e))}}
 async function tryInvite(u){const em=(u.email||'').toLowerCase();if(!em)return null;let iv;try{iv=await FS.collection('undangan').doc(em).get()}catch(e){return null}if(!iv.exists)return null;const d=iv.data(),cid=d.cid;
