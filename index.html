@@ -15,7 +15,7 @@ button,input,select,textarea{font:inherit;color:inherit}button{background:none;b
 :focus-visible{outline:2px solid var(--ac);outline-offset:2px}
 .app{height:100%;display:flex;flex-direction:column}
 .top{padding:14px 20px 0}.top b{display:block;font-size:24px;font-weight:600;letter-spacing:.03em;line-height:1.1}
-.top small{display:block;font-size:12px;color:var(--mu);margin-top:3px}
+.top small{display:block;font-size:12px;color:var(--mu);margin-top:3px}.tl{display:flex;align-items:center;gap:12px}.tl img{width:40px;height:40px;object-fit:contain;border-radius:8px;flex:none}.tl>div{min-width:0}.tl small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hd{overflow:hidden;padding-left:20px}
 .hdi{display:flex;gap:20px;width:max-content;padding:8px 0 10px}
 .hdi button{font-size:20px;font-weight:300;line-height:1.1;opacity:.45;transition:opacity .25s,transform .3s cubic-bezier(.34,1.56,.64,1);transform-origin:left bottom}
@@ -72,7 +72,7 @@ textarea.ni{resize:vertical;font-size:12px;font-family:ui-monospace,monospace}
 .pill{display:inline-block;border:1px solid var(--ln);border-radius:99px;padding:1px 9px;font-size:11px;color:var(--mu);margin-left:6px}
 .sel{width:auto!important;display:inline-block!important;padding:5px 8px!important;font-size:13px!important;margin:0!important}
 </style></head><body>
-<div class="app"><div class="top"><b>ZUI SYSTEM</b><small id="cn">Satu login untuk semua aplikasi Zui</small></div>
+<div class="app"><div class="top tl"><img id="lg" alt="" style="display:none"><div><b>ZUI SYSTEM</b><small id="cn">Satu login untuk semua aplikasi Zui</small></div></div>
 <div class="hd" id="hd"><div class="hdi" id="hdi" role="tablist"></div></div>
 <div class="pv" id="pv"><section id="p_app"></section><section id="p_mem"></section><section id="p_log"></section><section id="p_set"></section></div>
 <button class="fab" id="fab" onclick="fa()" style="display:none"></button></div>
@@ -116,7 +116,7 @@ function rLog(){if(!canLog()){$('#p_log').innerHTML='<div class="em">Jejak aktiv
 const q=LQ.toLowerCase(),L=LOGS.filter(l=>!q||[l.nama,l.app,l.aksi,l.ket].join(' ').toLowerCase().includes(q));
 $('#p_log').innerHTML=`<input class="ni" id="lq" placeholder="Cari nama, aplikasi, aksi" aria-label="Cari" value="${E(LQ)}" oninput="LQ=this.value;rLog();const e=$('#lq');e.focus();e.setSelectionRange(e.value.length,e.value.length)"><div class="sgs"><button class="bt" onclick="ldLog()">Muat ulang</button></div>`+(L.length?L.map(l=>`<div class="it"><div class="nm">${E(l.aksi)} <span class="pill">${E(l.app)}</span></div><div class="m">${E(l.ket||'')}</div><div class="m">${E(l.nama)} · ${fdt(l.ts)}</div></div>`).join(''):'<div class="em">Belum ada aktivitas.</div>')}
 function rSet(){const t=localStorage.getItem('zui.sys.th')||'auto';let h=`<h3 class="hh">Akun</h3><div class="m">${E(ME.nama)} <span class="pill">${E(RL[ME.peran]||'-')}</span></div><div class="m">${E(USER?USER.email:'')}</div><div class="sgs" style="margin-top:8px"><button class="bt" onclick="logout()">Keluar</button></div><h3 class="hh">Tampilan</h3>`+chips(['Otomatis','Terang','Gelap'],['auto','light','dark'].indexOf(t),'th');
-if(isAdm()){h+=`<h3 class="hh">Perusahaan</h3><input class="ni" id="sn" value="${E(CO.nama)}" maxlength="60" aria-label="Nama perusahaan"><h3 class="hh">Alamat aplikasi</h3><p class="m">Alamat lengkap tiap aplikasi (mis. https://namaanda.github.io/zui-inventori/). Dipakai di tab Aplikasi.</p>`+APPS.map(a=>`<label class="m">${E(a[1])}<input class="ni" data-a="${a[0]}" placeholder="https://" value="${E((CO.apps||{})[a[0]]||'')}" aria-label="Alamat ${E(a[1])}"></label>`).join('')+`<button class="go" style="margin-top:12px;padding:10px 16px;border-radius:8px" onclick="svCo()">Simpan</button>`}
+if(isAdm()){h+=`<h3 class="hh">Perusahaan</h3><input class="ni" id="sn" value="${E(CO.nama)}" maxlength="60" aria-label="Nama perusahaan"><h3 class="hh">Logo</h3><p class="m">Tampil di semua aplikasi Zui. Gambar persegi atau transparan paling bagus; otomatis diperkecil.</p><div style="display:flex;align-items:center;gap:12px;margin:8px 0"><img id="lgp" alt="" style="width:56px;height:56px;object-fit:contain;border-radius:8px;border:1px solid var(--ln);${LG?'':'display:none'}" src="${LG?E(LG):''}"><label class="bt" style="cursor:pointer">Pilih gambar<input type="file" id="lgf" accept="image/*" style="display:none" onchange="pickLogo(this)"></label><button class="bt" id="lgx" onclick="clrLogo()" style="${LG?'':'display:none'}">Hapus logo</button></div><h3 class="hh">Alamat aplikasi</h3><p class="m">Alamat lengkap tiap aplikasi (mis. https://namaanda.github.io/zui-inventori/). Dipakai di tab Aplikasi.</p>`+APPS.map(a=>`<label class="m">${E(a[1])}<input class="ni" data-a="${a[0]}" placeholder="https://" value="${E((CO.apps||{})[a[0]]||'')}" aria-label="Alamat ${E(a[1])}"></label>`).join('')+`<button class="go" style="margin-top:12px;padding:10px 16px;border-radius:8px" onclick="svCo()">Simpan</button>`}
 $('#p_set').innerHTML=h}
 function rAll(){rApp();rMem();rLog();rSet()}
 /* ---------- data ---------- */
@@ -131,9 +131,9 @@ let cid=null;try{const pr=await FS.collection('profil').doc(u.uid).get();cid=pr.
 if(!cid){$('#au').style.display='none';$('#nc').style.display='flex';return}
 CID=cid;let mb=null,co=null;try{mb=await coRef().collection('anggota').doc(u.uid).get();co=await coRef().get()}catch(e){toast(fbe(e))}
 if(!mb||!mb.exists||!co||!co.exists||mb.data().aktif!==true||!RL[mb.data().peran]){CID=null;$('#au').style.display='none';$('#nct').textContent='Akun Anda tidak aktif di perusahaan ini. Hubungi pemilik atau admin.';$('#nc').style.display='flex';return}
-ME.peran=mb.data().peran;ME.nama=mb.data().nama||ME.nama;CO=Object.assign({nama:'',apps:{}},co.data());
+ME.peran=mb.data().peran;ME.nama=mb.data().nama||ME.nama;CO=Object.assign({nama:'',apps:{}},co.data());LG=CO.logo||'';
 try{await ldMem();await ldInv()}catch(e){toast(fbe(e))}
-$('#cn').textContent=CO.nama;$('#au').style.display='none';rAll();ldLog();sync()}
+$('#cn').textContent=CO.nama;setLogo();$('#au').style.display='none';rAll();ldLog();sync()}
 async function mk(){const n=$('#cnm').value.trim();if(!n){$('#cnm').focus();return}if(!USER)return;const cid=uid();
 try{await FS.collection('perusahaan').doc(cid).set({nama:n,owner:USER.uid,ts:Date.now(),apps:{}});
 await FS.collection('perusahaan').doc(cid).collection('anggota').doc(USER.uid).set({email:(USER.email||'').toLowerCase(),nama:USER.displayName||USER.email,peran:'pemilik',aktif:true,ts:Date.now()});
@@ -147,9 +147,16 @@ async function cinv(em){if(DEL!==em){DEL=em;const b=document.getElementById('xi'
 async function spr(id,p){const m=MEM.find(x=>x.id===id);if(!m||!RS.includes(p)||m.peran==='pemilik'||id===ME.uid||!isAdm())return;try{await coRef().collection('anggota').doc(id).update({peran:p});m.peran=p;logw('Ubah peran',(m.nama||m.email)+' menjadi '+RL[p]);toast('Peran diubah')}catch(e){toast(fbe(e));rMem()}}
 async function tgl(id){const m=MEM.find(x=>x.id===id);if(!m||m.peran==='pemilik'||id===ME.uid||!isAdm())return;try{await coRef().collection('anggota').doc(id).update({aktif:!m.aktif});m.aktif=!m.aktif;rMem();logw(m.aktif?'Aktifkan anggota':'Nonaktifkan anggota',m.nama||m.email)}catch(e){toast(fbe(e))}}
 async function rm(id){const m0=MEM.find(x=>x.id===id);if(!m0||m0.peran==='pemilik'||id===ME.uid||!isAdm())return;if(DEL!==id){DEL=id;const b=document.getElementById('xm'+id);if(b)b.textContent='Yakin?';setTimeout(()=>{DEL=''},3000);return}DEL='';const m=MEM.find(x=>x.id===id);try{await coRef().collection('anggota').doc(id).delete();await ldMem();rMem();logw('Keluarkan anggota',m?(m.nama||m.email):id)}catch(e){toast(fbe(e))}}
+let LG='';
+const setLogo=()=>{const i=$('#lg');if(!i)return;const l=(CO&&CO.logo)||'';if(l&&/^data:image\//.test(l)){i.src=l;i.style.display=''}else{i.removeAttribute('src');i.style.display='none'}};
+function lgUi(){const p=$('#lgp'),x=$('#lgx');if(p){if(LG){p.src=LG;p.style.display=''}else{p.removeAttribute('src');p.style.display='none'}}if(x)x.style.display=LG?'':'none'}
+function clrLogo(){LG='';lgUi()}
+function pickLogo(inp){const f=inp.files&&inp.files[0];inp.value='';if(!f)return;if(!/^image\//.test(f.type)){toast('File harus berupa gambar');return}
+const r=new FileReader();r.onerror=()=>toast('Gambar tidak terbaca');r.onload=()=>{const im=new Image();im.onerror=()=>toast('Gambar tidak terbaca');im.onload=()=>{let out='';for(const mx of [256,192,128]){const k=Math.min(1,mx/Math.max(im.width,im.height)),w=Math.max(1,Math.round(im.width*k)),h=Math.max(1,Math.round(im.height*k)),c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(im,0,0,w,h);for(const t of ['image/png','image/webp']){let u='';try{u=c.toDataURL(t,.85)}catch(e){}if(u&&u.startsWith('data:'+t)&&u.length<=70000){out=u;break}}if(out)break}
+if(!out){toast('Gambar terlalu rumit, pakai gambar yang lebih sederhana');return}LG=out;lgUi();toast('Logo siap, tekan Simpan')};im.src=r.result};r.readAsDataURL(f)}
 async function svCo(){const n=$('#sn').value.trim()||CO.nama,ap2={};document.querySelectorAll('#p_set [data-a]').forEach(e=>{const v=e.value.trim();if(v&&!okUrl(v)){ap2.bad=1}else if(v)ap2[e.dataset.a]=v});
 if(ap2.bad){toast('Alamat aplikasi harus diawali http:// atau https://');return}
-try{await coRef().update({nama:n,apps:ap2});CO.nama=n;CO.apps=ap2;$('#cn').textContent=n;rApp();toast('Tersimpan');logw('Pengaturan perusahaan','diperbarui')}catch(e){toast(fbe(e))}}
+try{await coRef().update({nama:n,apps:ap2,logo:LG});CO.nama=n;CO.apps=ap2;CO.logo=LG;setLogo();$('#cn').textContent=n;rApp();toast('Tersimpan');logw('Pengaturan perusahaan','diperbarui')}catch(e){toast(fbe(e))}}
 /* ---------- login ---------- */
 function amode(m){AM=m;$('#abt').textContent=m=='in'?'Masuk':'Daftar';$('#afg').style.display=m=='in'?'':'none';$('#ap').autocomplete=m=='in'?'current-password':'new-password';$('#ain').classList.toggle('on',m=='in');$('#aup').classList.toggle('on',m=='up');msg('')}
 async function authGo(ev){ev.preventDefault();if(!FA){msg('Layanan login belum siap.',1);return false}const em=$('#ae').value.trim(),pw=$('#ap').value;$('#abt').disabled=true;
