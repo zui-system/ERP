@@ -91,7 +91,7 @@ const $=s=>document.querySelector(s),E=s=>String(s).replace(/[&<>"']/g,c=>({'&':
 const CFG={apiKey:'AIzaSyAR-TIaq1VH0OOD2XGx_IhedaH7mwKpW30',authDomain:'zuisystem.firebaseapp.com',projectId:'zuisystem',storageBucket:'zuisystem.firebasestorage.app',messagingSenderId:'55666230248',appId:'1:55666230248:web:783df0dc060a1d7ce3da5d'};
 const RL={pemilik:'Pemilik',admin:'Admin',gudang:'Gudang',produksi:'Produksi',mutu:'Mutu',kasir:'Kasir',keuangan:'Keuangan'},RS=['admin','gudang','produksi','mutu','kasir','keuangan'];
 const N=['Aplikasi','Anggota','Aktivitas','Pengaturan'],LN=N.length-1;
-const APPS=[['inventori','Zui Inventori','Stok, pembelian, penjualan, batch dan kedaluwarsa','pemilik admin gudang produksi mutu kasir keuangan'],['manufaktur','Zui Manufaktur','BoM, produksi, mutu','pemilik admin gudang produksi mutu'],['karyawan','Zui Karyawan','Data dan jadwal karyawan','pemilik admin keuangan'],['keuangan','Zui Keuangan','Utang, piutang, kas','pemilik admin keuangan']];
+const APPS=[['inventori','Zui Inventori','Stok, pembelian, penjualan, batch dan kedaluwarsa','pemilik admin gudang produksi mutu kasir keuangan'],['manufaktur','Zui Manufaktur','BoM, produksi, mutu','pemilik admin gudang produksi mutu'],['karyawan','Zui Karyawan','Data karyawan, absen, cuti','pemilik admin gudang produksi mutu kasir keuangan'],['keuangan','Zui Keuangan','Utang, piutang, kas','pemilik admin keuangan']];
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7),fdt=t=>{try{return new Date(t).toLocaleString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}catch(e){return''}};
 let TGS=[],TGL=false,USER=null,FA=null,FS=null,CID=null,ME={uid:'',email:'',nama:'',peran:''},CO={nama:'',apps:{}},MEM=[],INV=[],LOGS=[],LQ='',DEL='',cur=0,AM='in';
 const isAdm=()=>ME.peran==='pemilik'||ME.peran==='admin',canLog=()=>isAdm()||ME.peran==='keuangan';
@@ -136,7 +136,8 @@ if(A||r==='produksi'){add('manufaktur','Bahan sudah diserahkan, siap dimulai',P.
 if(A)add('inventori','Pembelian menunggu persetujuan',po.filter(x=>x.st==='draf'&&(x.bu!==me||r==='pemilik')).length);
 if(A||r==='keuangan')add('inventori','Pembelian menunggu konfirmasi keuangan',po.filter(x=>x.st==='disetujui'&&(!x.ap1||x.ap1.u!==me||r==='pemilik'||x.ap1.auto)).length);
 if(A||r==='gudang')add('inventori','Pembelian dikonfirmasi, menunggu barang diterima',po.filter(x=>x.st==='dipesan').length);
-if(A){try{const k=await c.collection('kas').where('st','==','menunggu').get();add('keuangan','Pengeluaran kas menunggu persetujuan',k.docs.filter(d=>d.data().uid!==me||r==='pemilik').length)}catch(e){}}
+if(A){try{const k=await c.collection('cuti').where('st','==','menunggu').get();add('karyawan','Cuti menunggu persetujuan',k.docs.filter(d=>d.data().uid!==me||r==='pemilik').length)}catch(e){}}
+if(A){try{const k=await c.collection('kas').where('st','==','menunggu').get();add('keuangan','Pengeluaran kas menunggu persetujuan',k.docs.filter(d=>d.data().uid!==me||r==='pemilik').length)}catch(e){}try{const k=await c.collection('cuti').where('st','==','menunggu').get();add('karyawan','Cuti menunggu persetujuan',k.docs.filter(d=>d.data().uid!==me||r==='pemilik').length)}catch(e){}}
 TGS=T;TGL=true;rApp()}catch(e){TGL=true;TGS=[];rApp()}}
 async function ldLog(){if(!canLog()){LOGS=[];rLog();return}try{const s=await coRef().collection('log').orderBy('ts','desc').limit(200).get();LOGS=s.docs.map(d=>d.data());rLog()}catch(e){toast(fbe(e))}}
 async function tryInvite(u){const em=(u.email||'').toLowerCase();if(!em)return null;let iv;try{iv=await FS.collection('undangan').doc(em).get()}catch(e){return null}if(!iv.exists)return null;const d=iv.data(),cid=d.cid;
