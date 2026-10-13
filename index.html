@@ -79,6 +79,11 @@ a.ti:hover .ic{filter:brightness(1.12)}a.ti:active{transform:scale(.98)}
 #p_app .gr .act{margin:0}
 @media(min-width:900px){.gr{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(min-width:1280px){.gr{grid-template-columns:repeat(4,minmax(0,1fr))}}@media(min-width:900px){.pv section .ni,.pv section select.ni{max-width:520px}}
 @media(max-width:340px){.gr{grid-template-columns:1fr}}
+/* garis pita cahaya */
+:root{--rb:linear-gradient(90deg,#E8603C 0%,#F2B63D 28%,#5BBF7A 52%,#3FA7D6 76%,#7A6FDB 100%)}
+.hd{border-bottom:0;position:relative}.hd:after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--rb);box-shadow:0 0 10px rgba(63,167,214,.4);opacity:.95}
+#p_app .gr .card{border-top:1px solid var(--ln);position:relative;overflow:hidden}
+#p_app .gr .card:before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:var(--rb);box-shadow:0 0 8px rgba(63,167,214,.35)}
 .au{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px}
 .ac{width:min(380px,100%)}.ac h1{font-size:26px;font-weight:600;letter-spacing:.03em;margin:0}.ac .m{margin:4px 0 18px;font-size:13px}
 .ac input{display:block;width:100%;padding:12px;border:1px solid var(--ln);border-radius:8px;background:var(--sf);font-size:15px;margin-top:10px}
