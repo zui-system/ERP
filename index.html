@@ -268,9 +268,9 @@ function bnOrd(){const e=$('#bnord');if(!e)return;const od=bnOrder(),live=!!(od&
 if(key===BNOS)return;BNOS=key;const b=BNP||{};
 if(!od){e.innerHTML='';const n=$('#bnnew');if(n)n.open=true;const rp=$('#bnrp');if(rp)rp.style.display='none';return}
 if(od.dead){e.innerHTML=`<p class="m am">Pesanan kedaluwarsa. Ajukan langganan lagi untuk mendapatkan jumlah baru.</p>`;const n=$('#bnnew');if(n)n.open=true;return}
-const o=od.o,p=bnPk().find(x=>x.k===o.paket)||{nama:''},kode=bnC()==='IDR'&&(b.kode!==false)?(o.jml%1000):0,tg=new Date(od.exp).toLocaleString(ZLOC,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+const o=od.o,p=bnPk().find(x=>x.k===o.paket)||{nama:''},kode=0,tg=new Date(od.exp).toLocaleString(ZLOC,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
 let h=`<div class="card ord"><b>Pesanan Anda</b> <span class="pill">${E(p.nama||'')}</span><div class="kv"><span>Jumlah transfer</span><b>${prc(o.jml)} <button type="button" class="bt" style="padding:2px 8px" onclick="bnCopyAmt(${+o.jml})">Salin</button></b>`+(kode?`<span>Termasuk kode unik</span><b>${prc(kode)}</b>`:'')+(b.bank?`<span>Bank</span><b>${E(b.bank)}</b>`:'')+(b.norek?`<span>No. rekening</span><b>${E(b.norek)} <button type="button" class="bt" style="padding:2px 8px" onclick="bnCopy()">Salin</button></b>`:'')+(b.an?`<span>Atas nama</span><b>${E(b.an)}</b>`:'')+`<span>Bayar sebelum</span><b>${E(tg)}</b><span>Ref</span><b>${E(o.ref||'')}</b></div><p class="m">Tulis kode ini di catatan transfer bila tersedia.</p>`;
-if(b.qris)h+=`<img src="${E(b.qris)}" alt="QRIS" style="max-width:100%;border-radius:8px;border:1px solid var(--ln)">`;
+{const qz=p.qr||b.qris;if(qz)h+=`<img src="${E(qz)}" alt="QRIS" style="max-width:100%;border-radius:8px;border:1px solid var(--ln)">`}
 h+=od.rs.length?`<p class="m" style="color:var(--ok)">Resit diterima. Kami sedang memeriksa pembayaran Anda.</p>`:`<p class="m">Setelah transfer, kirim resit yang jelas (nominal, tanggal, dan jam terlihat).</p>`;
 h+=`<label class="bt" style="cursor:pointer;display:inline-block">Kirim resit<input type="file" accept="image/*" style="display:none" onchange="bnRs(this)"></label><div id="bnrv"></div></div>`;
 e.innerHTML=h;const n=$('#bnnew');if(n)n.open=false;const rp=$('#bnrp');if(rp)rp.style.display='';bnRv()}
@@ -286,8 +286,8 @@ try{await B.commit();BNRI=null;toast('Resit terkirim. Terima kasih! Kami periksa
 function bnPay(){const P=bnPk(),b=BNP||{},sel=P.find(p=>p.k===BNSEL)||P[0];BNSEL=sel.k;const hg=bnHarga(sel),el=$('#bnpay');if(!el)return;
 let h='<h3 class="hh">Pilih paket</h3>'+P.map(p=>`<button type="button" class="pk${p.k===BNSEL?' on':''}" onclick="BNSEL='${E(p.k)}';bnPay()"><span>${E(p.nama)}</span><span>${bnLabel(p)}</span></button>`).join('');
 h+='<h3 class="hh">Cara bayar</h3>';
-if(b.bank||b.norek||b.qris){h+=`<div class="kv"><span>Jumlah</span><b>${prc(hg.p||hg.n)}</b>`+(b.bank?`<span>Bank</span><b>${E(b.bank)}</b>`:'')+(b.norek?`<span>No. rekening</span><b>${E(b.norek)} <button type="button" class="bt" style="padding:2px 8px" onclick="bnCopy()">Salin</button></b>`:'')+(b.an?`<span>Atas nama</span><b>${E(b.an)}</b>`:'')+'</div>';
-if(b.qris)h+=`<img src="${E(b.qris)}" alt="QRIS" style="max-width:100%;border-radius:8px;border:1px solid var(--ln);margin-top:6px">`;
+if(b.bank||b.norek||b.qris||sel.qr){h+=`<div class="kv"><span>Jumlah</span><b>${prc(hg.p||hg.n)}</b>`+(b.bank?`<span>Bank</span><b>${E(b.bank)}</b>`:'')+(b.norek?`<span>No. rekening</span><b>${E(b.norek)} <button type="button" class="bt" style="padding:2px 8px" onclick="bnCopy()">Salin</button></b>`:'')+(b.an?`<span>Atas nama</span><b>${E(b.an)}</b>`:'')+'</div>';
+{const qz=sel.qr||b.qris;if(qz)h+=`<img src="${E(qz)}" alt="QRIS" style="max-width:100%;border-radius:8px;border:1px solid var(--ln);margin-top:6px">`}
 if(b.catatan)h+=`<p class="m">${E(b.catatan)}</p>`}
 else h+='<p class="m">Data pembayaran belum diatur. Tekan Ajukan langganan, lalu tim Zui akan membalas dengan cara bayar.</p>';
 el.innerHTML=h}
@@ -302,10 +302,11 @@ B.set(FS.collection('bantuan').doc(c).collection('pesan').doc(uid()),m);
 B.set(FS.collection('bantuan').doc(c),bnDoc(ts,st,teks,jenis==='langganan'?(pk||''):((BNH&&BNH.pk)||'')),{merge:true});
 try{await B.commit();return true}catch(e){toast(fbe(e));return false}}
 async function bnSend(){const i=$('#bni'),t=(i.value||'').trim();if(!t){i.focus();return}i.value='';if(!(await bnPost(t,'chat','')))i.value=t;else bnAuto(t)}
-async function bnReq(){const P=bnPk(),p=P.find(x=>x.k===BNSEL)||P[0],h=bnHarga(p),n=($('#bnb').value||'').trim(),base=h.p||h.n,kode=bnC()==='IDR'&&!(BNP&&BNP.kode===false)?1+Math.floor(Math.random()*999):0,jml=base+kode,ref='ZUI-'+Math.random().toString(36).slice(2,6).toUpperCase();
+async function bnReq(){const P=bnPk(),p=P.find(x=>x.k===BNSEL)||P[0],h=bnHarga(p),n=($('#bnb').value||'').trim(),base=h.p||h.n,kode=0,jml=base+kode,ref='ZUI-'+Math.random().toString(36).slice(2,6).toUpperCase();
 const t=`Pengajuan langganan ${p.nama}. Jumlah transfer ${bnC()} ${jml}`+(kode?` (harga ${base} + kode unik ${kode})`:'')+`. Ref ${ref}.`+(n?`\nCatatan: ${n}`:'')+`\nPerusahaan: ${CO.nama}`;
 if(await bnPost(t,'langganan',p.k,{jml:jml,ref:ref})){$('#bnb').value='';toast('Pengajuan terkirim. Transfer sesuai jumlah di Pesanan Anda, lalu kirim resitnya.');bnAns([bnT('Pengajuan diterima. Terima kasih!'),bnT('Langkah berikutnya: transfer sesuai jumlah di Pesanan Anda, lalu kirim resitnya di sini.'),bnT('Kami cek lalu aktifkan, dan memberi kabar di chat ini.')],Date.now()+50)}}
 /*BN-END*/
+
 
 /* ---------- pantauan pemilik ---------- */
 let PAN=null,PANT=0,PANL=false;const rp=n=>zuiRp(n),nf0=n=>zuiNf({maximumFractionDigits:0}).format(n);
