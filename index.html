@@ -78,7 +78,7 @@ textarea.ni{resize:vertical;font-size:12px;font-family:ui-monospace,monospace}
 <button class="fab" id="fab" onclick="fa()" style="display:none"></button></div>
 <div id="ts" role="status"></div>
 <div id="nc" class="au" style="display:none"><div class="ac"><h1>ZUI SYSTEM</h1><p class="m" id="nct">Akun Anda belum tergabung ke perusahaan.</p>
-<div id="mkb" style="display:none"><input id="cnm" placeholder="Nama perusahaan baru" maxlength="60" aria-label="Nama perusahaan"><button class="go" style="margin-top:12px" onclick="mk()">Buat perusahaan</button></div><p class="m" id="mkn" style="display:none;margin-top:10px">Pendaftaran perusahaan baru hanya untuk email yang sudah disetujui Zui. Jika Anda karyawan, minta pemilik perusahaan mengundang email ini di Zui System.</p>
+<div id="mkb" style="display:none"><input id="cnm" placeholder="Nama perusahaan baru" maxlength="60" aria-label="Nama perusahaan"><button class="go" style="margin-top:12px" onclick="mk()">Buat perusahaan</button></div><div id="mkn" style="display:none;margin-top:10px"><p class="m">Pendaftaran perusahaan baru hanya untuk email yang sudah disetujui Zui. Jika Anda karyawan, minta pemilik perusahaan mengundang email ini di Zui System.</p><div id="rqf"><p class="m" style="margin-top:10px">Ingin mencoba untuk usaha Anda? Kirim permintaan akses (uji coba 14 hari).</p><input id="rqn" placeholder="Nama Anda" maxlength="60" aria-label="Nama Anda"><input id="rqu" placeholder="Nama usaha" maxlength="80" aria-label="Nama usaha"><input id="rqh" placeholder="WhatsApp (opsional)" maxlength="30" inputmode="tel" aria-label="WhatsApp"><button class="go" style="margin-top:12px" onclick="rq()">Kirim permintaan</button></div><p class="m am" id="rqs" style="display:none"></p></div>
 <p class="m" style="margin-top:14px">Sudah diundang? Pastikan Anda masuk dengan email yang diundang, lalu tekan Coba lagi.</p>
 <div class="sgs"><button class="bt" onclick="location.reload()">Coba lagi</button><button class="bt" onclick="logout()">Keluar</button></div></div></div>
 <div id="au" class="au" style="display:none"><form class="ac" onsubmit="return authGo(event)"><h1>ZUI SYSTEM</h1><p class="m">Satu login untuk semua aplikasi Zui</p>
@@ -147,12 +147,16 @@ await FS.collection('perusahaan').doc(cid).collection('anggota').doc(u.uid).set(
 await FS.collection('profil').doc(u.uid).set({cid});try{await iv.ref.delete()}catch(e){}return cid}
 async function boot(u){USER=u;ME={uid:u.uid,email:u.email||'',nama:u.displayName||u.email||'Pengguna',peran:''};CID=null;$('#nc').style.display='none';
 let cid=null;try{const pr=await FS.collection('profil').doc(u.uid).get();cid=pr.exists?pr.data().cid:null;if(!cid)cid=await tryInvite(u)}catch(e){toast(fbe(e))}
-if(!cid){let iz=false;try{iz=(await FS.collection('izin').doc((u.email||'').toLowerCase()).get()).exists}catch(e){}$('#mkb').style.display=iz?'':'none';$('#mkn').style.display=iz?'none':'';$('#au').style.display='none';$('#nc').style.display='flex';return}
+if(!cid){let iz=false;try{iz=(await FS.collection('izin').doc((u.email||'').toLowerCase()).get()).exists}catch(e){}$('#mkb').style.display=iz?'':'none';$('#mkn').style.display=iz?'none':'';if(!iz)await rqShow(u);$('#au').style.display='none';$('#nc').style.display='flex';return}
 CID=cid;let mb=null,co=null;try{mb=await coRef().collection('anggota').doc(u.uid).get();co=await coRef().get()}catch(e){toast(fbe(e))}
 if(!mb||!mb.exists||!co||!co.exists||mb.data().aktif!==true||!RL[mb.data().peran]){CID=null;$('#au').style.display='none';$('#nct').textContent='Akun Anda tidak aktif di perusahaan ini. Hubungi pemilik atau admin.';$('#nc').style.display='flex';return}
 ME.peran=mb.data().peran;ME.nama=mb.data().nama||ME.nama;CO=Object.assign({nama:'',apps:{}},co.data());LG=CO.logo||'';if(Date.now()>lgEnd(CO)){CID=null;$('#au').style.display='none';$('#mkb').style.display='none';$('#mkn').style.display='none';$('#nct').textContent=LGMSG;$('#nc').style.display='flex';return}
 try{await ldMem();await ldInv()}catch(e){toast(fbe(e))}
 $('#cn').textContent=CO.nama;setLogo();$('#au').style.display='none';rAll();ldLog();sync();ldTugas()}
+async function rqShow(u){let st='';try{const d=await FS.collection('permintaan').doc((u.email||'').toLowerCase()).get();if(d.exists)st=d.data().st}catch(e){}
+$('#rqf').style.display=st==='baru'?'none':'';const e=$('#rqs');e.style.display=st?'':'none';e.textContent=st==='baru'?'Permintaan Anda sudah terkirim. Setelah disetujui, tekan Coba lagi.':st==='ditolak'?'Permintaan sebelumnya belum disetujui. Anda bisa mengirim ulang.':''}
+async function rq(){if(!USER)return;const n=$('#rqn').value.trim(),us=$('#rqu').value.trim();if(!n||!us){toast('Isi nama dan nama usaha');return}const em=(USER.email||'').toLowerCase();
+try{await FS.collection('permintaan').doc(em).set({email:em,nama:n,usaha:us,hp:$('#rqh').value.trim(),ts:Date.now(),st:'baru'});await rqShow(USER);toast('Permintaan terkirim')}catch(e){toast(fbe(e))}}
 async function mk(){const n=$('#cnm').value.trim();if(!n){$('#cnm').focus();return}if(!USER)return;const cid=uid();
 try{await FS.collection('perusahaan').doc(cid).set({nama:n,owner:USER.uid,ts:Date.now(),apps:{}});
 await FS.collection('perusahaan').doc(cid).collection('anggota').doc(USER.uid).set({email:(USER.email||'').toLowerCase(),nama:USER.displayName||USER.email,peran:'pemilik',aktif:true,ts:Date.now()});
