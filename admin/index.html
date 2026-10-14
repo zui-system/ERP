@@ -93,7 +93,7 @@ textarea.ni{resize:vertical;font-size:12px;font-family:ui-monospace,monospace}
 @media(prefers-reduced-motion:reduce){#spl{display:none}}
 @keyframes glw{0%,100%{opacity:.55}50%{opacity:1}}
 #spl u{animation:glw 2.5s ease-in-out infinite}
-</style></head><body><div id="spl" aria-hidden="true"><b>ZUI</b><i>ADMIN</i><u></u></div><script>(function(){var s=document.getElementById("spl");function k(){if(s){s.style.display="none";s=null}}addEventListener("pointerdown",k,true);addEventListener("keydown",k,true)})()</script>
+.pwr{display:none;font-size:12px;color:var(--mu);margin:-2px 0 10px;gap:2px}.pwr span:before{content:"○ "}.pwr span.ok{color:var(--ok)}.pwr span.ok:before{content:"● "}</style></head><body><div id="spl" aria-hidden="true"><b>ZUI</b><i>ADMIN</i><u></u></div><script>(function(){var s=document.getElementById("spl");function k(){if(s){s.style.display="none";s=null}}addEventListener("pointerdown",k,true);addEventListener("keydown",k,true)})()</script>
 <div class="app"><div class="top tl"><img id="lg" alt="" style="display:none"><div><b>ZUI ADMIN</b><small id="cn">Pelanggan dan langganan</small></div></div>
 <div class="hd" id="hd"><div class="hdi" id="hdi" role="tablist"></div></div>
 <div class="pv" id="pv"><section id="p_pe"></section><section id="p_km"></section><section id="p_set"></section></div>
@@ -103,7 +103,7 @@ textarea.ni{resize:vertical;font-size:12px;font-family:ui-monospace,monospace}
 <div class="sgs"><button class="bt" onclick="location.reload()">Coba lagi</button><a class="ab" id="nsy" href="#" style="display:none">Buka Zui System</a><button class="bt" onclick="logout()">Keluar</button></div></div></div>
 <div id="au" class="au" style="display:none"><form class="ac" onsubmit="return authGo(event)"><h1>ZUI <span class="w2">ADMIN</span></h1><p class="m">Masuk dengan akun Zui System Anda</p>
 <div class="sgs"><button type="button" id="ain" class="sg on" onclick="amode('in')">Masuk</button><button type="button" id="aup" class="sg" onclick="amode('up')">Daftar</button></div>
-<input id="ae" type="email" required autocomplete="email" placeholder="Email" aria-label="Email"><input id="ap" type="password" required minlength="8" autocomplete="current-password" placeholder="Kata sandi (min. 8 karakter)" aria-label="Kata sandi">
+<input id="ae" type="email" required autocomplete="email" placeholder="Email" aria-label="Email"><input id="ap" type="password" required autocomplete="current-password" placeholder="Kata sandi" aria-label="Kata sandi" oninput="pwUi()"><input id="ap2" type="password" autocomplete="new-password" placeholder="Ulangi kata sandi" aria-label="Ulangi kata sandi" style="display:none" oninput="pwUi()"><div id="pwr" class="pwr"><span id="pr1">Minimal 8 karakter</span><span id="pr2">Ada angka</span><span id="pr3">Ada huruf besar</span><span id="pr4">Ada huruf kecil</span><span id="pr5">Kedua kata sandi sama</span><span style="opacity:.7">Simbol boleh ditambahkan (opsional)</span></div><button type="button" id="pwe" class="lnk" style="display:none;margin:0 auto 10px" onclick="pwShow()">Tampilkan kata sandi</button>
 <button id="abt" class="go" type="submit">Masuk</button><p id="am" class="am" role="alert"></p><div class="or">ATAU</div>
 <button type="button" class="gbtn" onclick="authG()"><b style="color:#4285F4">G</b> Masuk dengan Google</button><button type="button" id="afg" class="lnk" onclick="forgot()">Lupa kata sandi?</button></form></div>
 <script>
@@ -253,8 +253,24 @@ async function ldPe(){try{const s=await FS.collection('perusahaan').get();PE=awa
 async function ldAll(){await ldPe();rAll()}
 function unl(){if(BHUN){BHUN();BHUN=null}if(KMUN){KMUN();KMUN=null}BHF=0;BH=[];BP=null}
 /* ---------- login ---------- */
-function amode(m){AM=m;$('#abt').textContent=m=='in'?'Masuk':'Daftar';$('#afg').style.display=m=='in'?'':'none';$('#ap').autocomplete=m=='in'?'current-password':'new-password';$('#ain').classList.toggle('on',m=='in');$('#aup').classList.toggle('on',m=='up');msg('')}
-async function authGo(ev){ev.preventDefault();if(!FA){msg('Layanan login belum siap.',1);return false}const em=$('#ae').value.trim(),pw=$('#ap').value;$('#abt').disabled=true;
+/*SESS*/function zSess(u){var st=false;try{st=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}catch(e){}
+var lim=(st?30:1)*864e5;function g(){try{return+localStorage.getItem('zui.act')||0}catch(e){return 0}}
+function t(){try{localStorage.setItem('zui.act',Date.now())}catch(e){}}
+function ex(){var a=g();return a&&Date.now()-a>lim}
+function out(){firebase.auth().signOut().then(function(){setTimeout(function(){msg('Sesi berakhir karena lama tidak dipakai. Silakan masuk lagi.',1)},250)},function(){})}
+if(ex()){out();return true}
+t();
+if(!window.__zsi){window.__zsi=1;var lt=0,tc=function(){var n=Date.now();if(n-lt>6e4){lt=n;t()}};
+['click','keydown','touchstart'].forEach(function(e){addEventListener(e,tc,{passive:true,capture:true})});
+document.addEventListener('visibilitychange',function(){if(document.visibilityState=='visible'&&firebase.auth().currentUser){if(ex())out();else t()}});
+setInterval(function(){if(firebase.auth().currentUser&&ex())out()},6e4)}
+return false}
+function pwR(p,q){return[p.length>=8,/[0-9]/.test(p),/[A-Z]/.test(p),/[a-z]/.test(p),p.length>0&&p===q]}
+function pwUi(){if(AM!='up')return;const r=pwR($('#ap').value,$('#ap2').value);r.forEach((v,i)=>$('#pr'+(i+1)).classList.toggle('ok',v))}
+function pwShow(){const a=$('#ap'),b=$('#ap2'),h=a.type=='password';a.type=b.type=h?'text':'password';$('#pwe').textContent=h?'Sembunyikan kata sandi':'Tampilkan kata sandi'}
+function pwChk(p,q){const r=pwR(p,q);if(!r[0]||!r[1]||!r[2]||!r[3])return'Kata sandi harus minimal 8 karakter, memakai angka, huruf besar, dan huruf kecil.';if(!r[4])return'Konfirmasi kata sandi tidak sama.';return''}
+function amode(m){AM=m;$('#ap2').style.display=$('#pwr').style.display=$('#pwe').style.display=m=='up'?'':'none';$('#pwr').style.display=m=='up'?'grid':'none';$('#ap2').required=m=='up';$('#ap2').value='';$('#ap').type='password';$('#ap2').type='password';$('#pwe').textContent='Tampilkan kata sandi';$('#abt').textContent=m=='in'?'Masuk':'Daftar';$('#afg').style.display=m=='in'?'':'none';$('#ap').autocomplete=m=='in'?'current-password':'new-password';$('#ain').classList.toggle('on',m=='in');$('#aup').classList.toggle('on',m=='up');msg('')}
+async function authGo(ev){ev.preventDefault();if(!FA){msg('Layanan login belum siap.',1);return false}const em=$('#ae').value.trim(),pw=$('#ap').value;if(AM=='up'){const bad=pwChk(pw,$('#ap2').value);if(bad){msg(bad,1);return false}}$('#abt').disabled=true;
 try{if(AM=='in'){const c=await FA.signInWithEmailAndPassword(em,pw);if(!c.user.emailVerified){await c.user.sendEmailVerification().catch(()=>{});await FA.signOut();msg('Email belum diverifikasi. Kami mengirim ulang tautan verifikasi ke email Anda.',1)}}
 else{const c2=await FA.createUserWithEmailAndPassword(em,pw);await c2.user.sendEmailVerification();await FA.signOut();msg('Pendaftaran berhasil. Cek email Anda untuk verifikasi, lalu masuk.')}}
 catch(e){msg(fbe(e),1)}$('#abt').disabled=false;return false}
@@ -279,6 +295,6 @@ pv.addEventListener('scroll',()=>requestAnimationFrame(sync));addEventListener('
 ap();sync();$('#au').style.display='flex';
 (async()=>{try{for(const f of ['app','auth','firestore'])await ldS('https://www.gstatic.com/firebasejs/10.12.2/firebase-'+f+'-compat.js')}catch(e){msg('Tidak dapat memuat layanan login. Periksa koneksi internet.',1);return}
 firebase.initializeApp(CFG);FA=firebase.auth();FS=firebase.firestore();
-FA.onAuthStateChanged(u=>{if(u&&u.emailVerified){if(!USER||USER.uid!==u.uid)setTimeout(()=>boot(u),0)}else if(!u){unl();USER=null;PE=[];$('#nc').style.display='none';$('#au').style.display='flex'}})})();
+FA.onAuthStateChanged(u=>{if(u&&u.emailVerified){if(zSess(u))return;if(!USER||USER.uid!==u.uid)setTimeout(()=>boot(u),0)}else if(!u){unl();USER=null;PE=[];$('#nc').style.display='none';$('#au').style.display='flex'}})})();
 if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script></body></html>
