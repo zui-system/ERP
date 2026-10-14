@@ -109,17 +109,26 @@ a.ti:hover .ic{filter:brightness(1.12)}a.ti:active{transform:scale(.98)}
 .bnin{display:flex;gap:8px;margin-top:8px}.bnin input{flex:1;min-width:0;margin:0}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--bad);margin-left:6px;vertical-align:middle}
 .stp{margin:10px 0 0;padding-left:20px;font-size:13px;color:var(--mu);display:grid;gap:2px}.qcs{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.qc{border:1px solid var(--ln);border-radius:99px;padding:5px 11px;font-size:12px;background:var(--bg);color:var(--ink)}.bm.ot{align-self:flex-start;border-style:dashed;border-color:var(--ac);background:var(--bg);max-width:94%}.bm.ot .t{display:grid;gap:3px}.ao{color:var(--ac);font-weight:600;margin:0 0 3px}.bnm .em{padding:8px 2px}
 .ord .kv{margin:8px 0}#bnnew>summary{cursor:pointer;margin-top:12px;font-size:14px;color:var(--ac)}.card.ord{margin-top:12px}
-</style></head><body>
+/* logo utama: ZUI di atas, nama aplikasi kecil; hanya untuk layar buka dan layar masuk */
+.ac h1{font-size:38px;font-weight:600;letter-spacing:.16em;line-height:1}.ac h1 .w2{display:block;font-size:11px;font-weight:400;letter-spacing:.42em;margin-top:9px;opacity:.7}
+#spl{position:fixed;inset:0;z-index:300;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;animation:spl 10s ease forwards}
+#spl b{display:block;font-size:56px;font-weight:600;letter-spacing:.16em;margin-left:.16em;line-height:1}#spl i{display:block;font-style:normal;font-size:13px;font-weight:400;letter-spacing:.42em;margin:12px 0 0 .42em;opacity:.7;line-height:1}
+#spl u{display:block;width:150px;height:3px;border-radius:3px;background:#2FA8D8;margin-top:26px;box-shadow:0 0 5px #2FA8D8,0 0 16px color-mix(in srgb,#2FA8D8 calc(var(--gl,1)*60%),transparent)}
+@keyframes spl{0%,96%{opacity:1}100%{opacity:0;visibility:hidden}}
+@media(prefers-reduced-motion:reduce){#spl{display:none}}
+@keyframes glw{0%,100%{opacity:.55}50%{opacity:1}}
+#spl u{animation:glw 2.5s ease-in-out infinite}
+</style></head><body><div id="spl" aria-hidden="true"><b>ZUI</b><i>SYSTEM</i><u></u></div><script>(function(){var s=document.getElementById("spl");function k(){if(s){s.style.display="none";s=null}}addEventListener("pointerdown",k,true);addEventListener("keydown",k,true)})()</script>
 <div class="app"><div class="top tl"><img id="lg" alt="" style="display:none"><div><b>ZUI SYSTEM</b><small id="cn">Satu login untuk semua aplikasi Zui</small></div></div>
 <div class="hd" id="hd"><div class="hdi" id="hdi" role="tablist"></div></div>
 <div class="pv" id="pv"><section id="p_app"></section><section id="p_pan"></section><section id="p_mem"></section><section id="p_log"></section><section id="p_set"></section></div>
 <button class="fab" id="fab" onclick="fa()" style="display:none"></button></div>
 <div id="ts" role="status"></div><dialog id="dk"></dialog>
-<div id="nc" class="au" style="display:none"><div class="ac"><h1>ZUI SYSTEM</h1><p class="m" id="nct">Akun Anda belum tergabung ke perusahaan.</p>
+<div id="nc" class="au" style="display:none"><div class="ac"><h1>ZUI <span class="w2">SYSTEM</span></h1><p class="m" id="nct">Akun Anda belum tergabung ke perusahaan.</p>
 <div id="mkb" style="display:none"><p class="m" style="margin-bottom:8px">Mulai uji coba gratis 14 hari. Semua aplikasi Zui langsung siap dipakai, tanpa menunggu persetujuan.</p><input id="cnm" placeholder="Nama perusahaan baru" maxlength="60" aria-label="Nama perusahaan"><button class="go" style="margin-top:12px" onclick="mk()">Buat perusahaan</button><p class="m" style="margin-top:10px">Jika Anda karyawan, jangan buat perusahaan. Minta pemilik mengundang email ini di Zui System, lalu tekan Coba lagi.</p></div><div id="mkn" style="display:none;margin-top:10px"><p class="m">Pendaftaran perusahaan baru hanya untuk email yang sudah disetujui Zui. Jika Anda karyawan, minta pemilik perusahaan mengundang email ini di Zui System.</p><div id="rqf"><p class="m" style="margin-top:10px">Ingin mencoba untuk usaha Anda? Kirim permintaan akses (uji coba 14 hari).</p><input id="rqn" placeholder="Nama Anda" maxlength="60" aria-label="Nama Anda"><input id="rqu" placeholder="Nama usaha" maxlength="80" aria-label="Nama usaha"><input id="rqh" placeholder="WhatsApp (opsional)" maxlength="30" inputmode="tel" aria-label="WhatsApp"><button class="go" style="margin-top:12px" onclick="rq()">Kirim permintaan</button></div><p class="m am" id="rqs" style="display:none"></p></div>
 <p class="m" style="margin-top:14px">Sudah diundang? Pastikan Anda masuk dengan email yang diundang, lalu tekan Coba lagi.</p>
 <div class="sgs"><button class="bt" onclick="location.reload()">Coba lagi</button><button class="bt" onclick="logout()">Keluar</button></div></div></div>
-<div id="au" class="au" style="display:none"><form class="ac" onsubmit="return authGo(event)"><h1>ZUI SYSTEM</h1><p class="m">Satu login untuk semua aplikasi Zui</p>
+<div id="au" class="au" style="display:none"><form class="ac" onsubmit="return authGo(event)"><h1>ZUI <span class="w2">SYSTEM</span></h1><p class="m">Satu login untuk semua aplikasi Zui</p>
 <div class="sgs"><button type="button" id="ain" class="sg on" onclick="amode('in')">Masuk</button><button type="button" id="aup" class="sg" onclick="amode('up')">Daftar</button></div>
 <input id="ae" type="email" required autocomplete="email" placeholder="Email" aria-label="Email"><input id="ap" type="password" required minlength="8" autocomplete="current-password" placeholder="Kata sandi (min. 8 karakter)" aria-label="Kata sandi">
 <button id="abt" class="go" type="submit">Masuk</button><p id="am" class="am" role="alert"></p><div class="or">ATAU</div>
@@ -213,7 +222,7 @@ const $=s=>document.querySelector(s),E=s=>String(s).replace(/[&<>"']/g,c=>({'&':
 const CFG={apiKey:'AIzaSyAR-TIaq1VH0OOD2XGx_IhedaH7mwKpW30',authDomain:'zuisystem.firebaseapp.com',projectId:'zuisystem',storageBucket:'zuisystem.firebasestorage.app',messagingSenderId:'55666230248',appId:'1:55666230248:web:783df0dc060a1d7ce3da5d'};
 const RL=Object.fromEntries(Object.entries({pemilik:'Pemilik',admin:'Admin',gudang:'Gudang',produksi:'Produksi',mutu:'Mutu',kasir:'Kasir',keuangan:'Keuangan'}).map(([k,v])=>[k,ztr(v)])),RS=['admin','gudang','produksi','mutu','kasir','keuangan'];
 const N=['Aplikasi','Pantauan','Anggota','Aktivitas','Pengaturan'],LN=N.length-1;
-const DEFURL={inventori:'https://inventori.zuisystem.com/',manufaktur:'https://manufaktur.zuisystem.com/',karyawan:'https://karyawan.zuisystem.com/',keuangan:'https://keuangan.zuisystem.com/'};
+const DEFURL={inventori:'https://zuisystem.com/inventori/',manufaktur:'https://zuisystem.com/manufaktur/',karyawan:'https://zuisystem.com/karyawan/',keuangan:'https://zuisystem.com/keuangan/'};
 const APPS=[['inventori','Zui Inventori','Stok, pembelian, penjualan, batch dan kedaluwarsa','pemilik admin gudang produksi mutu kasir keuangan'],['manufaktur','Zui Manufaktur','BoM, produksi, mutu','pemilik admin gudang produksi mutu'],['karyawan','Zui Karyawan','Data karyawan, absen, cuti','pemilik admin gudang produksi mutu kasir keuangan'],['keuangan','Zui Keuangan','Utang, piutang, kas','pemilik admin keuangan']];
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7),fdt=t=>{try{return new Date(t).toLocaleString(ZLOC,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}catch(e){return''}};
 let TGS=[],TGL=false,USER=null,FA=null,FS=null,CID=null,ME={uid:'',email:'',nama:'',peran:''},CO={nama:'',apps:{}},MEM=[],INV=[],LOGS=[],LQ='',DEL='',cur=0,AM='in';
