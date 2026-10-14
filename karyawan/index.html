@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1D6E8C"><title>Zui Karyawan</title><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap">
+<style>
+
+:root{--bg:#EDF0F3;--sf:#fff;--ink:#16202A;--mu:#5F6B77;--ln:#D8DEE4;--ac:#1D6E8C;--am:#B9791A;--ok:#2E7D5B;--bad:#C0443A;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10171E;--sf:#18222B;--ink:#E7ECF0;--mu:#93A0AC;--ln:#2A3743;--ac:#5BB4D2;--am:#E0A64A;--ok:#5CC596;--bad:#E5776D}}
+:root[data-theme="dark"],html:root[data-app="dark"]{--bg:#10171E;--sf:#18222B;--ink:#E7ECF0;--mu:#93A0AC;--ln:#2A3743;--ac:#5BB4D2;--am:#E0A64A;--ok:#5CC596;--bad:#E5776D;color-scheme:dark}
+html:root[data-app="light"]{--bg:#EDF0F3;--sf:#fff;--ink:#16202A;--mu:#5F6B77;--ln:#D8DEE4;--ac:#1D6E8C;--am:#B9791A;--ok:#2E7D5B;--bad:#C0443A;color-scheme:light}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:400 14px/1.5 'Outfit',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}button{background:none;border:0;padding:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.app{height:100%;display:flex;flex-direction:column}
+.top{padding:14px 20px 0}.top b{display:block;font-size:24px;font-weight:600;letter-spacing:.03em;line-height:1.1}
+.top small{display:block;font-size:12px;color:var(--mu);margin-top:3px}.tl{display:flex;align-items:center;gap:12px}.tl img{width:40px;height:40px;object-fit:contain;border-radius:8px;flex:none}.tl>div{min-width:0}.tl small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hd{overflow:hidden;padding-left:20px}
+.hdi{display:flex;gap:20px;width:max-content;padding:8px 0 10px}
+.hdi button{font-size:20px;font-weight:300;line-height:1.1;opacity:.45;transition:opacity .25s,transform .3s cubic-bezier(.34,1.56,.64,1);transform-origin:left bottom}
+.hdi button.on{opacity:1;animation:pop .4s cubic-bezier(.34,1.56,.64,1)}.hdi button:active{transform:scale(.9)}
+@keyframes pop{0%{transform:scale(.88)}60%{transform:scale(1.08)}100%{transform:scale(1)}}
+.pv{flex:1;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}.pv::-webkit-scrollbar{display:none}
+.pv section{flex:0 0 100%;scroll-snap-align:start;scroll-snap-stop:always;overflow-y:auto;padding:4px 20px 110px}
+.sum{color:var(--mu);margin:0 0 6px}
+.kp{display:grid;grid-template-columns:repeat(3,1fr);margin:6px 0 10px;border-top:1px solid var(--ln);border-bottom:1px solid var(--ln)}
+.kp div{padding:12px 0 12px 12px;border-left:1px solid var(--ln);min-width:0}.kp div:first-child{border-left:0;padding-left:0}
+.kp b{display:block;font-size:18px;font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.kp span{font-size:12px;color:var(--mu)}
+.hh{font-size:14px;font-weight:600;margin:18px 0 4px}
+.it{border-bottom:1px solid var(--ln);padding:12px 0}.row{display:flex;gap:12px;align-items:center}.tx{flex:1;min-width:0}
+.nm{font-size:15px;overflow-wrap:anywhere}.m{font-size:12px;color:var(--mu)}
+.q{text-align:right;white-space:nowrap;color:var(--mu);font-size:12px}.q b{font-size:18px;font-weight:400;color:var(--ink)}
+.q.am b,.am{color:var(--am)}.q.bad b,.bad{color:var(--bad)}.q.ok b{color:var(--ok)}
+.act{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.act button,.sg,.bt{border:1px solid var(--ln);border-radius:8px;padding:5px 12px;font-size:12px}
+.act button:active,.sg:active,.bt:active{transform:scale(.95)}
+.sgs{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px}.sg{border-radius:99px;padding:6px 14px}
+.sg.on{background:var(--ac);border-color:var(--ac);color:var(--bg)}
+.ni,dialog input,dialog select{display:block;width:100%;padding:10px 12px;border:1px solid var(--ln);border-radius:8px;background:var(--bg);font-size:15px;margin-top:4px}
+.em{color:var(--mu);padding:16px 0;font-size:13px}
+.fab{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ac);color:var(--bg);border-radius:99px;padding:12px 18px;font-weight:600;font-size:14px;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+dialog{border:0;border-radius:14px;padding:20px;width:min(420px,92vw);background:var(--sf);color:var(--ink);max-height:90vh;overflow:auto}
+dialog::backdrop{background:rgba(10,15,20,.55)}dialog h2{margin:0 0 6px;font-weight:400;font-size:20px}
+dialog label{display:block;font-size:12px;color:var(--mu);margin-top:12px}
+.btn{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}.btn button{padding:9px 16px;border-radius:8px}.go{background:var(--ac);color:var(--bg);font-weight:600}
+textarea.ni{resize:vertical;font-size:12px;font-family:ui-monospace,monospace}
+#ts{position:fixed;left:50%;bottom:90px;transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:10px;font-size:13px;opacity:0;pointer-events:none;transition:.25s;z-index:50;max-width:90vw}#ts.on{opacity:1;transform:translate(-50%,0)}
+.ln{border:1px solid var(--ln);border-radius:10px;padding:8px;margin-top:10px}
+.ln select,.ln input{margin-top:6px}.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tot{font-size:16px;font-weight:600;margin-top:12px}
+.ck{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--ink)}.ck input{width:auto;display:inline-block;margin:0}
+.ls{margin-top:8px;border-top:1px dashed var(--ln)}.lr{display:grid;grid-template-columns:20px 1fr auto;gap:8px;padding:6px 0;border-bottom:1px dashed var(--ln);font-size:13px;line-height:1.35}.ln1{color:var(--mu)}.ln2 b{font-weight:600}.ln2 i{font-style:normal;color:var(--mu);font-size:12px}.ln3{text-align:right;white-space:nowrap}
+.tap{cursor:pointer}.tap .nm::after{content:' \203A';color:var(--mu)}
+#dt{width:min(580px,94vw)}.kv{display:grid;grid-template-columns:auto 1fr;gap:2px 14px;margin:8px 0;font-size:13px}.kv span{color:var(--mu)}.kv b{font-weight:400;text-align:right}
+.sc2{overflow-x:auto;margin:10px 0;border-top:1px solid var(--ln)}.dtb{border-collapse:collapse;width:100%;font-size:12px}.dtb th{color:var(--mu);font-weight:400;text-align:left;padding:6px 8px 6px 0;border-bottom:1px solid var(--ln);white-space:nowrap}.dtb td{padding:7px 8px 7px 0;border-bottom:1px solid var(--ln);vertical-align:top}.dtb .n{text-align:right;white-space:nowrap}
+.tt{display:flex;justify-content:space-between;font-size:13px;padding:3px 0}.tt.b{font-weight:600;font-size:15px;border-top:1px solid var(--ln);margin-top:4px;padding-top:6px}
+.ab{border:1px solid var(--ln);border-radius:8px;padding:5px 12px;font-size:12px;color:var(--ink);text-decoration:none}
+#prn{display:none}
+@media print{.app,dialog,#ts,.fab{display:none!important}#prn{display:block!important;color:#000;background:#fff}html,body{height:auto;background:#fff}.pd{font:12px/1.4 Arial,sans-serif;color:#000}.pd h1{font-size:18px;margin:0}.pd h2{font-size:14px;font-weight:400;margin:2px 0 8px}.pd table{width:100%;border-collapse:collapse;margin:10px 0}.pd th,.pd td{border:1px solid #888;padding:4px 6px;text-align:left}.pd .tr{display:flex;justify-content:space-between;max-width:300px;margin-left:auto}.pd .pf{margin-top:20px;font-size:10px;color:#555}}
+.au{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px}
+.ac{width:min(380px,100%)}.ac h1{font-size:26px;font-weight:600;letter-spacing:.03em;margin:0}.ac .m{margin:4px 0 18px;font-size:13px}
+.ac input{display:block;width:100%;padding:12px;border:1px solid var(--ln);border-radius:8px;background:var(--sf);font-size:15px;margin-top:10px}
+.ac .go{width:100%;margin-top:16px;padding:12px;border-radius:10px}.am{font-size:13px;margin-top:12px;min-height:18px;color:var(--ok)}.am.er{color:var(--bad)}
+.or{text-align:center;color:var(--mu);font-size:11px;margin:14px 0 4px;letter-spacing:.1em}.gbtn{width:100%;border:1px solid var(--ln);border-radius:10px;padding:11px;background:var(--sf);margin-top:8px}
+.lnk{display:block;margin:14px auto 0;color:var(--ac);font-size:13px}
+@media(max-width:480px){.top b{font-size:22px}.hdi{gap:14px}.hdi button{font-size:17px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.card{border:1px solid var(--ln);border-radius:12px;padding:14px;margin-top:12px;background:var(--sf)}
+.card b{font-size:16px;font-weight:600}.card .act{margin-top:10px}
+.pill{display:inline-block;border:1px solid var(--ln);border-radius:99px;padding:1px 9px;font-size:11px;color:var(--mu);margin-left:6px}
+.sel{width:auto!important;display:inline-block!important;padding:5px 8px!important;font-size:13px!important;margin:0!important}
+.pill.ok{color:var(--ok);border-color:var(--ok)}.pill.bad{color:var(--bad);border-color:var(--bad)}.pill.am{color:var(--am);border-color:var(--am)}
+.rd{display:flex;gap:14px;margin-top:6px}.rd label{display:flex!important;gap:6px;align-items:center;margin:0!important;color:var(--ink)!important;font-size:13px!important}.rd input{width:auto!important;display:inline-block!important;margin:0!important}
+.ac2{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:10px 0;border-bottom:1px solid var(--ln)}.ac2 b{font-weight:400;font-size:17px;text-align:right}
+/* garis menyala (seragam dengan Zui System; kekuatan --gl: terang 0.4, gelap 1) */
+:root{--gl:.4;--gc:#7A86F0}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--gl:1}}
+:root[data-theme="dark"],html:root[data-app="dark"]{--gl:1}
+.hd{overflow-x:clip;overflow-y:visible;position:relative;z-index:2}
+.hd:after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--gc);box-shadow:0 0 3px var(--gc),0 0 9px color-mix(in srgb,var(--gc) calc(var(--gl)*55%),transparent)}
+.hd:before{content:"";position:absolute;left:0;right:0;top:100%;height:18px;background:linear-gradient(color-mix(in srgb,var(--gc) calc(var(--gl)*20%),transparent),transparent);pointer-events:none}
+/* logo utama: ZUI di atas, nama aplikasi kecil; hanya untuk layar buka dan layar masuk */
+.ac h1{font-size:38px;font-weight:600;letter-spacing:.16em;line-height:1}.ac h1 .w2{display:block;font-size:11px;font-weight:400;letter-spacing:.42em;margin-top:9px;opacity:.7}
+#spl{position:fixed;inset:0;z-index:300;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;animation:spl 10s ease forwards}
+#spl b{display:block;font-size:56px;font-weight:600;letter-spacing:.16em;margin-left:.16em;line-height:1}#spl i{display:block;font-style:normal;font-size:13px;font-weight:400;letter-spacing:.42em;margin:12px 0 0 .42em;opacity:.7;line-height:1}
+#spl u{display:block;width:150px;height:3px;border-radius:3px;background:#7A86F0;margin-top:26px;box-shadow:0 0 5px #7A86F0,0 0 16px color-mix(in srgb,#7A86F0 calc(var(--gl,1)*60%),transparent)}
+@keyframes spl{0%,96%{opacity:1}100%{opacity:0;visibility:hidden}}
+@media(prefers-reduced-motion:reduce){#spl{display:none}}
+@keyframes glw{0%,100%{opacity:.55}50%{opacity:1}}
+#spl u{animation:glw 2.5s ease-in-out infinite}
+</style></head><body><div id="spl" aria-hidden="true"><b>ZUI</b><i>KARYAWAN</i><u></u></div><script>(function(){var s=document.getElementById("spl");function k(){if(s){s.style.display="none";s=null}}addEventListener("pointerdown",k,true);addEventListener("keydown",k,true)})()</script>
+<div class="app"><div class="top tl"><img id="lg" alt="" style="display:none"><div><b>ZUI KARYAWAN</b><small id="cn">Data, kehadiran, cuti</small></div></div>
+<div class="hd" id="hd"><div class="hdi" id="hdi" role="tablist"></div></div>
+<div class="pv" id="pv"><section id="p_sy"></section><section id="p_hd"></section><section id="p_ct"></section><section id="p_kr"></section><section id="p_set"></section></div>
+<button class="fab" id="fab" onclick="fa()" style="display:none"></button></div>
+<div id="ts" role="status"></div><dialog id="dk"></dialog>
+<div id="nc" class="au" style="display:none"><div class="ac"><h1>ZUI <span class="w2">KARYAWAN</span></h1><p class="m" id="nct">Akun Anda belum tergabung ke perusahaan.</p>
+<div class="sgs"><button class="bt" onclick="location.reload()">Coba lagi</button><a class="ab" id="nsy" href="#" style="display:none">Buka Zui System</a><button class="bt" onclick="logout()">Keluar</button></div></div></div>
+<div id="au" class="au" style="display:none"><form class="ac" onsubmit="return authGo(event)"><h1>ZUI <span class="w2">KARYAWAN</span></h1><p class="m">Masuk dengan akun Zui System Anda</p>
+<div class="sgs"><button type="button" id="ain" class="sg on" onclick="amode('in')">Masuk</button><button type="button" id="aup" class="sg" onclick="amode('up')">Daftar</button></div>
+<input id="ae" type="email" required autocomplete="email" placeholder="Email" aria-label="Email"><input id="ap" type="password" required minlength="8" autocomplete="current-password" placeholder="Kata sandi (min. 8 karakter)" aria-label="Kata sandi">
+<button id="abt" class="go" type="submit">Masuk</button><p id="am" class="am" role="alert"></p><div class="or">ATAU</div>
+<button type="button" class="gbtn" onclick="authG()"><b style="color:#4285F4">G</b> Masuk dengan Google</button><button type="button" id="afg" class="lnk" onclick="forgot()">Lupa kata sandi?</button></form></div>
+<script>
+window.ZD=[["@","Masuk","Sign in","Log masuk"],["=","Masuk","In","Masuk"],["=","Daftar","Sign up","Daftar"],["=","ATAU","OR","ATAU"],["=","Masuk dengan Google","Sign in with Google","Log masuk dengan Google"],["=","Lupa kata sandi?","Forgot password?","Lupa kata laluan?"],["=","Kata sandi","Password","Kata laluan"],["=","Kata sandi (min. 8 karakter)","Password (min. 8 characters)","Kata laluan (min. 8 aksara)"],["=","Email","Email","E-mel"],["@","Keluar","Sign out","Log keluar"],["=","Keluar","Out","Keluar"],["=","Coba lagi","Try again","Cuba lagi"],["=","Muat ulang","Reload","Muat semula"],["=","Simpan","Save","Simpan"],["=","Batal","Cancel","Batal"],["=","Tutup","Close","Tutup"],["=","Hapus","Delete","Padam"],["=","Ubah","Edit","Ubah"],["=","Tambah","Add","Tambah"],["=","Cari","Search","Cari"],["=","Buka","Open","Buka"],["=","Ya","Yes","Ya"],["=","Yakin?","Sure?","Pasti?"],["=","Yakin? Ketuk lagi","Sure? Tap again","Pasti? Ketik sekali lagi"],["=","Tampilan","Appearance","Paparan"],["=","Otomatis","Automatic","Automatik"],["=","Terang","Light","Cerah"],["=","Gelap","Dark","Gelap"],["=","Bahasa","Language","Bahasa"],["=","Akun","Account","Akaun"],["=","Pengaturan","Settings","Tetapan"],["=","Pengguna","User","Pengguna"],["=","Anda","You","Anda"],["=","Admin","Admin","Pentadbir"],["=","Pemilik","Owner","Pemilik"],["=","Gudang","Warehouse","Gudang"],["=","Produksi","Production","Pengeluaran"],["=","Mutu","Quality","Kualiti"],["=","Kasir","Cashier","Juruwang"],["=","Keuangan","Finance","Kewangan"],["=","Peran","Role","Peranan"],["=","Nama","Name","Nama"],["=","Nama Anda","Your name","Nama anda"],["=","Tanggal","Date","Tarikh"],["=","Keterangan","Notes","Keterangan"],["=","Catatan","Note","Catatan"],["=","Alasan","Reason","Sebab"],["=","Alasan penolakan","Reason for rejection","Sebab penolakan"],["=","Jumlah","Amount","Jumlah"],["=","Status","Status","Status"],["=","Total","Total","Jumlah"],["=","Semua","All","Semua"],["=","Lainnya","Other","Lain-lain"],["=","Lain-lain","Other","Lain-lain"],["=","Umum","General","Umum"],["=","Riwayat","History","Sejarah"],["=","Ringkasan","Summary","Ringkasan"],["=","Setujui","Approve","Luluskan"],["=","Tolak","Reject","Tolak"],["=","Disetujui","Approved","Diluluskan"],["=","Ditolak","Rejected","Ditolak"],["=","Dibatalkan","Cancelled","Dibatalkan"],["=","Batalkan","Cancel","Batalkan"],["=","Menunggu","Pending","Menunggu"],["=","Aktif","Active","Aktif"],["=","Aktifkan","Activate","Aktifkan"],["=","Nonaktifkan","Deactivate","Nyahaktifkan"],["=","Nonaktif","Inactive","Tidak aktif"],["=","Dicatat","Recorded","Direkodkan"],["=","Dihapus","Deleted","Dipadam"],["=","Tersimpan","Saved","Disimpan"],["=","Terjadi kesalahan","Something went wrong","Ralat berlaku"],["=","Tidak ada koneksi internet","No internet connection","Tiada sambungan internet"],["=","Layanan login belum siap.","The sign-in service is not ready.","Perkhidmatan log masuk belum sedia."],["=","Tidak dapat memuat layanan login. Periksa koneksi internet.","Could not load the sign-in service. Check your internet connection.","Tidak dapat memuatkan perkhidmatan log masuk. Semak sambungan internet."],["=","Email atau kata sandi salah","Incorrect email or password","E-mel atau kata laluan salah"],["=","Email sudah terdaftar","This email is already registered","E-mel sudah didaftarkan"],["=","Kata sandi terlalu lemah","Password is too weak","Kata laluan terlalu lemah"],["=","Format email tidak valid","Invalid email format","Format e-mel tidak sah"],["=","Terlalu banyak percobaan. Coba lagi nanti","Too many attempts. Try again later","Terlalu banyak percubaan. Cuba lagi nanti"],["=","Popup login diblokir peramban","The sign-in popup was blocked by the browser","Pop timbul log masuk disekat pelayar"],["=","Domain belum diizinkan di Firebase (Authorized domains)","This domain is not allowed in Firebase (Authorized domains)","Domain belum dibenarkan dalam Firebase (Authorized domains)"],["=","Email ini sudah terdaftar dengan metode lain","This email is registered with another method","E-mel ini didaftarkan dengan kaedah lain"],["=","Metode login ini belum diaktifkan di Firebase","This sign-in method is not enabled in Firebase","Kaedah log masuk ini belum diaktifkan dalam Firebase"],["=","Akses ditolak. Periksa peran Anda dan Firestore Rules","Access denied. Check your role and the Firestore Rules","Akses ditolak. Semak peranan anda dan Firestore Rules"],["=","Email belum diverifikasi. Kami mengirim ulang tautan verifikasi ke email Anda.","Email not verified. We sent the verification link to your email again.","E-mel belum disahkan. Kami menghantar semula pautan pengesahan ke e-mel anda."],["=","Pendaftaran berhasil. Cek email Anda untuk verifikasi, lalu masuk.","Sign-up successful. Check your email to verify, then sign in.","Pendaftaran berjaya. Semak e-mel anda untuk pengesahan, kemudian log masuk."],["=","Tautan reset dikirim ke email Anda.","A reset link was sent to your email.","Pautan tetapan semula dihantar ke e-mel anda."],["=","Isi email dulu.","Enter your email first.","Isi e-mel dahulu."],["=","Isi email yang valid","Enter a valid email","Isi e-mel yang sah"],["=","Akun Anda belum tergabung ke perusahaan.","Your account has not joined a company.","Akaun anda belum menyertai syarikat."],["=","Akun Anda belum tergabung ke perusahaan mana pun. Minta pemilik mengundang email","Your account has not joined any company. Ask the owner to invite the email","Akaun anda belum menyertai mana-mana syarikat. Minta pemilik menjemput e-mel"],["=","Akun Anda tidak aktif di perusahaan ini. Hubungi pemilik atau admin.","Your account is not active in this company. Contact the owner or an admin.","Akaun anda tidak aktif dalam syarikat ini. Hubungi pemilik atau pentadbir."],["=","Masa uji coba atau langganan perusahaan ini sudah berakhir. Hubungi penyedia aplikasi untuk memperpanjang.","This company's trial or subscription has ended. Contact the app provider to renew.","Tempoh percubaan atau langganan syarikat ini telah tamat. Hubungi penyedia aplikasi untuk memperbaharui."],["=","Masuk dengan akun Zui System Anda","Sign in with your Zui System account","Log masuk dengan akaun Zui System anda"],["=","Buka Zui System","Open Zui System","Buka Zui System"],["=","Zui System","Zui System","Zui System"],["=","Zui Inventori","Zui Inventory","Zui Inventori"],["=","Zui Manufaktur","Zui Manufacturing","Zui Pembuatan"],["=","Zui Keuangan","Zui Finance","Zui Kewangan"],["=","Zui Karyawan","Zui Staff","Zui Pekerja"],["=","Buka Zui Inventori","Open Zui Inventory","Buka Zui Inventori"],["=","Uji coba","Trial","Percubaan"],["=","Langganan","Subscription","Langganan"],["=","Bulan ini","This month","Bulan ini"],["=","hari ini","today","hari ini"],["=","Hari ini","Today","Hari ini"],["=","Jan","Jan","Jan"],["=","Feb","Feb","Feb"],["=","Mar","Mar","Mac"],["=","Apr","Apr","Apr"],["=","Mei","May","Mei"],["=","Jun","Jun","Jun"],["=","Jul","Jul","Jul"],["=","Agu","Aug","Ogo"],["=","Sep","Sep","Sep"],["=","Okt","Oct","Okt"],["=","Nov","Nov","Nov"],["=","Des","Dec","Dis"],["=","Pilih akun","Select an account","Pilih akaun"],["=","Isi nama","Enter a name","Isi nama"],["=","Isi jumlah","Enter an amount","Isi jumlah"],["=","Isi tanggal","Enter a date","Isi tarikh"],["=","Tanggal tidak valid","Invalid date","Tarikh tidak sah"],["=","Telepon","Phone","Telefon"],["=","Alamat","Address","Alamat"],["=","Kode","Code","Kod"],["=","Satuan","Unit","Unit"],["=","Tipe","Type","Jenis"],["=","Jenis","Type","Jenis"],["=","Lokasi","Location","Lokasi"],["=","Dibuat","Created","Dicipta"],["=","Dibuat oleh","Created by","Dicipta oleh"],["=","Diajukan","Submitted","Dikemukakan"],["=","Diajukan oleh","Submitted by","Dikemukakan oleh"],["=","Disetujui oleh","Approved by","Diluluskan oleh"],["=","Ditolak oleh","Rejected by","Ditolak oleh"],["=","Tindakan","Action","Tindakan"],["=","Perusahaan","Company","Syarikat"],["=","Nama perusahaan","Company name","Nama syarikat"],["=","Logo","Logo","Logo"],["=","Pilih gambar","Choose image","Pilih imej"],["=","Kirim","Send","Hantar"],["=","Salin teks","Copy text","Salin teks"],["=","Teks disalin","Text copied","Teks disalin"],["=","Gagal sinkron","Sync failed","Penyegerakan gagal"],["=","Tersinkron ✓","Synced ✓","Disegerakkan ✓"],["=","Menyinkronkan…","Syncing…","Menyegerakkan…"],["=","Online","Online","Dalam talian"],["~","jatuh tempo","due","tarikh akhir"],["~","menunggu persetujuan","awaiting approval","menunggu kelulusan"],["~","tidak punya akses ke","has no access to","tiada akses ke"],["#","Peran {x} tidak punya akses ke {y}.","The {x} role has no access to {y}.","Peranan {x} tiada akses ke {y}."],["=","Anggota","Members","Ahli"],["=","disetujui","approved","diluluskan"],["=","dibatalkan","cancelled","dibatalkan"],["=","ditolak","rejected","ditolak"],["~"," hari"," days"," hari"],["~"," menjadi "," to "," menjadi "],["~"," sebagai "," as "," sebagai "],["~","(menunggu persetujuan)","(awaiting approval)","(menunggu kelulusan)"],["~","(draf)","(draft)","(draf)"],["~","diperbarui","updated","dikemas kini"],["=","Ajukan cuti","Request leave","Mohon cuti"],["=","+ Ajukan cuti","+ Request leave","+ Mohon cuti"],["=","+ Karyawan","+ Employee","+ Pekerja"],["=","Absen hari ini","Today's attendance","Kehadiran hari ini"],["=","Absen hari ini selesai.","Today's attendance is complete.","Kehadiran hari ini selesai."],["=","Absen masuk","Clock in","Daftar masuk"],["=","Absen pulang","Clock out","Daftar keluar"],["=","Ajukan","Submit","Mohon"],["=","Akun Anda belum dihubungkan ke data karyawan, jatah cuti memakai 12 hari. Minta Admin menghubungkannya di tab Karyawan.","Your account is not linked to an employee record, so the leave allowance defaults to 12 days. Ask an Admin to link it in the Employees tab.","Akaun anda belum dihubungkan dengan data pekerja, peruntukan cuti menggunakan 12 hari. Minta Admin menghubungkannya di tab Pekerja."],["=","Akun Zui System","Zui System account","Akaun Zui System"],["=","Aturan","Rules","Peraturan"],["=","Batalkan cuti","Cancel leave","Batalkan cuti"],["=","Belum absen","Not clocked in yet","Belum daftar masuk"],["=","Belum absen masuk atau sudah pulang","Not clocked in, or already clocked out","Belum daftar masuk atau sudah keluar"],["=","Belum ada absen bulan ini.","No attendance this month.","Belum ada kehadiran bulan ini."],["=","Belum ada data karyawan.","No employee records yet.","Belum ada data pekerja."],["=","Belum ada pengajuan cuti.","No leave requests yet.","Belum ada permohonan cuti."],["=","Belum ada.","None yet.","Belum ada."],["=","Belum punya akun","No account yet","Belum ada akaun"],["=","Bertabrakan dengan cuti lain","Overlaps with another leave","Bertindih dengan cuti lain"],["=","Cuti","Leave","Cuti"],["=","Cuti diajukan, menunggu persetujuan","Leave requested, awaiting approval","Cuti dimohon, menunggu kelulusan"],["=","Cuti disetujui","Leave approved","Cuti diluluskan"],["=","Cuti ditolak","Leave rejected","Cuti ditolak"],["=","Cuti hari ini","On leave today","Bercuti hari ini"],["=","Cuti saya","My leave","Cuti saya"],["=","Cuti tahunan","Annual leave","Cuti tahunan"],["=","Cuti terakhir","Latest leave","Cuti terkini"],["=","Dari","From","Dari"],["=","Data, kehadiran, cuti","Records, attendance, leave","Data, kehadiran, cuti"],["=","Divisi","Division","Bahagian"],["=","Izin","Permission","Kebenaran"],["=","Jabatan","Position","Jawatan"],["=","Jatah cuti tahunan (hari)","Annual leave allowance (days)","Peruntukan cuti tahunan (hari)"],["=","Karyawan","Employees","Pekerja"],["=","Karyawan aktif","Active employees","Pekerja aktif"],["=","Kehadiran","Attendance","Kehadiran"],["=","Kehadiran saya bulan ini:","My attendance this month:","Kehadiran saya bulan ini:"],["=","Melebihi sisa cuti tahunan","Exceeds the remaining annual leave","Melebihi baki cuti tahunan"],["=","Menunggu persetujuan","Awaiting approval","Menunggu kelulusan"],["=","Pemohon","Requester","Pemohon"],["=","Pengajuan cuti","Leave requests","Permohonan cuti"],["=","Pengajuan dibatalkan","Request cancelled","Permohonan dibatalkan"],["=","Pulang","Clock out","Keluar"],["=","Rentang hanya berisi hari Minggu","The range contains only Sundays","Julat hanya mengandungi hari Ahad"],["=","Sakit","Sick","Sakit"],["=","Sampai","To","Hingga"],["=","Saya","Me","Saya"],["=","Setujui cuti","Approve leave","Luluskan cuti"],["=","Sisa","Remaining","Baki"],["=","Sisa cuti tahunan Anda","Your remaining annual leave","Baki cuti tahunan anda"],["=","Sudah absen","Clocked in","Sudah daftar masuk"],["=","Sudah absen masuk","Already clocked in","Sudah daftar masuk"],["=","Tahunan","Annual","Tahunan"],["=","Tambah karyawan","Add employee","Tambah pekerja"],["=","Tambahkan dengan tombol di bawah.","Add one with the button below.","Tambah dengan butang di bawah."],["=","Tanggal masuk","Start date","Tarikh mula"],["=","Terpakai","Used","Digunakan"],["=","Tidak ada.","None.","Tiada."],["=","Tolak cuti","Reject leave","Tolak cuti"],["=","Ubah karyawan","Edit employee","Ubah pekerja"],["=","Hari cuti dihitung Senin sampai Sabtu (Minggu tidak dihitung). Cuti disetujui Pemilik atau Admin, bukan oleh pemohon sendiri (kecuali Pemilik). Jatah cuti tahunan diatur per karyawan.","Leave days are counted Monday to Saturday (Sundays are not counted). Leave is approved by the Owner or an Admin, never by the requester (except the Owner). The annual allowance is set per employee.","Hari cuti dikira Isnin hingga Sabtu (Ahad tidak dikira). Cuti diluluskan oleh Pemilik atau Admin, bukan oleh pemohon sendiri (kecuali Pemilik). Peruntukan cuti tahunan ditetapkan bagi setiap pekerja."],["~","Belum ada data karyawan.","No employee records yet.","Belum ada data pekerja."],["~","Isi alasan penolakan","Enter a reason for rejection","Isi sebab penolakan"],["~","hari. Diputuskan oleh Pemilik atau Admin.","days. Decided by the Owner or an Admin.","hari. Diputuskan oleh Pemilik atau Admin."],["~","karyawan aktif","active employees","pekerja aktif"],["~","· Pulang","· Out","· Keluar"],["~","· bulan ini","· this month","· bulan ini"],["~","· masuk","· in","· masuk"],["~",", pulang",", out",", keluar"],["~","Hari ini,","Today,","Hari ini,"],["~","Cuti tahunan","Annual leave","Cuti tahunan"],["~","Tahunan","Annual","Tahunan"],["~","Sakit","Sick","Sakit"],["~","Masuk ","In ","Masuk "],["~","Belum absen","Not clocked in","Belum daftar masuk"],["~","Belum punya akun","No account yet","Belum ada akaun"],["~","(belum dihubungkan)","(not linked)","(belum dihubungkan)"],["=","Pasang dan bagikan","Install and share","Pasang dan kongsi"],["=","Pasang di perangkat ini","Install on this device","Pasang pada peranti ini"],["=","Bagikan aplikasi","Share app","Kongsi aplikasi"],["=","Pasang","Install","Pasang"],["=","Nanti","Later","Nanti"],["=","Bagikan","Share","Kongsi"],["=","Aplikasi ini sudah terpasang di perangkat Anda.","This app is already installed on your device.","Aplikasi ini sudah dipasang pada peranti anda."],["=","Cara memasang: di iPhone atau iPad, ketuk tombol Bagikan lalu pilih Tambah ke Layar Utama. Di Android atau Chrome, buka menu ⋮ lalu pilih Pasang aplikasi (atau Tambahkan ke layar utama).","How to install: on iPhone or iPad, tap the Share button, then choose Add to Home Screen. On Android or Chrome, open the ⋮ menu, then choose Install app (or Add to home screen).","Cara memasang: pada iPhone atau iPad, ketik butang Kongsi kemudian pilih Tambah ke Skrin Utama. Pada Android atau Chrome, buka menu ⋮ kemudian pilih Pasang aplikasi (atau Tambah ke skrin utama)."],["=","Tautan disalin. Tempel ke WhatsApp atau pesan.","Link copied. Paste it into WhatsApp or a message.","Pautan disalin. Tampal ke WhatsApp atau mesej."],["=","Salin teks ini:","Copy this text:","Salin teks ini:"],["#","Pasang {x} di perangkat ini supaya terbuka seperti aplikasi biasa.","Install {x} on this device so it opens like a regular app.","Pasang {x} pada peranti ini supaya terbuka seperti aplikasi biasa."],["=","Langganan dan uji coba","Subscription and trial","Langganan dan percubaan"],["=","Ajukan langganan","Request subscription","Mohon langganan"],["=","Alamat aplikasi sudah terpasang otomatis.","App addresses are set automatically.","Alamat aplikasi ditetapkan secara automatik."],["#","{x} · sisa {n} hari","{x} · {n} days left","{x} · baki {n} hari"],["=","Uji coba berakhir, hubungi untuk berlangganan.","Trial ended; get in touch to subscribe.","Percubaan tamat, hubungi untuk melanggan."],["=","Pembayaran dikonfirmasi manual oleh tim Zui, lalu masa aktif diperpanjang.","Payment is confirmed manually by the Zui team, then your access period is extended.","Pembayaran disahkan secara manual oleh pasukan Zui, kemudian tempoh aktif dilanjutkan."],["=","Pesan disalin ke papan klip. Jika email tidak terbuka, tempel ke email atau WhatsApp.","Message copied to the clipboard. If email does not open, paste it into an email or WhatsApp.","Mesej disalin ke papan keratan. Jika e-mel tidak terbuka, tampal ke e-mel atau WhatsApp."]];
+/*ZUI-I18N*/
+(function(){
+var W=window,LG=function(k){try{return localStorage.getItem(k)}catch(e){return null}},LP=function(k,v){try{localStorage.setItem(k,v)}catch(e){}};
+var nv=String((typeof navigator!=='undefined'&&navigator.language)||'id').slice(0,2).toLowerCase();
+var L=LG('zui.lang');if(L!=='en'&&L!=='ms'&&L!=='id')L=nv==='en'?'en':nv==='ms'?'ms':'id';
+var CU=LG('zui.cur');if(CU!=='MYR'&&CU!=='USD'&&CU!=='IDR')CU='IDR';
+var ZP='',CF={IDR:{s:'Rp',d:0},MYR:{s:'RM',d:2},USD:{s:'$',d:2}}[CU];
+W.ZL=L;W.ZCU=CU;W.ZLOC={id:'id-ID',en:'en-GB',ms:'ms-MY'}[L];W.ZCF=CF;W.ZLN={id:'Indonesia',en:'English',ms:'Melayu'};
+W.zuiP=function(p){ZP=(p==='en'||p==='ms'||p==='id')?p:''};
+W.zuiCo=function(c){var l=ZP||(c&&c.bahasa)||'id',m=(c&&c.mata)||'IDR';if(l!=='en'&&l!=='ms')l='id';if(m!=='MYR'&&m!=='USD')m='IDR';
+ LP('zui.lang',l);LP('zui.cur',m);
+ if(l!==L||m!==CU){var t=+LG('zui.rl')||0;if(Date.now()-t>15000){LP('zui.rl',String(Date.now()));try{location.reload()}catch(e){}}}};
+W.zuiRp=function(v){var n=Number(v)||0,s=n<0?'-':'';n=Math.abs(n);return s+CF.s+(CF.s==='$'?'':' ')+new Intl.NumberFormat(W.ZLOC,{minimumFractionDigits:CF.d,maximumFractionDigits:CF.d}).format(n)};
+W.zuiRd=function(v){var p=Math.pow(10,CF.d);return Math.round((Number(v)||0)*p)/p};
+W.zuiNf=function(o){return new Intl.NumberFormat(W.ZLOC,o)};
+W.zuiLangUI=function(){return '<div class="sgs">'+['id','en','ms'].map(function(k){return '<button type="button" class="sg'+(k===L?' on':'')+'" onclick="zuiSetLang(\''+k+'\')">'+W.ZLN[k]+'</button>'}).join('')+'</div>'};
+W.zuiSetLang=function(x){if(x!=='id'&&x!=='en'&&x!=='ms')return;LP('zui.lang',x);LP('zui.rl','0');var go=function(){try{location.reload()}catch(e){}};
+ try{var u=W.USER||(typeof USER!=='undefined'?USER:null),f=typeof FS!=='undefined'?FS:null;if(u&&f){f.collection('profil').doc(u.uid).set({bahasa:x},{merge:true}).then(go,go);return}}catch(e){}go()};
+try{document.documentElement.lang=L}catch(e){}
+try{var fm=document.querySelector('#au .ac');if(fm)fm.insertAdjacentHTML('beforeend','<div style="margin-top:14px">'+W.zuiLangUI()+'</div>')}catch(e){}
+if(L==='id'){W.ztr=function(s){return s};W.zuiH=function(h){return h};return}
+var EX={},AX={},PT=[],SS=[],ix=L==='en'?2:3;
+(W.ZD||[]).forEach(function(e){var k=e[0],a=e[1],b=e[ix]||a;
+ if(k==='=')EX[a]=b;
+ else if(k==='@')AX[a]=b;
+ else if(k==='~')SS.push([a,b]);
+ else if(k==='#'){var nm=[];var re=a.replace(/[.*+?^$()|[\]\\]/g,'\\$&').replace(/\{(\w+)\}/g,function(m,n){nm.push(n);return '([\\s\\S]+?)'});PT.push([new RegExp('^'+re+'$'),b,nm])}});
+SS.sort(function(x,y){return y[0].length-x[0].length});
+function cur(s){return CU==='IDR'?s:s.replace(/\bRp\b/g,CF.s)}
+function tr(s,d,au){if(!s)return s;var m=/^(\s*)([\s\S]*?)(\s*)$/.exec(s),c=m[2];if(!c||!/[A-Za-z]/.test(c))return s;
+ var r=au&&AX[c]!==undefined?AX[c]:EX[c];if(r!==undefined)return m[1]+cur(r)+m[3];
+ if((d||0)<3)for(var i=0;i<PT.length;i++){var x=PT[i][0].exec(c);if(x){var o=PT[i][1];PT[i][2].forEach(function(n,j){o=o.split('{'+n+'}').join(tr(x[j+1],(d||0)+1))});return m[1]+cur(o)+m[3]}}
+ var t=c,ch=false;for(var k=0;k<SS.length;k++){if(t.indexOf(SS[k][0])>=0){t=t.split(SS[k][0]).join(SS[k][1]);ch=true}}
+ if(ch||CU!=='IDR')return m[1]+cur(t)+m[3];return s}
+W.ztr=function(s){return tr(String(s))};
+W.zuiH=function(h){return String(h).replace(/>([^<>]+)</g,function(a,t){return '>'+tr(t)+'<'}).replace(/(placeholder|title|aria-label)="([^"]*)"/g,function(a,k,v){return k+'="'+tr(v)+'"'})};
+var AT=['placeholder','title','aria-label','alt'];
+function isAu(el){for(var i=0;el&&i<5;i++,el=el.parentNode){if(el.id==='au'||el.id==='nc')return true;var oc=el.getAttribute&&el.getAttribute('onclick');if(oc&&oc.indexOf('logout')>=0)return true}return false}
+function walk(n){if(!n)return;var t=n.nodeType;if(t===3){var v=n.nodeValue,r=tr(v,0,isAu(n.parentNode));if(r!==v)n.nodeValue=r;return}
+ if(t!==1)return;var g=n.nodeName;if(g==='SCRIPT'||g==='STYLE'||g==='TEXTAREA'&&0)return;
+ if(g==='OPTION'&&!n.hasAttribute('value'))n.setAttribute('value',n.textContent);
+ for(var i=0;i<AT.length;i++){var a=n.getAttribute&&n.getAttribute(AT[i]);if(a){var r2=tr(a);if(r2!==a)n.setAttribute(AT[i],r2)}}
+ for(var c=n.firstChild;c;c=c.nextSibling)walk(c)}
+W.zuiWalk=walk;
+['alert','confirm','prompt'].forEach(function(k){var o=W[k];if(typeof o==='function')W[k]=function(m,d){return o.call(W,tr(String(m)),d)}});
+if(typeof MutationObserver!=='undefined'&&typeof document!=='undefined'){
+ var mo=new MutationObserver(function(ms){var seen=[];ms.forEach(function(m){if(m.type==='childList')m.addedNodes.forEach(function(x){walk(x)});else if(m.type==='characterData')walk(m.target);else if(m.type==='attributes'){var a=m.target.getAttribute(m.attributeName),r=tr(a);if(a&&r!==a)m.target.setAttribute(m.attributeName,r)}});mo.takeRecords()});
+ var go=function(){walk(document.documentElement);mo.observe(document.documentElement,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:AT})};
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go()}
+})();
+/*ZUI-INST*/
+(function(){var W=window,DP=null,D=document;
+var std=false;try{std=(W.matchMedia&&W.matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true}catch(e){}
+var T=function(s){return W.ztr?W.ztr(s):s};
+W.addEventListener('beforeinstallprompt',function(e){e.preventDefault();DP=e});
+W.addEventListener('appinstalled',function(){DP=null;var b=D.getElementById('zbn');if(b)b.remove()});
+W.zuiPasang=function(){
+ if(std){W.alert('Aplikasi ini sudah terpasang di perangkat Anda.');return}
+ if(DP){var p=DP;DP=null;p.prompt();return}
+ W.alert('Cara memasang: di iPhone atau iPad, ketuk tombol Bagikan lalu pilih Tambah ke Layar Utama. Di Android atau Chrome, buka menu ⋮ lalu pilih Pasang aplikasi (atau Tambahkan ke layar utama).')};
+W.zuiBagi=function(){var u=location.origin+location.pathname.replace(/index\.html$/,''),t='Buka '+(D.title||'Zui')+': '+u;
+ try{if(navigator.share){navigator.share({text:t}).catch(function(){});return}}catch(e){}
+ try{navigator.clipboard.writeText(t).then(function(){W.alert('Tautan disalin. Tempel ke WhatsApp atau pesan.')},function(){W.prompt('Salin teks ini:',t)})}catch(e){W.prompt('Salin teks ini:',t)}};
+W.zuiMail=function(sub,body){var to='info.zuisystem@gmail.com';
+ try{navigator.clipboard.writeText('Kepada: '+to+'\nSubjek: '+sub+'\n\n'+body).then(function(){try{toast('Pesan disalin ke papan klip. Jika email tidak terbuka, tempel ke email atau WhatsApp.')}catch(e){}},function(){})}catch(e){}
+ try{W.open('https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent(to)+'&su='+encodeURIComponent(sub)+'&body='+encodeURIComponent(body),'_blank','noopener')}catch(e){}};
+W.zuiSetUI=function(){return '<h3 class="hh">Pasang dan bagikan</h3><div class="sgs"><button type="button" class="bt" onclick="zuiPasang()">Pasang di perangkat ini</button><button type="button" class="bt" onclick="zuiBagi()">Bagikan aplikasi</button></div><h3 class="hh">Bahasa</h3>'+W.zuiLangUI()};
+W.zuiLgShow=function(t){try{zlg(t)}catch(e){}};
+function zlg(t){var a=D.getElementById('zlg'),n=D.getElementById('nct');if(!n)return;
+ if(!/^Masa uji coba/.test(String(t))){if(a)a.style.display='none';return}
+ if(!a){a=D.createElement('a');a.id='zlg';a.className='ab';a.textContent='Langganan';a.style.cssText='display:inline-block;margin:10px 8px 0 0';n.parentNode.insertBefore(a,n.nextSibling)}
+ var g=W.__lg||{},u=W.USER||(typeof USER!=='undefined'?USER:null),b='Halo Zui, saya ingin berlangganan.\nPerusahaan: '+(g.nama||'-')+'\nID: '+(g.cid||'-')+'\nEmail akun: '+((u&&u.email)||'-');
+ a.href='#';a.onclick=function(ev){ev.preventDefault();
+  if(W.bnOpen){W.bnOpen();return}
+  var s='';try{s=(typeof SYSURL!=='undefined'&&SYSURL&&!/ISI_/.test(SYSURL))?SYSURL:''}catch(e){}
+  if(s){W.open(s.replace(/\/?$/,'/')+'?langganan=1','_blank','noopener');return}
+  W.zuiMail('Langganan Zui: '+(g.nama||''),b)};a.style.display=''}
+try{if(/[?&]pasang=1/.test(location.search)&&!std){setTimeout(function(){if(D.getElementById('zbn'))return;var b=D.createElement('div');b.id='zbn';b.setAttribute('role','dialog');
+ b.style.cssText='position:fixed;left:12px;right:12px;bottom:12px;z-index:99;background:var(--bg,#fff);color:var(--tx,#111);border:1px solid var(--ln,#ccc);border-radius:10px;padding:12px 14px;box-shadow:0 4px 18px rgba(0,0,0,.18);font-size:14px';
+ b.innerHTML='<div>Pasang '+String(D.title||'aplikasi').replace(/[<>&]/g,'')+' di perangkat ini supaya terbuka seperti aplikasi biasa.</div><div style="display:flex;gap:8px;margin-top:10px"><button type="button" class="bt" onclick="zuiPasang()">Pasang</button><button type="button" class="bt" onclick="document.getElementById(\'zbn\').remove()">Nanti</button></div>';
+ D.body.appendChild(b);if(W.zuiWalk)W.zuiWalk(b)},1200)}}catch(e){}
+})();
+
+
+const $=s=>document.querySelector(s),E=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const CFG={apiKey:'AIzaSyAR-TIaq1VH0OOD2XGx_IhedaH7mwKpW30',authDomain:'zuisystem.firebaseapp.com',projectId:'zuisystem',storageBucket:'zuisystem.firebasestorage.app',messagingSenderId:'55666230248',appId:'1:55666230248:web:783df0dc060a1d7ce3da5d'};
+const SYSURL='https://zuisystem.com/';
+const RL=Object.fromEntries(Object.entries({pemilik:'Pemilik',admin:'Admin',gudang:'Gudang',produksi:'Produksi',mutu:'Mutu',kasir:'Kasir',keuangan:'Keuangan'}).map(([k,v])=>[k,ztr(v)]));
+const N=['Saya','Kehadiran','Cuti','Karyawan','Pengaturan'],LN=N.length-1,JC=['Tahunan','Sakit','Izin','Lainnya'];
+let USER=null,FA=null,FS=null,CID=null,ME={uid:'',email:'',nama:'',peran:''},CO={nama:'',apps:{}},KR=[],HD=[],CT=[],AG=[],cur=0,AM='in',DEL='',U1=null,U2=null,U3=null,U4=null;
+const isAdm=()=>ME.peran==='pemilik'||ME.peran==='admin',canApv=c=>c.st==='menunggu'&&isAdm()&&(c.uid!==ME.uid||ME.peran==='pemilik');
+const nf=zuiNf({maximumFractionDigits:3}),rp=n=>zuiRp(n);
+const pad=n=>String(n).padStart(2,'0'),today=()=>{const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())};
+const MB=Array.from({length:12},(_,i)=>new Date(2000,i,15).toLocaleDateString(ZLOC,{month:'short'})),fd=s=>{if(!s)return'-';const a=String(s).split('-');return a.length===3?`${+a[2]} ${MB[a[1]-1]} ${a[0]}`:s};
+const fdt=t=>{try{return new Date(t).toLocaleString(ZLOC,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}catch(e){return''}};
+const num=v=>{const x=parseFloat(String(v==null?'':v).replace(',','.'));return isFinite(x)?x:0};
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+function toast(m){const e=$('#ts');e.textContent=m;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('on'),4200)}
+function msg(t,e){const m=$('#am');m.textContent=t;m.className='am'+(e?' er':'')}
+function fbe(e){const m={'auth/invalid-credential':'Email atau kata sandi salah','auth/wrong-password':'Email atau kata sandi salah','auth/user-not-found':'Email atau kata sandi salah','auth/email-already-in-use':'Email sudah terdaftar','auth/weak-password':'Kata sandi terlalu lemah','auth/invalid-email':'Format email tidak valid','auth/too-many-requests':'Terlalu banyak percobaan. Coba lagi nanti','auth/network-request-failed':'Tidak ada koneksi internet','auth/popup-blocked':'Popup login diblokir peramban','auth/unauthorized-domain':'Domain belum diizinkan di Firebase (Authorized domains)','auth/account-exists-with-different-credential':'Email ini sudah terdaftar dengan metode lain','auth/operation-not-allowed':'Metode login ini belum diaktifkan di Firebase','permission-denied':'Akses ditolak. Periksa peran Anda dan Firestore Rules'};return m[e&&e.code]||(e&&e.message)||'Terjadi kesalahan'}
+const lgEnd=c=>{const s=c&&c.langganan&&c.langganan.sampai,m=s&&s.toMillis?s.toMillis():(typeof s==='number'?s:0);return m||((c&&c.ts)||0)+14*864e5},lgSisa=c=>Math.ceil((lgEnd(c)-Date.now())/864e5),LGMSG='Masa uji coba atau langganan perusahaan ini sudah berakhir. Hubungi penyedia aplikasi untuk memperpanjang.';
+const coRef=()=>FS.collection('perusahaan').doc(CID);
+async function logw(aksi,ket){try{await coRef().collection('log').doc(uid()).set({uid:ME.uid,nama:ME.nama,app:'karyawan',aksi,ket:String(ket||'').slice(0,200),ts:Date.now()})}catch(e){}}
+function ap(){const t=localStorage.getItem('zui.kar.th')||'auto',e=document.documentElement;if(t==='auto')e.removeAttribute('data-app');else e.setAttribute('data-app',t)}
+function th(i){try{localStorage.setItem('zui.kar.th',['auto','light','dark'][i])}catch(e){}ap();rSet()}
+const chips=(L,c,f)=>'<div class="sgs">'+L.map((n,i)=>`<button class="sg${i==c?' on':''}" onclick="${f}(${i})">${E(n)}</button>`).join('')+'</div>';
+function dlg(h){const d=$('#dk');d.innerHTML=h;if(!d.open)d.showModal()}
+function cls(){const d=$('#dk');if(d.open)d.close()}
+const setLogo=()=>{const i=$('#lg');if(!i)return;const l=(CO&&CO.logo)||'';if(l&&/^data:image\//.test(l)){i.src=l;i.style.display=''}else{i.removeAttribute('src');i.style.display='none'}};
+const hdr=(t,s)=>`<h3 class="hh">${t}</h3>${s?`<p class="m">${s}</p>`:''}`;
+/* ---------- hitungan ---------- */
+const pad2=pad,MS=today().slice(0,7),yr=()=>+today().slice(0,4);
+const dts=s=>{const a=String(s).split('-');return new Date(+a[0],a[1]-1,+a[2])};
+const hari=(a,b)=>{if(!a||!b||b<a)return 0;let n=0;const d=dts(a),e=dts(b);for(;d<=e;d.setDate(d.getDate()+1))if(d.getDay()!==0)n++;return n};
+const me=()=>KR.find(k=>k.uid===ME.uid&&k.aktif!==false)||null,jatah=()=>(me()||{}).jatah??12;
+const mine=()=>CT.filter(c=>c.uid===ME.uid);
+const pakai=()=>mine().filter(c=>c.st==='disetujui'&&c.jenis==='Tahunan'&&(c.dari||'').startsWith(String(yr()))).reduce((s,c)=>s+c.hari,0),tunggu=()=>mine().filter(c=>c.st==='menunggu'&&c.jenis==='Tahunan').reduce((s,c)=>s+c.hari,0);
+const hm=t=>t?new Date(t).toLocaleTimeString(ZLOC,{hour:'2-digit',minute:'2-digit'}).replace('.',':'):'-';
+const hid=u=>u+'_'+today(),hmine=()=>HD.find(h=>h.uid===ME.uid&&h.tgl===today());
+const stp=c=>c.st==='menunggu'?'<span class="pill am">menunggu</span>':c.st==='ditolak'?'<span class="pill bad">ditolak</span>':c.st==='batal'?'<span class="pill">dibatalkan</span>':'<span class="pill ok">disetujui</span>';
+/* ---------- tampilan ---------- */
+function cutiRow(c,adm){const rg=c.dari===c.sampai?fd(c.dari):fd(c.dari)+' - '+fd(c.sampai);return`<div class="it tap" onclick="ctDet('${E(c.id)}')"><div class="row"><div class="tx"><div class="nm" style="font-size:14px">${adm?E(c.nama)+' · ':''}${E(c.jenis)} · ${c.hari} hari</div><div class="m">${rg}${c.ket?' · '+E(c.ket):''} ${stp(c)}</div></div></div></div>`}
+function rSy(){const h=hmine(),sd=jatah()-pakai(),L=mine().slice(0,5),nk=me();
+$('#p_sy').innerHTML=`<p class="sum">${E(CO.nama)}</p><div class="m">${E(ME.nama)} <span class="pill">${E(RL[ME.peran]||'-')}</span>${nk?' · '+E(nk.jab||''):''}</div>
+`+hdr('Absen hari ini',fd(today()))+`<div class="tt"><span>Masuk</span><span>${h?hm(h.masuk):'-'}</span></div><div class="tt"><span>Pulang</span><span>${h&&h.pulang?hm(h.pulang):'-'}</span></div>
+<div class="sgs" style="margin-top:10px">${!h?'<button class="go" style="padding:8px 18px;border-radius:8px" onclick="absen(1)">Absen masuk</button>':!h.pulang?'<button class="go" style="padding:8px 18px;border-radius:8px" onclick="absen(0)">Absen pulang</button>':'<span class="m">Absen hari ini selesai.</span>'}</div>
+`+hdr('Cuti tahunan '+yr())+`<div class="kp"><div><b>${sd-tunggu()}</b><span>Sisa</span></div><div><b>${pakai()}</b><span>Terpakai</span></div><div><b class="${tunggu()?'am':''}">${tunggu()}</b><span>Menunggu</span></div></div>`+(nk?'':'<p class="m am">Akun Anda belum dihubungkan ke data karyawan, jatah cuti memakai 12 hari. Minta Admin menghubungkannya di tab Karyawan.</p>')+
+hdr('Cuti terakhir')+(L.length?L.map(c=>cutiRow(c,0)).join(''):'<div class="em">Belum ada pengajuan cuti.</div>')}
+function rHd(){const ad=isAdm();if(!ad){const L=HD.filter(h=>h.uid===ME.uid&&(h.tgl||'').startsWith(MS)).sort((a,b)=>a.tgl<b.tgl?1:-1);
+$('#p_hd').innerHTML=`<p class="sum">Kehadiran saya bulan ini: ${L.length} hari</p>`+(L.length?L.map(h=>`<div class="it"><div class="row"><div class="tx"><div class="nm" style="font-size:14px">${fd(h.tgl)}</div><div class="m">Masuk ${hm(h.masuk)} · Pulang ${hm(h.pulang)}</div></div></div></div>`).join(''):'<div class="em">Belum ada absen bulan ini.</div>');return}
+const ak=KR.filter(k=>k.aktif!==false),td=HD.filter(h=>h.tgl===today()),cu=CT.filter(c=>c.st==='disetujui'&&c.dari<=today()&&c.sampai>=today());
+$('#p_hd').innerHTML=`<p class="sum">Hari ini, ${fd(today())}</p><div class="kp"><div><b>${td.length}</b><span>Sudah absen</span></div><div><b>${cu.length}</b><span>Cuti hari ini</span></div><div><b>${Math.max(0,ak.length-td.length-cu.length)}</b><span>Belum absen</span></div></div>`+
+hdr('Karyawan aktif')+(ak.length?ak.map(k=>{const h=td.find(x=>x.uid&&x.uid===k.uid),c=cu.find(x=>x.uid&&x.uid===k.uid),bl=HD.filter(x=>x.uid&&x.uid===k.uid&&(x.tgl||'').startsWith(MS)).length;
+return`<div class="it"><div class="row"><div class="tx"><div class="nm" style="font-size:14px">${E(k.nama)}</div><div class="m">${k.uid?(h?'Masuk '+hm(h.masuk)+(h.pulang?', pulang '+hm(h.pulang):''):c?'Cuti ('+E(c.jenis)+')':'Belum absen'):'Belum punya akun'} · bulan ini ${bl} hari</div></div></div></div>`}).join(''):'<div class="em">Belum ada data karyawan.</div>')}
+function rCt(){const ad=isAdm(),pn=CT.filter(c=>c.st==='menunggu'&&(ad||c.uid===ME.uid)),rw=CT.filter(c=>c.st!=='menunggu'&&(ad||c.uid===ME.uid)).slice(0,100);
+$('#p_ct').innerHTML=`<p class="sum">${ad?'Pengajuan cuti':'Cuti saya'}</p>`+hdr('Menunggu persetujuan')+(pn.length?pn.map(c=>cutiRow(c,ad)).join(''):'<div class="em">Tidak ada.</div>')+hdr('Riwayat')+(rw.length?rw.map(c=>cutiRow(c,ad)).join(''):'<div class="em">Belum ada.</div>')}
+function rKr(){const ad=isAdm(),L=KR.slice().sort((a,b)=>(a.aktif===false)-(b.aktif===false)||a.nama.localeCompare(b.nama));
+$('#p_kr').innerHTML=`<p class="sum">${KR.filter(k=>k.aktif!==false).length} karyawan aktif</p>`+(L.length?L.map(k=>`<div class="it${ad?' tap':''}"${ad?` onclick="krForm('${E(k.id)}')"`:''}><div class="row"><div class="tx"><div class="nm" style="font-size:14px">${E(k.nama)}${k.aktif===false?' <span class="pill">nonaktif</span>':''}</div><div class="m">${E([k.jab,k.div].filter(Boolean).join(' · '))||'-'}${k.tgl?' · masuk '+fd(k.tgl):''}${ad&&k.hp?' · '+E(k.hp):''}</div></div></div></div>`).join(''):'<div class="em">Belum ada data karyawan.'+(ad?' Tambahkan dengan tombol di bawah.':'')+'</div>')}
+function rSet(){const t=localStorage.getItem('zui.kar.th')||'auto';$('#p_set').innerHTML=`<h3 class="hh">Akun</h3><div class="m">${E(ME.nama)} · ${E(RL[ME.peran]||'-')}</div><div class="m">${E(ME.email)}</div><div class="m">${E(CO.nama)}</div>
+<h3 class="hh">Aturan</h3><p class="m">Hari cuti dihitung Senin sampai Sabtu (Minggu tidak dihitung). Cuti disetujui Pemilik atau Admin, bukan oleh pemohon sendiri (kecuali Pemilik). Jatah cuti tahunan diatur per karyawan.</p>
+${zuiSetUI()}<h3 class="hh">Tampilan</h3>${chips(['Otomatis','Terang','Gelap'],['auto','light','dark'].indexOf(t),'th')}
+<div class="sgs" style="margin-top:12px">${/^ISI/.test(SYSURL)?'':`<a class="ab" href="${E(SYSURL)}">Buka Zui System</a>`}<button class="bt" onclick="logout()">Keluar</button></div>`}
+function rAll(){rSy();rHd();rCt();rKr();rSet();fab()}
+/* ---------- absen ---------- */
+async function absen(masuk){const h=hmine(),t=Date.now();try{if(masuk){if(h){toast('Sudah absen masuk');return}await coRef().collection('hadir').doc(hid(ME.uid)).set({uid:ME.uid,nama:ME.nama,tgl:today(),masuk:t,pulang:null,ket:''});logw('Absen masuk',hm(t));toast('Absen masuk '+hm(t))}
+else{if(!h||h.pulang){toast('Belum absen masuk atau sudah pulang');return}await coRef().collection('hadir').doc(h.id).update({pulang:t});logw('Absen pulang',hm(t));toast('Absen pulang '+hm(t))}}catch(e){toast(fbe(e))}}
+/* ---------- cuti ---------- */
+function ctForm(){dlg(`<h2>Ajukan cuti</h2><label>Jenis<select id="cj">${JC.map(x=>`<option>${x}</option>`).join('')}</select></label><div class="g2"><label>Dari<input id="cd" type="date" value="${today()}"></label><label>Sampai<input id="cs" type="date" value="${today()}"></label></div><label>Keterangan<input id="ck" maxlength="120"></label><p class="m">Sisa cuti tahunan Anda ${jatah()-pakai()-tunggu()} hari. Diputuskan oleh Pemilik atau Admin.</p><div class="btn"><button onclick="cls()">Batal</button><button class="go" onclick="ctSave()">Ajukan</button></div>`)}
+async function ctSave(){const j=$('#cj').value,d=$('#cd').value,s=$('#cs').value,n=hari(d,s);if(!d||!s||s<d){toast('Tanggal tidak valid');return}if(n<1){toast('Rentang hanya berisi hari Minggu');return}
+if(mine().some(c=>(c.st==='menunggu'||c.st==='disetujui')&&c.dari<=s&&c.sampai>=d)){toast('Bertabrakan dengan cuti lain');return}
+if(j==='Tahunan'&&n>jatah()-pakai()-tunggu()){toast('Melebihi sisa cuti tahunan');return}
+const m=Date.now(),id=uid();try{await coRef().collection('cuti').doc(id).set({uid:ME.uid,nama:ME.nama,jenis:j,dari:d,sampai:s,hari:n,ket:$('#ck').value.trim(),st:'menunggu',apv:null,ts:m,mod:m});logw('Ajukan cuti',j+' '+n+' hari '+d);cls();toast('Cuti diajukan, menunggu persetujuan')}catch(e){toast(fbe(e))}}
+function ctDet(id){const c=CT.find(x=>x.id===id);if(!c)return;dlg(`<h2>${E(c.jenis)} · ${c.hari} hari</h2><div class="m">${stp(c)}</div><div class="kv"><span>Pemohon</span><b>${E(c.nama)}</b><span>Tanggal</span><b>${fd(c.dari)}${c.dari!==c.sampai?' - '+fd(c.sampai):''}</b>${c.ket?`<span>Keterangan</span><b>${E(c.ket)}</b>`:''}<span>Diajukan</span><b>${fdt(c.ts)}</b>${c.apv&&c.apv.nama?`<span>${c.st==='ditolak'?'Ditolak oleh':'Disetujui oleh'}</span><b>${E(c.apv.nama)}</b>`:''}${c.apv&&c.apv.ket?`<span>Alasan</span><b>${E(c.apv.ket)}</b>`:''}</div>
+<div class="act" style="margin-top:14px">${canApv(c)?`<button class="go" style="padding:5px 12px;border-radius:8px" onclick="ctApv('${E(c.id)}',1)">Setujui</button><button onclick="ctRej('${E(c.id)}')">Tolak</button>`:''}${c.st==='menunggu'&&c.uid===ME.uid?`<button onclick="ctBatal('${E(c.id)}')">Batalkan</button>`:''}<button onclick="cls()">Tutup</button></div>`)}
+async function ctApv(id,ok,ket){const c=CT.find(x=>x.id===id);if(!c||!canApv(c))return;const m=Date.now();try{await coRef().collection('cuti').doc(id).update({st:ok?'disetujui':'ditolak',apv:{uid:ME.uid,nama:ME.nama,ts:m,ket:ket||''},mod:m});logw(ok?'Setujui cuti':'Tolak cuti',c.nama+' '+c.hari+' hari'+(ket?' · '+ket:''));cls();toast(ok?'Cuti disetujui':'Cuti ditolak')}catch(e){toast(fbe(e))}}
+function ctRej(id){const c=CT.find(x=>x.id===id);if(!c||!canApv(c))return;dlg(`<h2>Tolak cuti</h2><label>Alasan penolakan<input id="rj" maxlength="150"></label><div class="btn"><button onclick="cls()">Batal</button><button class="go" onclick="ctRej2('${E(id)}')">Tolak</button></div>`)}
+function ctRej2(id){const t=($('#rj').value||'').trim();if(!t){toast('Isi alasan penolakan');$('#rj').focus();return}ctApv(id,0,t)}
+async function ctBatal(id){const c=CT.find(x=>x.id===id);if(!c||c.uid!==ME.uid||c.st!=='menunggu')return;try{await coRef().collection('cuti').doc(id).update({st:'batal',mod:Date.now()});logw('Batalkan cuti',c.dari);cls();toast('Pengajuan dibatalkan')}catch(e){toast(fbe(e))}}
+/* ---------- karyawan ---------- */
+function krForm(id){if(!isAdm())return;const k=KR.find(x=>x.id===id)||{},used=KR.filter(x=>x.uid&&x.id!==id).map(x=>x.uid);
+dlg(`<h2>${id?'Ubah':'Tambah'} karyawan</h2><label>Nama<input id="kn" maxlength="60" value="${E(k.nama||'')}"></label><div class="g2"><label>Jabatan<input id="kj" maxlength="40" value="${E(k.jab||'')}"></label><label>Divisi<input id="kd" maxlength="40" value="${E(k.div||'')}"></label></div>
+<div class="g2"><label>Tanggal masuk<input id="kt" type="date" value="${E(k.tgl||'')}"></label><label>Telepon<input id="kh" maxlength="30" value="${E(k.hp||'')}"></label></div><div class="g2"><label>Jatah cuti tahunan (hari)<input id="kc" type="number" min="0" max="60" value="${k.jatah??12}"></label>
+<label>Akun Zui System<select id="ku"><option value="">(belum dihubungkan)</option>${AG.filter(m=>!used.includes(m.id)||m.id===k.uid).map(m=>`<option value="${E(m.id)}"${m.id===k.uid?' selected':''}>${E(m.nama||m.email)} · ${E(RL[m.peran]||'')}</option>`).join('')}</select></label></div>
+<label class="rd" style="display:flex"><input id="ka" type="checkbox"${k.aktif===false?'':' checked'}> Aktif</label>
+<div class="btn"><button onclick="cls()">Batal</button><button class="go" onclick="krSave('${E(id||'')}')">Simpan</button></div>`)}
+async function krSave(id){if(!isAdm())return;const nm=$('#kn').value.trim();if(!nm){toast('Isi nama');$('#kn').focus();return}const m=Date.now(),old=KR.find(x=>x.id===id),ju=Math.max(0,Math.min(60,Math.round(num($('#kc').value))));
+const rec={nama:nm,jab:$('#kj').value.trim(),div:$('#kd').value.trim(),tgl:$('#kt').value||'',hp:$('#kh').value.trim(),jatah:ju,uid:$('#ku').value||'',aktif:$('#ka').checked,by:old?old.by:ME.nama,ts:old?old.ts:m,mod:m};
+try{await coRef().collection('karyawan').doc(id||uid()).set(rec);logw(id?'Ubah karyawan':'Tambah karyawan',nm);cls();toast('Tersimpan')}catch(e){toast(fbe(e))}}
+/* ---------- data ---------- */
+function unl(){[U1,U2,U3,U4].forEach(f=>{if(f)f()});U1=U2=U3=U4=null}
+function listen(){unl();const c=coRef(),ad=isAdm();U1=c.collection('karyawan').onSnapshot(s=>{KR=s.docs.map(d=>Object.assign({id:d.id},d.data()));rAll()},e=>toast(fbe(e)));
+U2=(ad?c.collection('hadir').orderBy('ts','desc').limit(1500):c.collection('hadir').where('uid','==',ME.uid)).onSnapshot(s=>{HD=s.docs.map(d=>Object.assign({id:d.id},d.data()));rAll()},e=>toast(fbe(e)));
+U3=(ad?c.collection('cuti').orderBy('ts','desc').limit(500):c.collection('cuti').where('uid','==',ME.uid)).onSnapshot(s=>{CT=s.docs.map(d=>Object.assign({id:d.id},d.data())).sort((a,b)=>(b.ts||0)-(a.ts||0));rAll()},e=>toast(fbe(e)));
+U4=c.collection('anggota').onSnapshot(s=>{AG=s.docs.map(d=>Object.assign({id:d.id},d.data())).filter(m=>m.aktif===true);if(isAdm())rAll()},()=>{})}
+/* ---------- login ---------- */
+function amode(m){AM=m;$('#abt').textContent=m=='in'?'Masuk':'Daftar';$('#afg').style.display=m=='in'?'':'none';$('#ap').autocomplete=m=='in'?'current-password':'new-password';$('#ain').classList.toggle('on',m=='in');$('#aup').classList.toggle('on',m=='up');msg('')}
+async function authGo(ev){ev.preventDefault();if(!FA){msg('Layanan login belum siap.',1);return false}const em=$('#ae').value.trim(),pw=$('#ap').value;$('#abt').disabled=true;
+try{if(AM=='in'){const c=await FA.signInWithEmailAndPassword(em,pw);if(!c.user.emailVerified){await c.user.sendEmailVerification().catch(()=>{});await FA.signOut();msg('Email belum diverifikasi. Kami mengirim ulang tautan verifikasi ke email Anda.',1)}}
+else{const c2=await FA.createUserWithEmailAndPassword(em,pw);await c2.user.sendEmailVerification();await FA.signOut();msg('Pendaftaran berhasil. Cek email Anda untuk verifikasi, lalu masuk.')}}
+catch(e){msg(fbe(e),1)}$('#abt').disabled=false;return false}
+async function authG(){if(!FA){msg('Layanan login belum siap.',1);return}const p=new firebase.auth.GoogleAuthProvider();
+try{await FA.signInWithPopup(p)}catch(e){const c=e&&e.code;if(c=='auth/popup-blocked'||c=='auth/operation-not-supported-in-this-environment')FA.signInWithRedirect(p);else if(c!='auth/popup-closed-by-user'&&c!='auth/cancelled-popup-request')msg(fbe(e),1)}}
+async function forgot(){const em=$('#ae').value.trim();if(!em){msg('Isi email dulu.',1);return}try{await FA.sendPasswordResetEmail(em);msg('Tautan reset dikirim ke email Anda.')}catch(e){msg(fbe(e),1)}}
+async function logout(){unl();await FA.signOut()}
+function noCo(t){$('#au').style.display='none';$('#nct').textContent=t;const a=$('#nsy');if(!/^ISI/.test(SYSURL)){a.href=SYSURL;a.style.display=''}$('#nc').style.display='flex';zuiLgShow(t)}
+async function tryInvite(u){const em=(u.email||'').toLowerCase();if(!em)return null;let iv;try{iv=await FS.collection('undangan').doc(em).get()}catch(e){return null}if(!iv.exists)return null;const d=iv.data(),cid=d.cid;
+await FS.collection('perusahaan').doc(cid).collection('anggota').doc(u.uid).set({email:em,nama:d.nama||u.displayName||em,peran:d.peran,aktif:true,ts:Date.now()});
+await FS.collection('profil').doc(u.uid).set({cid});try{await iv.ref.delete()}catch(e){}return cid}
+async function boot(u){USER=u;ME={uid:u.uid,email:u.email||'',nama:u.displayName||u.email||'Pengguna',peran:''};CID=null;$('#nc').style.display='none';
+let cid=null;try{const pr=await FS.collection('profil').doc(u.uid).get();cid=pr.exists?pr.data().cid:null;zuiP(pr.exists?pr.data().bahasa:'');if(!cid)cid=await tryInvite(u)}catch(e){toast(fbe(e))}
+if(!cid){noCo('Akun Anda belum tergabung ke perusahaan mana pun. Minta pemilik mengundang email '+(u.email||'')+' di Zui System.');return}
+CID=cid;let mb=null,co=null;try{mb=await coRef().collection('anggota').doc(u.uid).get();co=await coRef().get()}catch(e){toast(fbe(e))}
+if(!mb||!mb.exists||!co||!co.exists||mb.data().aktif!==true||!RL[mb.data().peran]){CID=null;noCo('Akun Anda tidak aktif di perusahaan ini. Hubungi pemilik atau admin.');return}
+ME.peran=mb.data().peran;ME.nama=mb.data().nama||ME.nama;CO=Object.assign({nama:'',apps:{}},co.data());zuiCo(CO);if(Date.now()>lgEnd(CO)){window.__lg={cid:cid,nama:CO.nama};CID=null;noCo(LGMSG);return}
+$('#cn').textContent=CO.nama||'Data, kehadiran, cuti';setLogo();$('#au').style.display='none';rAll();listen()}
+const ldS=u=>new Promise((ok,no)=>{const s=document.createElement('script');s.src=u;s.onload=ok;s.onerror=no;document.head.appendChild(s)});
+/* ---------- pivot ---------- */
+const pv=$('#pv'),hd=$('#hd'),hdi=$('#hdi');hdi.innerHTML=N.map((n,i)=>`<button role="tab" onclick="go(${i})">${n}</button>`).join('');const bt=[...hdi.children];
+function go(i){pv.scrollTo({left:i*pv.clientWidth,behavior:'smooth'})}
+const fbt=()=>cur===2?'+ Ajukan cuti':cur===3&&isAdm()?'+ Karyawan':'';
+function fab(){const f=$('#fab'),t=CID?fbt():'';f.style.display=t?'':'none';f.textContent=t}
+function fa(){if(cur===2)ctForm();else if(cur===3)krForm('')}
+function sync(){const w=pv.clientWidth||1,p=pv.scrollLeft/w,i=Math.max(0,Math.min(Math.floor(p),LN)),f=p-i,a=bt[i].offsetLeft,b=bt[Math.min(i+1,LN)].offsetLeft,m=Math.max(0,hdi.offsetWidth-(hd.clientWidth-20));
+hdi.style.transform='translateX('+(-Math.min(a+(b-a)*f,m))+'px)';const k=Math.max(0,Math.min(Math.round(p),LN));bt.forEach((e,j)=>{e.classList.toggle('on',j===k);e.setAttribute('aria-selected',j===k)});if(k!==cur){cur=k;fab()}}
+pv.addEventListener('scroll',()=>requestAnimationFrame(sync));addEventListener('resize',sync);
+ap();sync();$('#au').style.display='flex';
+(async()=>{try{for(const f of ['app','auth','firestore'])await ldS('https://www.gstatic.com/firebasejs/10.12.2/firebase-'+f+'-compat.js')}catch(e){msg('Tidak dapat memuat layanan login. Periksa koneksi internet.',1);return}
+firebase.initializeApp(CFG);FA=firebase.auth();FS=firebase.firestore();
+FA.onAuthStateChanged(u=>{if(u&&u.emailVerified){if(!USER||USER.uid!==u.uid)setTimeout(()=>boot(u),0)}else if(!u){unl();USER=null;CID=null;KR=[];HD=[];CT=[];AG=[];$('#nc').style.display='none';$('#au').style.display='flex'}})})();
+if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script></body></html>
