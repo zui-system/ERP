@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="id"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#1D6E8C"><title>Zui Admin</title><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#1D6E8C"><title>Zui Admin</title><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-192.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap">
 <style>
 
@@ -96,25 +96,21 @@ textarea.ni{resize:vertical;font-size:12px;font-family:ui-monospace,monospace}
 @keyframes zl{to{transform:scaleX(1)}}@keyframes zp{50%{box-shadow:0 0 9px #2FA8D8,0 0 28px color-mix(in srgb,#2FA8D8 calc(var(--gl,1)*90%),transparent)}}
 @keyframes spl{0%,92%{opacity:1}100%{opacity:0;visibility:hidden}}
 @media(prefers-reduced-motion:reduce){#spl{animation:spl 7.6s ease forwards!important}#spl b span{animation:zr .7s cubic-bezier(.2,.8,.2,1) forwards!important}#spl b span:nth-child(1){animation-delay:.4s!important}#spl b span:nth-child(2){animation-delay:.7s!important}#spl b span:nth-child(3){animation-delay:1.12s!important}#spl i span{animation:zf .77s ease forwards!important;animation-delay:calc(2.1s + var(--i)*.14s)!important}#spl u{animation:zl 1.26s cubic-bezier(.6,0,.2,1) 3.78s forwards,zp 1.12s ease-in-out 5.18s 2!important}}
-.pwr{display:none;font-size:12px;color:var(--mu);margin:-2px 0 10px;gap:2px}.pwr span:before{content:"○ "}.pwr span.ok{color:var(--ok)}.pwr span.ok:before{content:"● "}</style></head><body><div id="spl" aria-hidden="true"><b><span>Z</span><span>U</span><span>I</span></b><i><span style="--i:0">A</span><span style="--i:1">D</span><span style="--i:2">M</span><span style="--i:3">I</span><span style="--i:4">N</span></i><u></u></div><script>setTimeout(function(){var e=document.getElementById("spl");if(e)e.remove()},8600)</script>
-<div class="app"><div class="top tl"><img id="lg" alt="" style="display:none"><div><b>ZUI ADMIN</b><small id="cn">Pelanggan dan langganan</small></div></div>
+.gbig{display:flex;align-items:center;justify-content:center;gap:10px}.gbig b{background:#fff;color:#4285F4;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:14px}#lk{position:fixed;inset:0;z-index:200;background:var(--bg);display:none;align-items:center;justify-content:center;padding:20px}#lk.on{display:flex}#lk input{display:block;width:100%;padding:14px;border:1px solid var(--ln);border-radius:10px;background:var(--sf);font-size:22px;letter-spacing:.4em;text-align:center}.nb{margin-left:auto;position:relative;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:var(--ink);flex:none}.nb:hover{background:var(--sf)}#nbn{position:absolute;top:2px;right:0;min-width:19px;height:19px;padding:0 5px;border-radius:99px;background:var(--bad);color:#fff;font-size:11px;font-weight:600;line-height:19px;text-align:center;display:none}.nb.on #nbn{display:block}.pwr{display:none;font-size:12px;color:var(--mu);margin:-2px 0 10px;gap:2px}.pwr span:before{content:"○ "}.pwr span.ok{color:var(--ok)}.pwr span.ok:before{content:"● "}</style></head><body><div id="spl" aria-hidden="true"><b><span>Z</span><span>U</span><span>I</span></b><i><span style="--i:0">A</span><span style="--i:1">D</span><span style="--i:2">M</span><span style="--i:3">I</span><span style="--i:4">N</span></i><u></u></div><script>setTimeout(function(){var e=document.getElementById("spl");if(e)e.remove()},8600)</script>
+<div class="app"><div class="top tl"><img id="lg" alt="" style="display:none"><div><b>ZUI ADMIN</b><small id="cn">Pelanggan dan langganan</small></div><button id="nb" class="nb" type="button" onclick="go(1)" aria-label="Kotak masuk, tidak ada pesan baru" title="Kotak masuk"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10.3 20a2 2 0 0 0 3.4 0"/></svg><span id="nbn" aria-hidden="true"></span></button></div>
 <div class="hd" id="hd"><div class="hdi" id="hdi" role="tablist"></div></div>
 <div class="pv" id="pv"><section id="p_pe"></section><section id="p_km"></section><section id="p_set"></section></div>
 <button class="fab" id="fab" onclick="fa()" style="display:none"></button></div>
 <div id="ts" role="status"></div><dialog id="dk"></dialog>
 <div id="nc" class="au" style="display:none"><div class="ac"><h1>ZUI <span class="w2">ADMIN</span></h1><p class="m" id="nct">Akun Anda belum tergabung ke perusahaan.</p>
 <div class="sgs"><button class="bt" onclick="location.reload()">Coba lagi</button><a class="ab" id="nsy" href="#" style="display:none">Buka Zui System</a><button class="bt" onclick="logout()">Keluar</button></div></div></div>
-<div id="au" class="au" style="display:none"><form class="ac" onsubmit="return authGo(event)"><h1>ZUI <span class="w2">ADMIN</span></h1><p class="m">Masuk dengan akun Zui System Anda</p>
-<div class="sgs"><button type="button" id="ain" class="sg on" onclick="amode('in')">Masuk</button><button type="button" id="aup" class="sg" onclick="amode('up')">Daftar</button></div>
-<input id="ae" type="email" required autocomplete="email" placeholder="Email" aria-label="Email"><input id="ap" type="password" required autocomplete="current-password" placeholder="Kata sandi" aria-label="Kata sandi" oninput="pwUi()"><input id="ap2" type="password" autocomplete="new-password" placeholder="Ulangi kata sandi" aria-label="Ulangi kata sandi" style="display:none" oninput="pwUi()"><div id="pwr" class="pwr"><span id="pr1">Minimal 8 karakter</span><span id="pr2">Ada angka</span><span id="pr3">Ada huruf besar</span><span id="pr4">Ada huruf kecil</span><span id="pr5">Kedua kata sandi sama</span><span style="opacity:.7">Simbol boleh ditambahkan (opsional)</span></div><button type="button" id="pwe" class="lnk" style="display:none;margin:0 auto 10px" onclick="pwShow()">Tampilkan kata sandi</button>
-<button id="abt" class="go" type="submit">Masuk</button><p id="am" class="am" role="alert"></p><div class="or">ATAU</div>
-<button type="button" class="gbtn" onclick="authG()"><b style="color:#4285F4">G</b> Masuk dengan Google</button><button type="button" id="afg" class="lnk" onclick="forgot()">Lupa kata sandi?</button></form></div>
+<div id="au" class="au" style="display:none"><form class="ac" onsubmit="return authGo(event)"><h1>ZUI <span class="w2">ADMIN</span></h1><p class="m">Khusus admin Zui System</p><button type="button" class="go gbig" onclick="authG()"><b>G</b> Masuk dengan Google</button><p id="am" class="am" role="alert"></p><button type="button" id="aet" class="lnk" onclick="aemT()">Masuk dengan email dan kata sandi</button><div id="aem" style="display:none"><div class="sgs" style="display:none"><button type="button" id="ain" class="sg on" onclick="amode('in')">Masuk</button><button type="button" id="aup" class="sg" onclick="amode('up')">Daftar</button></div><input id="ae" type="email" required autocomplete="email" placeholder="Email" aria-label="Email"><input id="ap" type="password" required autocomplete="current-password" placeholder="Kata sandi" aria-label="Kata sandi" oninput="pwUi()"><input id="ap2" type="password" autocomplete="new-password" placeholder="Ulangi kata sandi" aria-label="Ulangi kata sandi" style="display:none" oninput="pwUi()"><div id="pwr" class="pwr"><span id="pr1">Minimal 8 karakter</span><span id="pr2">Ada angka</span><span id="pr3">Ada huruf besar</span><span id="pr4">Ada huruf kecil</span><span id="pr5">Kedua kata sandi sama</span><span style="opacity:.7">Simbol boleh ditambahkan (opsional)</span></div><button type="button" id="pwe" class="lnk" style="display:none;margin:0 auto 10px" onclick="pwShow()">Tampilkan kata sandi</button><button id="abt" class="go" type="submit">Masuk</button><button type="button" id="afg" class="lnk" onclick="forgot()">Lupa kata sandi?</button></div></form></div><div id="lk" role="dialog" aria-modal="true" aria-label="Kunci aplikasi"><div class="ac"><h1>ZUI <span class="w2">ADMIN</span></h1><p class="m">Masukkan PIN</p><input id="lki" type="password" inputmode="numeric" autocomplete="off" maxlength="6" placeholder="PIN" aria-label="PIN" oninput="pinChk()" onkeydown="if(event.key==='Enter')pinChk(1)"><p id="lke" class="am er" role="alert"></p><button type="button" class="lnk" onclick="pinForgot()">Lupa PIN? Keluar dan masuk lagi</button></div></div>
 <script>
 
 const $=s=>document.querySelector(s),E=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const CFG={apiKey:'AIzaSyAR-TIaq1VH0OOD2XGx_IhedaH7mwKpW30',authDomain:'zuisystem.firebaseapp.com',projectId:'zuisystem',storageBucket:'zuisystem.firebasestorage.app',messagingSenderId:'55666230248',appId:'1:55666230248:web:783df0dc060a1d7ce3da5d'};
 const SYSURL='ISI_ALAMAT_ZUI_SYSTEM';
-const ADMIN_EMAIL='info.zuisystem@gmail.com',TRIAL=14;
+const ADMIN_EMAIL='admin.zuisystem@gmail.com',TRIAL=14;
 const N=['Perusahaan','Kotak Masuk','Pengaturan'],LN=N.length-1;
 let USER=null,FA=null,FS=null,PE=[],RQ=[],IZ=[],cur=0,AM='in',DEL='';
 const ME={uid:'',email:'',nama:''};
@@ -141,7 +137,7 @@ const TS=ms=>firebase.firestore.Timestamp.fromMillis(ms);
 function rPe(){const L=PE.slice().sort((a,b)=>lgEnd(a)-lgEnd(b));const ak=L.filter(c=>sisa(c)>0).length;
 $('#p_pe').innerHTML=`<p class="sum">${L.length} perusahaan · ${ak} aktif · ${L.length-ak} berakhir</p>`+(L.length?L.map(c=>{const d=sisa(c),st=d<=0?'<span class="pill bad">berakhir</span>':d<=7?`<span class="pill am">${d} hari</span>`:`<span class="pill ok">${d} hari</span>`;
 return`<div class="it tap" onclick="peDet('${E(c.id)}')"><div class="row"><div class="tx"><div class="nm" style="font-size:15px">${E(c.nama||'(tanpa nama)')} ${st}</div><div class="m">${E(paket(c))} sampai ${fd(iso(lgEnd(c)))} · ${E(c.oe||'-')}</div></div></div></div>`}).join(''):'<div class="em">Belum ada perusahaan.</div>')}
-function rSet(){const t=localStorage.getItem('zui.adm.th')||'auto',nt=window.Notification?Notification.permission:'';$('#p_set').innerHTML=`<h3 class="hh">Akun</h3><div class="m">${E(ME.email)}</div><p class="m">Lama uji coba otomatis: ${TRIAL} hari (diatur di Firestore Rules).</p><h3 class="hh">Notifikasi</h3><p class="m">Pesan baru dari pelanggan muncul langsung selama aplikasi ini terbuka.</p>${nt==='granted'?'<p class="m">Notifikasi browser aktif.</p>':nt==='denied'?'<p class="m">Notifikasi diblokir di peramban.</p>':nt?'<div class="sgs"><button class="bt" onclick="ntfOn()">Aktifkan notifikasi browser</button></div>':''}${bpForm()}<h3 class="hh">Tampilan</h3>${chips(['Otomatis','Terang','Gelap'],['auto','light','dark'].indexOf(t),'th')}<div class="sgs" style="margin-top:12px"><button class="bt" onclick="logout()">Keluar</button></div>`}
+function rSet(){const t=localStorage.getItem('zui.adm.th')||'auto',nt=window.Notification?Notification.permission:'';$('#p_set').innerHTML=`<h3 class="hh">Akun</h3><div class="m">${E(ME.email)}</div><p class="m">Lama uji coba otomatis: ${TRIAL} hari (diatur di Firestore Rules).</p><h3 class="hh">Notifikasi</h3><p class="m">Pesan baru dari pelanggan muncul langsung selama aplikasi ini terbuka.</p>${nt==='granted'?'<p class="m">Notifikasi browser aktif.</p>':nt==='denied'?'<p class="m">Notifikasi diblokir di peramban.</p>':nt?'<div class="sgs"><button class="bt" onclick="ntfOn()">Aktifkan notifikasi browser</button></div>':''}${bpForm()}${pinUi()}<h3 class="hh">Tampilan</h3>${chips(['Otomatis','Terang','Gelap'],['auto','light','dark'].indexOf(t),'th')}<div class="sgs" style="margin-top:12px"><button class="bt" onclick="logout()">Keluar</button></div>`}
 function rAll(){rPe();rKm();rSet()}
 /* ---------- perusahaan ---------- */
 function peDet(id){const c=PE.find(x=>x.id===id);if(!c)return;dlg(`<h2>${E(c.nama||'')}</h2><div class="m">${E(c.oe||'-')} · dibuat ${fd(iso(c.ts||0))}</div><div class="kv"><span>Status</span><b>${E(paket(c))}</b><span>Berlaku sampai</span><b>${fd(iso(lgEnd(c)))} (${Math.max(0,sisa(c))} hari lagi)</b></div>
@@ -157,7 +153,7 @@ async function peRst(id){try{await FS.collection('perusahaan').doc(id).update({l
 const BNDEF=[{k:'1',nama:'1 bulan',bln:1,n:{IDR:149000,MYR:39,USD:9},p:{IDR:79000,MYR:21,USD:5}},{k:'6',nama:'6 bulan',bln:6,n:{IDR:799000,MYR:209,USD:49},p:{IDR:399000,MYR:109,USD:25}},{k:'12',nama:'1 tahun',bln:12,n:{IDR:1490000,MYR:389,USD:89},p:{IDR:699000,MYR:189,USD:44}}];
 let BH=[],BP=null,BHUN=null,BHF=0,KMUN=null,KMC='',KMM=[],KAK='',BQR='';
 const bpk=()=>BP&&BP.paket&&BP.paket.length?BP.paket:BNDEF,kmNm=k=>(bpk().find(p=>p.k===k)||{}).nama||k||'',unrd=()=>BH.filter(h=>h.bu).length;
-function bdg(){const n=unrd();try{bt[1].textContent=N[1]+(n?' ('+n+')':'')}catch(e){}document.title=(n?'('+n+') ':'')+'Zui Admin'}
+function bdg(){const n=unrd();try{bt[1].textContent=N[1]+(n?' ('+n+')':'')}catch(e){}document.title=(n?'('+n+') ':'')+'Zui Admin';try{const b=$('#nb');b.classList.toggle('on',n>0);$('#nbn').textContent=n>99?'99+':n;b.setAttribute('aria-label',n?'Kotak masuk, '+n+' pesan belum dibaca':'Kotak masuk, tidak ada pesan baru')}catch(e){}try{if(navigator.setAppBadge){if(n>0)navigator.setAppBadge(n).catch(()=>{});else navigator.clearAppBadge().catch(()=>{})}}catch(e){}}
 function beep(){try{const A=new (window.AudioContext||window.webkitAudioContext)(),o=A.createOscillator(),g=A.createGain();o.connect(g);g.connect(A.destination);o.frequency.value=880;g.gain.value=.05;o.start();setTimeout(()=>{o.stop();A.close()},180)}catch(e){}}
 function ntf(a){const h=a[0],t=a.length>1?a.length+' pesan baru':'Pesan baru dari '+(h.nama||'pelanggan');toast(t);try{if(window.Notification&&Notification.permission==='granted'&&document.hidden)new Notification('Zui Admin',{body:t+(h.tx?': '+h.tx:'')})}catch(e){}beep()}
 function wBH(){if(BHUN){BHUN();BHUN=null}BHF=0;try{BHUN=FS.collection('bantuan').onSnapshot(s=>{const o=BH;BH=s.docs.map(d=>Object.assign({id:d.id},d.data()));if(BHF){const nw=BH.filter(h=>h.bu&&!(o.find(x=>x.id===h.id)||{}).bu);if(nw.length)ntf(nw)}BHF=1;bdg();rKm()},e=>toast(fbe(e)))}catch(e){}}
@@ -254,7 +250,7 @@ el.innerHTML=`<div class="card"><b>Pemeriksaan resit</b> <span class="pill ${ok?
 /* ---------- data ---------- */
 async function ldPe(){try{const s=await FS.collection('perusahaan').get();PE=await Promise.all(s.docs.map(async d=>{const c=Object.assign({id:d.id},d.data());try{const m=await FS.collection('perusahaan').doc(d.id).collection('anggota').doc(c.owner).get();c.oe=m.exists?m.data().email:''}catch(e){c.oe=''}return c}));rPe()}catch(e){toast(fbe(e))}}
 async function ldAll(){await ldPe();rAll()}
-function unl(){if(BHUN){BHUN();BHUN=null}if(KMUN){KMUN();KMUN=null}BHF=0;BH=[];BP=null}
+function unl(){if(BHUN){BHUN();BHUN=null}if(KMUN){KMUN();KMUN=null}BHF=0;BH=[];BP=null;try{bdg()}catch(e){}}
 /* ---------- login ---------- */
 /*SESS*/function zSess(u){var st=false;try{st=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}catch(e){}
 var lim=(st?30:1)*864e5;function g(){try{return+localStorage.getItem('zui.act')||0}catch(e){return 0}}
@@ -277,13 +273,14 @@ async function authGo(ev){ev.preventDefault();if(!FA){msg('Layanan login belum s
 try{if(AM=='in'){const c=await FA.signInWithEmailAndPassword(em,pw);if(!c.user.emailVerified){await c.user.sendEmailVerification().catch(()=>{});await FA.signOut();msg('Email belum diverifikasi. Kami mengirim ulang tautan verifikasi ke email Anda.',1)}}
 else{const c2=await FA.createUserWithEmailAndPassword(em,pw);await c2.user.sendEmailVerification();await FA.signOut();msg('Pendaftaran berhasil. Cek email Anda untuk verifikasi, lalu masuk.')}}
 catch(e){msg(fbe(e),1)}$('#abt').disabled=false;return false}
-async function authG(){if(!FA){msg('Layanan login belum siap.',1);return}const p=new firebase.auth.GoogleAuthProvider();
+async function authG(){if(!FA){msg('Layanan login belum siap.',1);return}const p=new firebase.auth.GoogleAuthProvider();p.setCustomParameters({login_hint:ADMIN_EMAIL,prompt:'select_account'});
 try{await FA.signInWithPopup(p)}catch(e){const c=e&&e.code;if(c=='auth/popup-blocked'||c=='auth/operation-not-supported-in-this-environment')FA.signInWithRedirect(p);else if(c!='auth/popup-closed-by-user'&&c!='auth/cancelled-popup-request')msg(fbe(e),1)}}
 async function forgot(){const em=$('#ae').value.trim();if(!em){msg('Isi email dulu.',1);return}try{await FA.sendPasswordResetEmail(em);msg('Tautan reset dikirim ke email Anda.')}catch(e){msg(fbe(e),1)}}
 async function logout(){await FA.signOut()}
 function noCo(t){$('#au').style.display='none';$('#nct').textContent=t;$('#nc').style.display='flex'}
 async function boot(u){USER=u;ME.uid=u.uid;ME.email=(u.email||'').toLowerCase();$('#nc').style.display='none';
-if(ME.email!==ADMIN_EMAIL){noCo('Akun ini bukan admin utama Zui.');return}
+if(ME.email!==ADMIN_EMAIL){FA.signOut().catch(()=>{});setTimeout(()=>msg('Akun ini bukan admin Zui. Masuk dengan akun admin.',1),400);return}
+pinShow();
 $('#au').style.display='none';$('#cn').textContent=ME.email;rAll();ldAll();wBH();ldBP()}
 const ldS=u=>new Promise((ok,no)=>{const s=document.createElement('script');s.src=u;s.onload=ok;s.onerror=no;document.head.appendChild(s)});
 /* ---------- pivot ---------- */
@@ -299,5 +296,30 @@ ap();sync();$('#au').style.display='flex';
 (async()=>{try{for(const f of ['app','auth','firestore'])await ldS('https://www.gstatic.com/firebasejs/10.12.2/firebase-'+f+'-compat.js')}catch(e){msg('Tidak dapat memuat layanan login. Periksa koneksi internet.',1);return}
 firebase.initializeApp(CFG);FA=firebase.auth();FS=firebase.firestore();
 FA.onAuthStateChanged(u=>{if(u&&u.emailVerified){if(zSess(u))return;if(!USER||USER.uid!==u.uid)setTimeout(()=>boot(u),0)}else if(!u){unl();USER=null;PE=[];$('#nc').style.display='none';$('#au').style.display='flex'}})})();
+/*PIN*/
+const PK='zui.adm.pin',PF='zui.adm.pinf';let LKON=false,LKH=0;
+function aemT(){const e=$('#aem');const o=e.style.display==='none';e.style.display=o?'':'none';$('#aet').textContent=o?'Sembunyikan email dan kata sandi':'Masuk dengan email dan kata sandi'}
+function pinGet(){try{return JSON.parse(localStorage.getItem(PK)||'null')}catch(e){return null}}
+function pinF(){try{return JSON.parse(localStorage.getItem(PF)||'null')||{n:0,u:0}}catch(e){return{n:0,u:0}}}
+function pinClr(){try{localStorage.removeItem(PK);localStorage.removeItem(PF)}catch(e){}}
+function b2h(b){return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('')}
+async function pinHash(pin,salt){const k=await crypto.subtle.importKey('raw',new TextEncoder().encode(pin),'PBKDF2',false,['deriveBits']);return b2h(await crypto.subtle.deriveBits({name:'PBKDF2',salt:new TextEncoder().encode(salt),iterations:150000,hash:'SHA-256'},k,256))}
+function pinShow(){if(!pinGet())return;cls();LKON=true;$('#lk').classList.add('on');$('#lki').value='';$('#lke').textContent='';pinWait();setTimeout(()=>{try{$('#lki').focus()}catch(e){}},60)}
+function pinWait(){const w=pinF().u-Date.now();clearTimeout(pinWait.t);if(w>0){$('#lke').textContent='Terlalu banyak percobaan. Coba lagi dalam '+Math.ceil(w/1000)+' detik.';$('#lki').disabled=true;pinWait.t=setTimeout(pinWait,1000)}else{if($('#lki').disabled){$('#lki').disabled=false;$('#lke').textContent='';try{$('#lki').focus()}catch(e){}}}}
+async function pinChk(en){const p=pinGet();if(!p||!(window.crypto&&crypto.subtle))return;const v=$('#lki').value;if(v.length<p.n&&!en)return;if(v.length<4)return;const f=pinF();if(f.u>Date.now())return;
+if(await pinHash(v,p.s)===p.h){try{localStorage.removeItem(PF)}catch(e){}LKON=false;$('#lk').classList.remove('on');$('#lki').value='';return}
+f.n++;if(f.n>=10){pinClr();LKON=false;$('#lk').classList.remove('on');toast('Terlalu banyak PIN salah. Masuk ulang dengan Google.');logout();return}
+if(f.n>=5)f.u=Date.now()+Math.min(30*Math.pow(2,f.n-5),600)*1000;
+try{localStorage.setItem(PF,JSON.stringify(f))}catch(e){}$('#lki').value='';$('#lke').textContent='PIN salah ('+f.n+' dari 10)';pinWait()}
+function pinForgot(){pinClr();LKON=false;$('#lk').classList.remove('on');logout()}
+function pinUi(){const p=pinGet();return`<h3 class="hh">Kunci aplikasi (PIN)</h3><p class="m">${p?'PIN aktif. Aplikasi terkunci saat dibuka dan setelah ditinggalkan lebih dari 1 menit. PIN hanya tersimpan di perangkat ini.':'Pasang PIN 4 sampai 6 angka agar aplikasi ini terkunci jika perangkat dipinjam orang. Yang melindungi data tetap login Google.'}</p><div class="sgs">${p?'<button class="bt" onclick="pinDlg(1)">Ubah PIN</button><button class="bt" onclick="pinDlg(2)">Matikan PIN</button><button class="bt" onclick="pinShow()">Kunci sekarang</button>':'<button class="bt" onclick="pinDlg(0)">Atur PIN</button>'}</div>`}
+function pinDlg(m){const f=(id,l)=>`<label>${l}<input id="${id}" type="password" inputmode="numeric" autocomplete="off" maxlength="6" placeholder="4 sampai 6 angka"></label>`;dlg(`<h2>${['Atur PIN','Ubah PIN','Matikan PIN'][m]}</h2>${m?f('pc','PIN sekarang'):''}${m<2?f('pn','PIN baru')+f('pn2','Ulangi PIN baru'):''}<p id="pm" class="am er" role="alert"></p><div class="btn"><button onclick="cls()">Batal</button><button class="go" onclick="pinSave(${m})">Simpan</button></div>`)}
+async function pinSave(m){const pm=$('#pm'),e=t=>{pm.textContent=t},p=pinGet();
+if(!(window.crypto&&crypto.subtle)){e('Peramban ini tidak mendukung PIN.');return}
+if(m){if(!p||await pinHash($('#pc').value,p.s)!==p.h){e('PIN sekarang salah.');return}}
+if(m==2){pinClr();cls();toast('PIN dimatikan');rSet();return}
+const a=$('#pn').value,b=$('#pn2').value;if(!/^\d{4,6}$/.test(a)){e('PIN harus 4 sampai 6 angka.');return}if(a!==b){e('Kedua PIN tidak sama.');return}
+const s=b2h(crypto.getRandomValues(new Uint8Array(16)).buffer);try{localStorage.setItem(PK,JSON.stringify({s:s,n:a.length,h:await pinHash(a,s)}));localStorage.removeItem(PF)}catch(x){e('Tidak dapat menyimpan PIN di perangkat ini.');return}cls();toast('PIN disimpan');rSet()}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)LKH=Date.now();else if(typeof USER!=='undefined'&&USER&&pinGet()&&!LKON&&LKH&&Date.now()-LKH>60000)pinShow()});
 if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script></body></html>
