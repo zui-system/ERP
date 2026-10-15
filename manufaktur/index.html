@@ -360,7 +360,7 @@ const ket=$('#qk').value.trim();if(await upd(id,{st:kep,qc:{res,kep,ket,uid:ME.u
 var lim=(st?30:1)*864e5;function g(){try{return+localStorage.getItem('zui.act')||0}catch(e){return 0}}
 function t(){try{localStorage.setItem('zui.act',Date.now())}catch(e){}}
 function ex(){var a=g();return a&&Date.now()-a>lim}
-function out(){firebase.auth().signOut().then(function(){setTimeout(function(){msg('Sesi berakhir karena lama tidak dipakai. Silakan masuk lagi.',1)},250)},function(){})}
+function out(){try{localStorage.removeItem('zui.act')}catch(e){}firebase.auth().signOut().then(function(){setTimeout(function(){msg('Sesi berakhir karena lama tidak dipakai. Silakan masuk lagi.',1)},250)},function(){})}
 if(ex()){out();return true}
 t();
 if(!window.__zsi){window.__zsi=1;var lt=0,tc=function(){var n=Date.now();if(n-lt>6e4){lt=n;t()}};
@@ -412,6 +412,6 @@ pv.addEventListener('scroll',()=>requestAnimationFrame(sync));addEventListener('
 ap();sync();$('#au').style.display='flex';
 (async()=>{try{for(const f of ['app','auth','firestore'])await ldS('https://www.gstatic.com/firebasejs/10.12.2/firebase-'+f+'-compat.js')}catch(e){msg('Tidak dapat memuat layanan login. Periksa koneksi internet.',1);return}
 firebase.initializeApp(CFG);FA=firebase.auth();FS=firebase.firestore();
-FA.onAuthStateChanged(u=>{if(u&&u.emailVerified){if(zSess(u))return;if(!USER||USER.uid!==u.uid)setTimeout(()=>boot(u),0)}else if(!u){unl();USER=null;CID=null;MEM=[];BOM=[];PRD=[];STK={items:[],ok:false};$('#nc').style.display='none';$('#au').style.display='flex'}})})();
+FA.onAuthStateChanged(u=>{if(u&&u.emailVerified){if(zSess(u))return;if(!USER||USER.uid!==u.uid)setTimeout(()=>boot(u),0)}else if(!u){try{localStorage.removeItem('zui.act')}catch(e){}unl();USER=null;CID=null;MEM=[];BOM=[];PRD=[];STK={items:[],ok:false};$('#nc').style.display='none';$('#au').style.display='flex'}})})();
 if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script></body></html>
