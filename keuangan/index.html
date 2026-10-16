@@ -119,7 +119,7 @@ html:root[data-app="navy"] dialog{background:#161E29}
 #zsp .z3 u{flex:1;min-width:12px;height:2px;background:var(--zc)}
 #zsp .z3 em{font-style:normal;font-size:13px;font-weight:600;letter-spacing:var(--zls);padding-left:var(--zls);color:#E8ECF1;line-height:1;white-space:nowrap}
 #zsp .zco{position:absolute;left:0;right:0;bottom:calc(26px + env(safe-area-inset-bottom,0px));text-align:center;font-size:9px;font-weight:500;letter-spacing:.2em;color:#7D8693}
-#zsp svg{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:min(100%,560px);height:auto;-webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,0) 0%,#000 45%);mask-image:linear-gradient(to bottom,rgba(0,0,0,0) 0%,#000 45%)}
+#zsp svg{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:min(100%,560px);height:auto;aspect-ratio:390/360;-webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,0) 0%,#000 45%);mask-image:linear-gradient(to bottom,rgba(0,0,0,0) 0%,#000 45%)}
 @keyframes zsRise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 @keyframes zsSpread{from{opacity:0;width:34%}to{opacity:1;width:100%}}
 @keyframes zsLine{from{transform:scaleX(0)}to{transform:scaleX(1)}}
@@ -131,24 +131,57 @@ html:root[data-app="navy"] dialog{background:#161E29}
 @keyframes zsTravel{0%{opacity:0;transform:translateX(0)}12%{opacity:.9}88%{opacity:.9}100%{opacity:0;transform:translateX(390px)}}
 #zsp .zr{opacity:0;animation:zsRise .6s cubic-bezier(.2,.7,.2,1) forwards}
 #zsp .zr:nth-child(1){animation-delay:.05s}#zsp .zr:nth-child(2){animation-delay:.17s}#zsp .zr:nth-child(3){animation-delay:.29s}
-#zsp .z2{opacity:0;align-self:center;animation:zsSpread .7s cubic-bezier(.3,.7,.2,1) .6s forwards}
-#zsp .z3 u{transform:scaleX(0);animation:zsLine .5s cubic-bezier(.3,.7,.2,1) 1.15s forwards,zsGlow .9s ease-out 1.5s forwards}
+#zsp .z2{opacity:0;align-self:center;animation:zsSpread .7s cubic-bezier(.3,.7,.2,1) .65s forwards}
+#zsp .z3 u{transform:scaleX(0);animation:zsLine .5s cubic-bezier(.3,.7,.2,1) 1.25s forwards,zsGlow .9s ease-out 1.6s forwards}
 #zsp .z3 u:first-child{transform-origin:right center}#zsp .z3 u:last-child{transform-origin:left center}
-#zsp .z3 em{opacity:0;animation:zsFade .5s ease-out 1.25s forwards}
-#zsp .zco{opacity:0;animation:zsIn .5s ease-out 1.8s forwards}
-#zsp .zd{stroke-dasharray:100;stroke-dashoffset:100;animation:zsDraw 1.3s ease-out 1.2s forwards}
-#zsp .zw{opacity:0;animation:zsLit .6s ease-out forwards}
-#zsp .zp{opacity:0;animation:zsTravel 1.3s ease-in-out 2.3s forwards}
-@media(prefers-reduced-motion:reduce){#zsp .zr,#zsp .z2,#zsp .z3 em,#zsp .zco{opacity:1!important;transform:none!important}#zsp .z2{width:100%!important}#zsp .z3 u{transform:none!important;box-shadow:0 0 12px var(--zc),0 0 4px var(--zc)!important}#zsp .zd{stroke-dashoffset:0!important}#zsp .zw{opacity:.6!important}#zsp .zp{display:none}}
-</style></head><body><div id="zsp" aria-hidden="true" style="--zc:#E5617A;--zls:.28em"><div class="zsl"><div class="z1"><span class="zr">Z</span><span class="zr">U</span><span class="zr">I</span></div><div class="z2"><span>S</span><span>Y</span><span>S</span><span>T</span><span>E</span><span>M</span></div><div class="z3"><u></u><em>KEUANGAN</em><u></u></div></div><div class="zco">PT. ZAOR UTAMA INDONESIA</div></div><script>(function(){var e=document.getElementById("zsp");if(!e)return;var k="zui.spl.keu",s=null;try{s=sessionStorage.getItem(k)}catch(x){}if(s){e.remove();return}try{sessionStorage.setItem(k,"1")}catch(x){}var r=false;try{r=matchMedia("(prefers-reduced-motion: reduce)").matches}catch(x){}var t=r?1200:2500,done=function(){e.classList.add("out");setTimeout(function(){if(e.parentNode)e.remove()},600)};setTimeout(done,t);e.addEventListener("click",done)})()</script>
+#zsp .z3 em{opacity:0;animation:zsFade .55s ease-out 1.35s forwards}
+#zsp .zco{opacity:0;animation:zsIn .6s ease-out 2.2s forwards}
+#zsp .zd{stroke-dasharray:100;stroke-dashoffset:100;animation:zsDraw 1.5s ease-out 1.5s forwards}
+#zsp .zw{opacity:0;animation:zsLit .8s ease-out forwards}
+#zsp .zp{opacity:0;animation:zsTravel 2.6s ease-in-out 2.9s forwards}
+#zsp .zm{width:260px}
+#zsp .zmw{display:flex;justify-content:space-between;font-weight:500;color:#E8ECF1;line-height:1}
+#zsp .zml{display:flex;margin-top:20px}
+#zsp .zml u{flex:1;height:2px;background:var(--zc);transform:scaleX(0);transform-origin:center;animation:zsLine .7s cubic-bezier(.3,.7,.2,1) 1.2s forwards,zsGlow .9s ease-out 1.7s forwards}
+.ac h1.zwm2{width:210px}
+.zwm2 .zmw{display:flex;justify-content:space-between;font-weight:500;line-height:1}
+.zwm2 .zml{display:flex;margin-top:14px}
+.zwm2 .zml u{flex:1;height:2px;border-radius:2px;background:var(--zc);box-shadow:0 0 3px var(--zc),0 0 9px color-mix(in srgb,var(--zc) calc(var(--gl,1)*55%),transparent)}
+@media(prefers-reduced-motion:reduce){#zsp .zml u{transform:none!important;box-shadow:0 0 12px var(--zc),0 0 4px var(--zc)!important}#zsp .zr,#zsp .z2,#zsp .z3 em,#zsp .zco{opacity:1!important;transform:none!important}#zsp .z2{width:100%!important}#zsp .z3 u{transform:none!important;box-shadow:0 0 12px var(--zc),0 0 4px var(--zc)!important}#zsp .zd{stroke-dashoffset:0!important}#zsp .zw{opacity:.6!important}#zsp .zp{display:none}}
+</style></head><body><div id="zsp" aria-hidden="true" style="--zc:#E5617A;--zls:.28em"><div class="zsl zm"><div class="zmw" style="font-size:33.5px"><span class="zr" style="animation-delay:0.05s">K</span><span class="zr" style="animation-delay:0.13s">E</span><span class="zr" style="animation-delay:0.21s">U</span><span class="zr" style="animation-delay:0.29s">A</span><span class="zr" style="animation-delay:0.37s">N</span><span class="zr" style="animation-delay:0.45s">G</span><span class="zr" style="animation-delay:0.53s">A</span><span class="zr" style="animation-delay:0.61s">N</span></div><div class="zml"><u></u></div></div><svg viewBox="0 0 390 360" fill="none" stroke="#2F6BFF" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<g stroke-opacity="0.05"><path class="zd" pathLength="100" d="M195 230 L-650 360 M195 230 L-371 360 M195 230 L-93 360 M195 230 L195 360 M195 230 L483 360 M195 230 L761 360 M195 230 L1040 360"/><path class="zd" pathLength="100" d="M0 240 H390 M0 254 H390 M0 274 H390 M0 304 H390 M0 344 H390"/></g>
+<g transform="translate(0 30)">
+<g stroke-opacity="0.06"><path class="zd" pathLength="100" d="M0 200 V168 H20 V140 H38 V158 H58 V118 H74 V146 H96 V160 H118 V128 H134 V150 H160 V136 H182 V112 H198 V150 H222 V132 H240 V160 H262 V124 H280 V146 H300 V106 H318 V140 H340 V156 H362 V130 H378 V162 H390"/></g>
+<g stroke-opacity="0.14">
+<path class="zd" pathLength="100" d="M0 200 H390"/>
+<path class="zd" pathLength="100" d="M20 200 V138 L65 112 L110 138 V200"/>
+<path class="zd" pathLength="100" d="M45 200 V160 H85 V200 M45 170 H85 M45 180 H85 M45 190 H85"/>
+<path class="zd" pathLength="100" d="M130 200 V140 L156 120 V140 L182 120 V140 L208 120 V140 H240 V200"/>
+<path class="zd" pathLength="100" d="M220 140 V88 H232 V140"/>
+<path class="zd" pathLength="100" d="M140 164 H152 V178 H140 Z M164 164 H176 V178 H164 Z M188 164 H200 V178 H188 Z M212 164 H224 V178 H212 Z"/>
+<path class="zd" pathLength="100" d="M262 200 V60 H312 V200 M312 118 H352 V200"/>
+<path class="zd" pathLength="100" d="M272 74 H282 M292 74 H302 M272 94 H282 M292 94 H302 M272 114 H282 M292 114 H302 M272 134 H282 M292 134 H302 M272 154 H282 M292 154 H302 M272 174 H282 M292 174 H302 M324 134 H340 M324 154 H340 M324 174 H340"/>
+</g>
+<rect class="zw" x="46" y="171" width="38" height="8" fill="#2EB67D" stroke="none" style="filter:drop-shadow(0 0 2px #2EB67D);animation-delay:2.9s"/>
+<rect class="zw" x="164" y="164" width="12" height="14" fill="#F29A38" stroke="none" style="filter:drop-shadow(0 0 2px #F29A38);animation-delay:3.1s"/>
+<rect class="zw" x="212" y="164" width="12" height="14" fill="#F29A38" stroke="none" style="filter:drop-shadow(0 0 2px #F29A38);animation-delay:3.35s"/>
+<rect class="zw" x="292" y="91" width="10" height="6" fill="#E5617A" stroke="none" style="filter:drop-shadow(0 0 2px #E5617A);animation-delay:3.0s"/>
+<rect class="zw" x="324" y="151" width="16" height="6" fill="#E5617A" stroke="none" style="filter:drop-shadow(0 0 2px #E5617A);animation-delay:3.2s"/>
+<rect class="zw" x="272" y="131" width="10" height="6" fill="#7A86F0" stroke="none" style="filter:drop-shadow(0 0 2px #7A86F0);animation-delay:3.05s"/>
+<rect class="zw" x="292" y="111" width="10" height="6" fill="#7A86F0" stroke="none" style="filter:drop-shadow(0 0 2px #7A86F0);animation-delay:3.45s"/>
+<rect class="zw" x="272" y="71" width="10" height="6" fill="#2F6BFF" stroke="none" style="filter:drop-shadow(0 0 2px #2F6BFF);animation-delay:3.15s"/>
+<rect class="zw" x="292" y="151" width="10" height="6" fill="#2F6BFF" stroke="none" style="filter:drop-shadow(0 0 2px #2F6BFF);animation-delay:3.3s"/>
+</g>
+<circle class="zp" cx="0" cy="230" r="2" fill="#2F6BFF" stroke="none" style="filter:drop-shadow(0 0 4px #2F6BFF)"/>
+</svg><div class="zco">PT. ZAOR UTAMA INDONESIA</div></div><script>(function(){var e=document.getElementById("zsp");if(!e)return;var k="zui.spl.keu",s=null;try{s=sessionStorage.getItem(k)}catch(x){}if(s){e.remove();return}try{sessionStorage.setItem(k,"1")}catch(x){}var r=false;try{r=matchMedia("(prefers-reduced-motion: reduce)").matches}catch(x){}var t=r?1200:6000,done=function(){e.classList.add("out");setTimeout(function(){if(e.parentNode)e.remove()},600)};setTimeout(done,t);e.addEventListener("click",done)})()</script>
 <div class="app"><div class="top tl"><img id="lg" alt="" style="display:none"><div><b>KEUANGAN</b><small id="cn">Kas, utang, piutang</small></div></div>
 <div class="hd" id="hd"><div class="hdi" id="hdi" role="tablist"></div></div>
 <div class="pv" id="pv"><section id="p_rg"></section><section id="p_ks"></section><section id="p_ut"></section><section id="p_pi"></section><section id="p_set"></section></div>
 <button class="fab" id="fab" onclick="fa()" style="display:none"></button></div>
 <div id="ts" role="status"></div><dialog id="dk"></dialog>
-<div id="nc" class="au" style="display:none"><div class="ac"><h1 class="zwm" style="--zc:#E5617A;--zls:.28em" aria-label="ZUI SYSTEM KEUANGAN"><span class="z1" aria-hidden="true"><span>Z</span><span>U</span><span>I</span></span><span class="z2" aria-hidden="true"><span>S</span><span>Y</span><span>S</span><span>T</span><span>E</span><span>M</span></span><span class="z3" aria-hidden="true"><u></u><em>KEUANGAN</em><u></u></span></h1><p class="m" id="nct">Akun Anda belum tergabung ke perusahaan.</p>
+<div id="nc" class="au" style="display:none"><div class="ac"><h1 class="zwm zwm2" style="--zc:#E5617A" aria-label="Keuangan"><span class="zmw" aria-hidden="true" style="font-size:27.0px"><span>K</span><span>E</span><span>U</span><span>A</span><span>N</span><span>G</span><span>A</span><span>N</span></span><span class="zml" aria-hidden="true"><u></u></span></h1><p class="m" id="nct">Akun Anda belum tergabung ke perusahaan.</p>
 <div class="sgs"><button class="bt" onclick="location.reload()">Coba lagi</button><a class="ab" id="nsy" href="#" style="display:none">Buka ZUI SYSTEM ERP</a><button class="bt" onclick="logout()">Keluar</button></div></div></div>
-<div id="au" class="au" style="display:none"><form class="ac" onsubmit="return authGo(event)"><h1 class="zwm" style="--zc:#E5617A;--zls:.28em" aria-label="ZUI SYSTEM KEUANGAN"><span class="z1" aria-hidden="true"><span>Z</span><span>U</span><span>I</span></span><span class="z2" aria-hidden="true"><span>S</span><span>Y</span><span>S</span><span>T</span><span>E</span><span>M</span></span><span class="z3" aria-hidden="true"><u></u><em>KEUANGAN</em><u></u></span></h1><p class="m">Masuk dengan akun ZUI SYSTEM ERP Anda</p>
+<div id="au" class="au" style="display:none"><form class="ac" onsubmit="return authGo(event)"><h1 class="zwm zwm2" style="--zc:#E5617A" aria-label="Keuangan"><span class="zmw" aria-hidden="true" style="font-size:27.0px"><span>K</span><span>E</span><span>U</span><span>A</span><span>N</span><span>G</span><span>A</span><span>N</span></span><span class="zml" aria-hidden="true"><u></u></span></h1><p class="m">Masuk dengan akun ZUI SYSTEM ERP Anda</p>
 <div class="sgs"><button type="button" id="ain" class="sg on" onclick="amode('in')">Masuk</button><button type="button" id="aup" class="sg" onclick="amode('up')">Daftar</button></div>
 <input id="ae" type="email" required autocomplete="email" placeholder="Email" aria-label="Email"><input id="ap" type="password" required autocomplete="current-password" placeholder="Kata sandi" aria-label="Kata sandi" oninput="pwUi()"><input id="ap2" type="password" autocomplete="new-password" placeholder="Ulangi kata sandi" aria-label="Ulangi kata sandi" style="display:none" oninput="pwUi()"><div id="pwr" class="pwr"><span id="pr1">Minimal 8 karakter</span><span id="pr2">Ada angka</span><span id="pr3">Ada huruf besar</span><span id="pr4">Ada huruf kecil</span><span id="pr5">Kedua kata sandi sama</span><span style="opacity:.7">Simbol boleh ditambahkan (opsional)</span></div><button type="button" id="pwe" class="lnk" style="display:none;margin:0 auto 10px" onclick="pwShow()">Tampilkan kata sandi</button>
 <button id="abt" class="go" type="submit">Masuk</button><p id="am" class="am" role="alert"></p><div class="or">ATAU</div>

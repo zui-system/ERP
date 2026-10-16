@@ -1,16 +1,21 @@
-# Pembaruan v4 (16 Okt 2026, malam): nama baru, logo, animasi, mode Biru Malam
+# Pembaruan v5 (16 Okt 2026, malam)
 
-1. **Nama baru.** Aplikasi pusat kini **ZUI SYSTEM ERP** (di layar, judul tab, nama saat dipasang, teks undangan, pemberitahuan, halaman Syarat). Modul tanpa kata "Zui": **Inventori, Manufaktur, Keuangan, Karyawan**. Di ikon HP, aplikasi pusat bernama pendek **ZUI ERP**.
-2. **Logo baru** di layar masuk semua aplikasi: ZUI besar, SYSTEM sejajar di bawahnya (S sejajar Z, M sejajar I), lalu nama aplikasi di antara dua garis menyala warna aplikasi (ERP biru, Inventori hijau, Manufaktur oranye, Keuangan merah muda, Karyawan ungu).
-3. **Animasi pembuka baru.** ZUI SYSTEM ERP: logo + ilustrasi garis (gudang, pabrik, kantor) dengan jendela menyala warna modul, sekitar 3,6 detik. Modul: logo saja, sekitar 2,5 detik. Tampil sekali tiap aplikasi dibuka, bisa dilewati dengan ketuk layar, dan langsung diam bila HP diatur "kurangi gerakan". (Animasi lama 7,6 detik dihapus.)
-4. **Mode tampilan Biru Malam** di Pengaturan → Tampilan semua aplikasi: Otomatis, Terang, Gelap, Biru Malam (warna latar logo dengan cahaya biru samar, tanpa ilustrasi).
-5. **Ikon baru** untuk semua aplikasi (ZUI / SYSTEM / garis warna aplikasi).
+1. **Animasi pembuka 6 detik** di semua aplikasi, dengan tempo seperti desain yang disetujui: logo, garis menyala, ilustrasi tergambar, jendela warna-warni menyala, dan cahaya berjalan. Tetap bisa dilewati dengan ketuk layar.
+2. **Ilustrasi tampil di semua aplikasi**, termasuk Inventori, Manufaktur, Keuangan, dan Karyawan.
+3. **Logo modul tanpa ZUI**: layar pembuka, layar masuk, dan ikon modul kini hanya menampilkan nama modul (mis. INVENTORI) dengan garis menyala warna modul. ZUI SYSTEM ERP tetap memakai logo ZUI / SYSTEM / ERP.
+4. **Pembaruan langsung terlihat**: halaman aplikasi selalu diambil versi terbarunya dari server, jadi setelah file diunggah, tampilan lama tidak tertahan lagi di HP.
 
-## Cara pasang v4
-1. Unggah/timpa semua file di folder ini ke repo zuisystem.com (termasuk ikon dan manifest di tiap folder).
+# Pembaruan v4: nama baru, logo, animasi, mode Biru Malam
+
+1. Aplikasi pusat kini **ZUI SYSTEM ERP** (nama pendek di HP: ZUI ERP). Modul tanpa kata "Zui": **Inventori, Manufaktur, Keuangan, Karyawan**.
+2. Logo baru di layar masuk dan ikon baru semua aplikasi.
+3. Mode tampilan **Biru Malam** di Pengaturan → Tampilan: Otomatis, Terang, Gelap, Biru Malam.
+
+## Cara pasang
+1. Unggah/timpa semua file di folder ini ke repo zuisystem.com (termasuk sw.js, ikon, dan manifest di tiap folder).
 2. Tidak ada perubahan Firestore Rules.
-3. Disarankan: Firebase Console → Project settings → General → **Public-facing name** = "ZUI SYSTEM ERP" (nama di email undangan dan atur kata sandi).
-4. Aplikasi yang sudah terpasang di HP akan memperbarui diri sendiri saat dibuka. Nama dan ikon di layar HP biasanya baru berubah setelah beberapa hari; agar langsung berubah, hapus pintasan lalu pasang ulang.
+3. Disarankan: Firebase Console → Project settings → General → **Public-facing name** = "ZUI SYSTEM ERP".
+4. Setelah unggah, tunggu sekitar 10 menit, lalu tutup aplikasi sepenuhnya dan buka lagi. Nama dan ikon di layar HP bisa butuh beberapa hari untuk berubah; agar langsung berubah, hapus pintasan lalu pasang ulang.
 
 # Pembaruan v3 (16 Okt 2026, siang)
 
