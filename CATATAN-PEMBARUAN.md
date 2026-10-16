@@ -1,3 +1,17 @@
+# Pembaruan v4 (16 Okt 2026, malam): nama baru, logo, animasi, mode Biru Malam
+
+1. **Nama baru.** Aplikasi pusat kini **ZUI SYSTEM ERP** (di layar, judul tab, nama saat dipasang, teks undangan, pemberitahuan, halaman Syarat). Modul tanpa kata "Zui": **Inventori, Manufaktur, Keuangan, Karyawan**. Di ikon HP, aplikasi pusat bernama pendek **ZUI ERP**.
+2. **Logo baru** di layar masuk semua aplikasi: ZUI besar, SYSTEM sejajar di bawahnya (S sejajar Z, M sejajar I), lalu nama aplikasi di antara dua garis menyala warna aplikasi (ERP biru, Inventori hijau, Manufaktur oranye, Keuangan merah muda, Karyawan ungu).
+3. **Animasi pembuka baru.** ZUI SYSTEM ERP: logo + ilustrasi garis (gudang, pabrik, kantor) dengan jendela menyala warna modul, sekitar 3,6 detik. Modul: logo saja, sekitar 2,5 detik. Tampil sekali tiap aplikasi dibuka, bisa dilewati dengan ketuk layar, dan langsung diam bila HP diatur "kurangi gerakan". (Animasi lama 7,6 detik dihapus.)
+4. **Mode tampilan Biru Malam** di Pengaturan → Tampilan semua aplikasi: Otomatis, Terang, Gelap, Biru Malam (warna latar logo dengan cahaya biru samar, tanpa ilustrasi).
+5. **Ikon baru** untuk semua aplikasi (ZUI / SYSTEM / garis warna aplikasi).
+
+## Cara pasang v4
+1. Unggah/timpa semua file di folder ini ke repo zuisystem.com (termasuk ikon dan manifest di tiap folder).
+2. Tidak ada perubahan Firestore Rules.
+3. Disarankan: Firebase Console → Project settings → General → **Public-facing name** = "ZUI SYSTEM ERP" (nama di email undangan dan atur kata sandi).
+4. Aplikasi yang sudah terpasang di HP akan memperbarui diri sendiri saat dibuka. Nama dan ikon di layar HP biasanya baru berubah setelah beberapa hari; agar langsung berubah, hapus pintasan lalu pasang ulang.
+
 # Pembaruan v3 (16 Okt 2026, siang)
 
 1. **Undangan langsung dikirim ke email.** Saat Pemilik/Admin menekan Kirim undangan, Zui membuat akun untuk email itu dan Firebase mengirim email berisi tautan untuk membuat kata sandi. Tautannya kembali ke Zui System, layar masuk menampilkan "Anda diundang ke (perusahaan) sebagai (peran)" dengan email sudah terisi, dan setelah masuk orang itu langsung bergabung. Pilihan "Buat perusahaan" disembunyikan untuk orang yang datang dari tautan undangan.

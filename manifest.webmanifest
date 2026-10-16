@@ -1,12 +1,12 @@
 {
-  "name": "Zui System",
-  "short_name": "Zui System",
-  "description": "Satu login untuk semua aplikasi Zui",
+  "name": "ZUI SYSTEM ERP",
+  "short_name": "ZUI ERP",
+  "description": "Satu login untuk semua modul ZUI SYSTEM ERP",
   "lang": "id",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#EDF0F3",
+  "background_color": "#0F141B",
   "theme_color": "#1D6E8C",
   "icons": [
     {

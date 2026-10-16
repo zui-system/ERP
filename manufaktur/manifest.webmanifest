@@ -1,12 +1,12 @@
 {
-  "name": "Zui Manufaktur",
-  "short_name": "Zui Manufaktur",
+  "name": "Manufaktur",
+  "short_name": "Manufaktur",
   "description": "BoM, produksi, mutu",
   "lang": "id",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#EDF0F3",
+  "background_color": "#0F141B",
   "theme_color": "#1D6E8C",
   "icons": [
     {

@@ -1,12 +1,12 @@
 {
-  "name": "Zui Keuangan",
-  "short_name": "Zui Keuangan",
+  "name": "Keuangan",
+  "short_name": "Keuangan",
   "description": "Kas, utang, piutang",
   "lang": "id",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#EDF0F3",
+  "background_color": "#0F141B",
   "theme_color": "#1D6E8C",
   "icons": [
     {
