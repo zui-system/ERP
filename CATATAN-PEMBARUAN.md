@@ -1,21 +1,12 @@
-# Pembaruan v5 (16 Okt 2026, malam)
+# Pembaruan v6 (16 Okt 2026, malam): pindah ke erp.zuisystem.com, animasi 10 detik
 
-1. **Animasi pembuka 6 detik** di semua aplikasi, dengan tempo seperti desain yang disetujui: logo, garis menyala, ilustrasi tergambar, jendela warna-warni menyala, dan cahaya berjalan. Tetap bisa dilewati dengan ketuk layar.
-2. **Ilustrasi tampil di semua aplikasi**, termasuk Inventori, Manufaktur, Keuangan, dan Karyawan.
-3. **Logo modul tanpa ZUI**: layar pembuka, layar masuk, dan ikon modul kini hanya menampilkan nama modul (mis. INVENTORI) dengan garis menyala warna modul. ZUI SYSTEM ERP tetap memakai logo ZUI / SYSTEM / ERP.
-4. **Pembaruan langsung terlihat**: halaman aplikasi selalu diambil versi terbarunya dari server, jadi setelah file diunggah, tampilan lama tidak tertahan lagi di HP.
+1. **Tautan modul mengikuti alamat ZUI SYSTEM ERP.** Dulu alamat modul tertulis tetap https://zuisystem.com/inventori/ dan seterusnya, sehingga setelah pindah ke erp.zuisystem.com tombol buka modul mengarah ke website. Sekarang alamat modul dihitung dari alamat ZUI SYSTEM ERP itu sendiri (mis. https://erp.zuisystem.com/inventori/). Tautan kembali dari modul ke ZUI SYSTEM ERP juga mengikuti alamatnya.
+2. **Alamat aplikasi tersimpan diperbarui otomatis** saat Pemilik/Admin membuka ZUI SYSTEM ERP, jadi tautan di Keuangan dan pesan undangan ikut benar.
+3. **Animasi pembuka 10 detik** di semua aplikasi (tetap bisa dilewati dengan ketuk layar).
 
-# Pembaruan v4: nama baru, logo, animasi, mode Biru Malam
-
-1. Aplikasi pusat kini **ZUI SYSTEM ERP** (nama pendek di HP: ZUI ERP). Modul tanpa kata "Zui": **Inventori, Manufaktur, Keuangan, Karyawan**.
-2. Logo baru di layar masuk dan ikon baru semua aplikasi.
-3. Mode tampilan **Biru Malam** di Pengaturan → Tampilan: Otomatis, Terang, Gelap, Biru Malam.
-
-## Cara pasang
-1. Unggah/timpa semua file di folder ini ke repo zuisystem.com (termasuk sw.js, ikon, dan manifest di tiap folder).
-2. Tidak ada perubahan Firestore Rules.
-3. Disarankan: Firebase Console → Project settings → General → **Public-facing name** = "ZUI SYSTEM ERP".
-4. Setelah unggah, tunggu sekitar 10 menit, lalu tutup aplikasi sepenuhnya dan buka lagi. Nama dan ikon di layar HP bisa butuh beberapa hari untuk berubah; agar langsung berubah, hapus pintasan lalu pasang ulang.
+## Wajib sekali saja setelah pindah domain
+- Firebase Console → Authentication → Settings → **Authorized domains** → Add domain → `erp.zuisystem.com`. Tanpa ini, masuk dengan Google dan email atur kata sandi gagal di alamat baru.
+- Pengguna masuk sekali lagi di erp.zuisystem.com (login lama tersimpan per alamat). Aplikasi yang terpasang dari alamat lama perlu dipasang ulang dari erp.zuisystem.com.
 
 # Pembaruan v3 (16 Okt 2026, siang)
 
