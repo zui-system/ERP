@@ -598,7 +598,7 @@ try{await FS.collection('perusahaan').doc(cid).set({nama:n,owner:USER.uid,ts:Dat
 await FS.collection('perusahaan').doc(cid).collection('anggota').doc(USER.uid).set({email:(USER.email||'').toLowerCase(),nama:USER.displayName||USER.email,peran:'pemilik',aktif:true,ts:Date.now()});
 await FS.collection('profil').doc(USER.uid).set({cid})}catch(e){toast(fbe(e));return}
 await boot(USER);logw('Perusahaan dibuat',n)}
-/* undangan lewat email: akun dibuat untuk email yang diundang, Firebase mengirim email "atur kata sandi" yang kembali ke ZUI SYSTEM ERP */
+/* undangan lewat email: akun dibuat untuk email yang diundang, Firebase mengirim email "atur kata sandi" yang kembali ke ZUI ERP */
 const invUrl=(em,ps)=>hubUrl()+'?undangan=1&e='+encodeURIComponent(em)+'&p='+encodeURIComponent(CO.nama||'')+(ps?'&r='+encodeURIComponent(ps):'');
 const rndPw=()=>{const a=new Uint32Array(6);crypto.getRandomValues(a);return 'Zi'+[...a].map(x=>x.toString(36)).join('')+'9a'};
 async function invMail(em,pr){const acs={url:invUrl(em,pr)};let ada=false;
@@ -608,7 +608,7 @@ async function invMail(em,pr){const acs={url:invUrl(em,pr)};let ada=false;
  if(ada)return{ok:true,ada:true};
  try{FA.languageCode=ZL;await FA.sendPasswordResetEmail(em,acs);return{ok:true}}catch(e){return{ok:false,err:fbe(e)}}}
 async function invResend(em){const v=INV.find(x=>x.id===em);try{FA.languageCode=ZL;await FA.sendPasswordResetEmail(em,{url:invUrl(em,v?RL[v.peran]:'')});toast('Email undangan dikirim ulang ke '+em+'. Minta ia memeriksa folder spam juga.')}catch(e){toast(fbe(e))}}
-function invShare(em){const v=INV.find(x=>x.id===em),r=v?RL[v.peran]||v.peran:'';shTxt(`Halo${v&&v.nama?' '+v.nama:''}, Anda diundang bergabung ke ${CO.nama} di Zui`+(r?` sebagai ${r}`:'')+`.\nBuka tautan ini dan masuk dengan email ${em}:\n${invUrl(em,r)}\nCek juga email dari ZUI SYSTEM ERP (tautan untuk membuat kata sandi; bisa masuk folder spam).`)}
+function invShare(em){const v=INV.find(x=>x.id===em),r=v?RL[v.peran]||v.peran:'';shTxt(`Halo${v&&v.nama?' '+v.nama:''}, Anda diundang bergabung ke ${CO.nama} di Zui`+(r?` sebagai ${r}`:'')+`.\nBuka tautan ini dan masuk dengan email ${em}:\n${invUrl(em,r)}\nCek juga email dari ZUI ERP (tautan untuk membuat kata sandi; bisa masuk folder spam).`)}
 async function invite(){const em=$('#ie').value.trim().toLowerCase();if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){toast('Isi email yang valid');$('#ie').focus();return}
 if(MEM.some(m=>(m.email||'').toLowerCase()===em)){toast('Email ini sudah menjadi anggota');return}
 const p=$('#ip').value;if(!RS.includes(p))return;
