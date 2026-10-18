@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="id"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#1D6E8C"><title>ZUI SYSTEM ERP</title><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-192.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<meta name="theme-color" content="#1D6E8C"><title>ZUI ERP</title><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-192.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600&family=Outfit:wght@300;400;600&display=swap">
 <style>
 
@@ -215,7 +215,7 @@ html:root[data-app="navy"] dialog{background:#161E29}
 </g>
 <circle class="zp" cx="0" cy="230" r="2" fill="#2F6BFF" stroke="none" style="filter:drop-shadow(0 0 4px #2F6BFF)"/>
 </svg><div class="zco">PT. ZAOR UTAMA INDONESIA</div></div><script>(function(){var e=document.getElementById("zsp");if(!e)return;var k="zui.spl.sys",s=null;try{s=sessionStorage.getItem(k)}catch(x){}if(s){e.remove();return}try{sessionStorage.setItem(k,"1")}catch(x){}var r=false;try{r=matchMedia("(prefers-reduced-motion: reduce)").matches}catch(x){}var t=r?1200:10000,done=function(){e.classList.add("out");setTimeout(function(){if(e.parentNode)e.remove()},600)};setTimeout(done,t);e.addEventListener("click",done)})()</script>
-<div class="app"><div class="top tl"><img id="lg" alt="" style="display:none"><div><b>ZUI SYSTEM ERP</b><small id="cn">Satu login untuk semua aplikasi Zui</small></div></div>
+<div class="app"><div class="top tl"><img id="lg" alt="" style="display:none"><div><b>ZUI ERP</b><small id="cn">Satu login untuk semua aplikasi Zui</small></div></div>
 <div class="hd" id="hd"><div class="hdi" id="hdi" role="tablist"></div></div>
 <div class="pv" id="pv"><section id="p_app"></section><section id="p_pan"></section><section id="p_mem"></section><section id="p_log"></section><section id="p_set"></section></div>
 <button class="fab" id="fab" onclick="fa()" style="display:none"></button></div>
@@ -536,7 +536,7 @@ function apRun(){if(!CID){APR=[];TGS=[];return}const r=ME.peran,me=ME.uid,A=isAd
  APR=R.filter(x=>!APDONE.has(x.k)).sort((a,b)=>(b.ts||0)-(a.ts||0));TGS=T;TGL=Object.keys(N).filter(k=>N[k]).every(k=>AP[k]!==undefined);
  if(APSEEN){const nw=APR.filter(x=>!APSEEN.has(x.k));nw.forEach(x=>APSEEN.add(x.k));if(nw.length)apNotify(nw)}
  apBadge();try{rApp()}catch(e){}}
-function apBadge(){const n=APR.length;try{document.title=(n?'('+n+') ':'')+'ZUI SYSTEM ERP'}catch(e){}try{if(navigator.setAppBadge){if(n)navigator.setAppBadge(n).catch(()=>{});else navigator.clearAppBadge().catch(()=>{})}}catch(e){}}
+function apBadge(){const n=APR.length;try{document.title=(n?'('+n+') ':'')+'ZUI ERP'}catch(e){}try{if(navigator.setAppBadge){if(n)navigator.setAppBadge(n).catch(()=>{});else navigator.clearAppBadge().catch(()=>{})}}catch(e){}}
 function apNotify(L){const x=L[0],t=L.length>1?ztr(L.length+' pengajuan baru menunggu persetujuan'):ztr('Pengajuan baru: '+x.tp);toast(t);try{if(navigator.vibrate)navigator.vibrate(150)}catch(e){}
  try{if(!('Notification' in window)||Notification.permission!=='granted'||document.visibilityState==='visible')return;const o={body:L.length>1?L.slice(0,4).map(z=>z.tp).join('\n'):t,tag:'zui-apr',renotify:true,icon:'icon-192.png',badge:'icon-192.png'},ttl='ZUI SYSTEM ERP · '+ztr('Persetujuan');
   if(navigator.serviceWorker&&navigator.serviceWorker.controller)navigator.serviceWorker.ready.then(r=>r.showNotification(ttl,o)).catch(()=>{});else new Notification(ttl,o)}catch(e){}}
