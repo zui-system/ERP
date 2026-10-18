@@ -1,7 +1,7 @@
 {
-  "name": "ZUI SYSTEM ERP",
+  "name": "ZUI ERP",
   "short_name": "ZUI ERP",
-  "description": "Satu login untuk semua modul ZUI SYSTEM ERP",
+  "description": "Satu login untuk semua modul ZUI ERP",
   "lang": "id",
   "start_url": "./",
   "scope": "./",
