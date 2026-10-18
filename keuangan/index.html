@@ -74,7 +74,7 @@ textarea.ni{resize:vertical;font-size:12px;font-family:ui-monospace,monospace}
 .pill.ok{color:var(--ok);border-color:var(--ok)}.pill.bad{color:var(--bad);border-color:var(--bad)}.pill.am{color:var(--am);border-color:var(--am)}
 .rd{display:flex;gap:14px;margin-top:6px}.rd label{display:flex!important;gap:6px;align-items:center;margin:0!important;color:var(--ink)!important;font-size:13px!important}.rd input{width:auto!important;display:inline-block!important;margin:0!important}
 .ac2{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:10px 0;border-bottom:1px solid var(--ln)}.ac2 b{font-weight:400;font-size:17px;text-align:right}
-/* garis menyala (seragam dengan ZUI SYSTEM ERP; kekuatan --gl: terang 0.4, gelap 1) */
+/* garis menyala (seragam dengan ZUI ERP; kekuatan --gl: terang 0.4, gelap 1) */
 :root{--gl:.4;--gc:#E5617A}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--gl:1}}
 :root[data-theme="dark"],html:root[data-app="dark"]{--gl:1}
@@ -97,7 +97,7 @@ textarea.ni{resize:vertical;font-size:12px;font-family:ui-monospace,monospace}
 .aps{font-size:12px;color:var(--mu);margin-top:8px}.aps b{font-weight:600;color:var(--ink)}.apd{font-size:13px;margin-top:8px;padding-top:6px;border-top:1px dashed var(--ln);display:grid;gap:2px;overflow-wrap:anywhere}
 .apc .act{margin-top:10px}.apc .act .apy{background:var(--ok);border-color:var(--ok);color:var(--bg);font-weight:600;padding:8px 20px;font-size:14px}.apc .act .apx{border-color:var(--bad);color:var(--bad);font-weight:600;padding:8px 20px;font-size:14px}.apc button:disabled{opacity:.55}
 
-/* ===== ZUI SYSTEM ERP v4: logo, animasi pembuka, mode Biru Malam ===== */
+/* ===== ZUI ERP v4: logo, animasi pembuka, mode Biru Malam ===== */
 html:root[data-app="navy"]{--bg:#0F141B;--sf:#161E29;--ink:#E8ECF1;--mu:#97A1AE;--ln:#253140;--ac:#5B8CFF;--am:#E6A54A;--ok:#5CC596;--bad:#E8777F;--gl:1;color-scheme:dark}
 html:root[data-app="navy"] body,html:root[data-app="navy"] .au{background:radial-gradient(120% 60% at 50% -8%,rgba(47,107,255,.20),rgba(47,107,255,.06) 45%,rgba(47,107,255,0) 70%) fixed,var(--bg)}
 html:root[data-app="navy"] dialog{background:#161E29}
@@ -180,7 +180,7 @@ html:root[data-app="navy"] dialog{background:#161E29}
 <button class="fab" id="fab" onclick="fa()" style="display:none"></button></div>
 <div id="ts" role="status"></div><dialog id="dk"></dialog>
 <div id="nc" class="au" style="display:none"><div class="ac"><h1 class="zwm zwm2" style="--zc:#E5617A" aria-label="Keuangan"><span class="zmw" aria-hidden="true" style="font-size:27.0px"><span>K</span><span>E</span><span>U</span><span>A</span><span>N</span><span>G</span><span>A</span><span>N</span></span><span class="zml" aria-hidden="true"><u></u></span></h1><p class="m" id="nct">Akun Anda belum tergabung ke perusahaan.</p>
-<div class="sgs"><button class="bt" onclick="location.reload()">Coba lagi</button><a class="ab" id="nsy" href="#" style="display:none">Buka ZUI SYSTEM ERP</a><button class="bt" onclick="logout()">Keluar</button></div></div></div>
+<div class="sgs"><button class="bt" onclick="location.reload()">Coba lagi</button><a class="ab" id="nsy" href="#" style="display:none">Buka ZUI ERP</a><button class="bt" onclick="logout()">Keluar</button></div></div></div>
 <div id="au" class="au" style="display:none"><form class="ac" onsubmit="return authGo(event)"><h1 class="zwm zwm2" style="--zc:#E5617A" aria-label="Keuangan"><span class="zmw" aria-hidden="true" style="font-size:27.0px"><span>K</span><span>E</span><span>U</span><span>A</span><span>N</span><span>G</span><span>A</span><span>N</span></span><span class="zml" aria-hidden="true"><u></u></span></h1><p class="m">Masuk dengan akun ZUI SYSTEM ERP Anda</p>
 <div class="sgs"><button type="button" id="ain" class="sg on" onclick="amode('in')">Masuk</button><button type="button" id="aup" class="sg" onclick="amode('up')">Daftar</button></div>
 <input id="ae" type="email" required autocomplete="email" placeholder="Email" aria-label="Email"><input id="ap" type="password" required autocomplete="current-password" placeholder="Kata sandi" aria-label="Kata sandi" oninput="pwUi()"><input id="ap2" type="password" autocomplete="new-password" placeholder="Ulangi kata sandi" aria-label="Ulangi kata sandi" style="display:none" oninput="pwUi()"><div id="pwr" class="pwr"><span id="pr1">Minimal 8 karakter</span><span id="pr2">Ada angka</span><span id="pr3">Ada huruf besar</span><span id="pr4">Ada huruf kecil</span><span id="pr5">Kedua kata sandi sama</span><span style="opacity:.7">Simbol boleh ditambahkan (opsional)</span></div><button type="button" id="pwe" class="lnk" style="display:none;margin:0 auto 10px" onclick="pwShow()">Tampilkan kata sandi</button>
@@ -358,7 +358,7 @@ function rSet(){const t=localStorage.getItem('zui.keu.th')||'auto';$('#p_set').i
 <h3 class="hh">Data Inventori</h3><div class="m">${INV.ok?INV.po.length+' pembelian, '+INV.so.length+' penjualan terbaca':'Belum terbaca'}</div><div class="sgs" style="margin-top:8px"><button class="bt" onclick="rld()">Muat ulang</button></div>
 <h3 class="hh">Alur kerja</h3><p class="m">${alur()?'Pengeluaran dan transfer kas menunggu persetujuan Pemilik atau Admin. Pembayaran utang baru diterapkan ke Inventori setelah disetujui.':'Persetujuan tidak diwajibkan oleh perusahaan ini (diatur di ZUI SYSTEM ERP).'}</p>
 ${zuiSetUI()}<h3 class="hh">Tampilan</h3>${chips(['Otomatis','Terang','Gelap','Biru Malam'],['auto','light','dark','navy'].indexOf(t),'th')}
-<div class="sgs" style="margin-top:12px">${/^ISI/.test(SYSURL)?'':`<a class="ab" href="${E(SYSURL)}">Buka ZUI SYSTEM ERP</a>`}<button class="bt" onclick="logout()">Keluar</button></div>`}
+<div class="sgs" style="margin-top:12px">${/^ISI/.test(SYSURL)?'':`<a class="ab" href="${E(SYSURL)}">Buka ZUI ERP</a>`}<button class="bt" onclick="logout()">Keluar</button></div>`}
 async function rld(){await ldInv();rAll();toast(INV.ok?'Data Inventori dimuat ulang':'Data Inventori belum terbaca')}
 function rAll(){rRg();rKs();rUt();rPi();rSet();fab()}
 /* ---------- akun ---------- */
@@ -441,7 +441,7 @@ await FS.collection('perusahaan').doc(cid).collection('anggota').doc(u.uid).set(
 await FS.collection('profil').doc(u.uid).set({cid});try{await iv.ref.delete()}catch(e){}return cid}
 async function boot(u){USER=u;ME={uid:u.uid,email:u.email||'',nama:u.displayName||u.email||'Pengguna',peran:''};CID=null;$('#nc').style.display='none';
 let cid=null;try{const pr=await FS.collection('profil').doc(u.uid).get();cid=pr.exists?pr.data().cid:null;zuiP(pr.exists?pr.data().bahasa:'');if(!cid)cid=await tryInvite(u)}catch(e){toast(fbe(e))}
-if(!cid){noCo('Akun Anda belum tergabung ke perusahaan mana pun. Minta pemilik mengundang email '+(u.email||'')+' di ZUI SYSTEM ERP.');return}
+if(!cid){noCo('Akun Anda belum tergabung ke perusahaan mana pun. Minta pemilik mengundang email '+(u.email||'')+' di ZUI ERP.');return}
 CID=cid;let mb=null,co=null;try{mb=await coRef().collection('anggota').doc(u.uid).get();co=await coRef().get()}catch(e){toast(fbe(e))}
 if(!mb||!mb.exists||!co||!co.exists||mb.data().aktif!==true||!RL[mb.data().peran]){CID=null;noCo('Akun Anda tidak aktif di perusahaan ini. Hubungi pemilik atau admin.');return}
 ME.peran=mb.data().peran;ME.nama=mb.data().nama||ME.nama;CO=Object.assign({nama:'',apps:{}},co.data());zuiCo(CO);if(Date.now()>lgEnd(CO)){window.__lg={cid:cid,nama:CO.nama};CID=null;noCo(LGMSG);return}
