@@ -1,3 +1,12 @@
+# Pembaruan v8 (19 Okt 2026): syarat, bantuan, versi, ubah nama
+
+1. **Syarat dan Kebijakan Privasi di semua modul.** Layar masuk Inventori, Manufaktur, Keuangan, dan Karyawan kini memuat "Dengan masuk atau mendaftar, Anda menyetujui Syarat dan Kebijakan Privasi" (satu halaman `syarat.html` untuk semua aplikasi).
+2. **Kaki halaman Pengaturan di semua aplikasi:** tautan Syarat dan Kebijakan Privasi, "ZUI ERP versi 26.01", dan "Aplikasi ZUI ERP dikelola oleh PT. Zaor Utama Indonesia".
+3. **Bantuan dari modul.** Pemilik/Admin melihat tombol "Bantuan dan pertanyaan umum" di Pengaturan modul; tombol ini membuka Langganan dan bantuan di ZUI ERP (tersambung ke Zui Admin). Peran lain melihat "Hubungi pemilik atau admin perusahaan Anda" karena kotak bantuan hanya untuk Pemilik/Admin.
+4. **Ubah nama sendiri** di ZUI ERP > Pengaturan > Akun > Ubah nama, termasuk untuk Pemilik (peran Pemilik tetap tidak bisa diubah). Nama baru dipakai di semua modul saat dibuka lagi.
+
+Tidak ada perubahan Firestore Rules. Cache service worker naik: sys v43, inv v25, mfg v23, keu v22, kar v21.
+
 # Pembaruan v7 (19 Okt 2026): perbaikan sinkron antar modul dan bug
 
 1. **Inventori tidak lagi membuang perubahan.** Dulu, bila dua orang (atau Keuangan/ZUI ERP saat menyetujui pembelian) menyimpan hampir bersamaan, perubahan yang terlambat dibuang dan muncul "mohon ulangi". Sekarang penyimpanan memakai transaksi dan perubahan digabung per baris data (barang, batch, pembelian, penjualan, kontak), jadi keduanya tersimpan.
