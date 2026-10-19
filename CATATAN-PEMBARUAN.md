@@ -1,3 +1,19 @@
+# Pembaruan v7 (19 Okt 2026): perbaikan sinkron antar modul dan bug
+
+1. **Inventori tidak lagi membuang perubahan.** Dulu, bila dua orang (atau Keuangan/ZUI ERP saat menyetujui pembelian) menyimpan hampir bersamaan, perubahan yang terlambat dibuang dan muncul "mohon ulangi". Sekarang penyimpanan memakai transaksi dan perubahan digabung per baris data (barang, batch, pembelian, penjualan, kontak), jadi keduanya tersimpan.
+2. **Satu akun di dua perangkat ikut sinkron.** Dulu perubahan dari akun yang sama di perangkat lain (mis. HP dan laptop pemilik) tidak dimuat otomatis.
+3. **Jam perangkat yang tidak tepat tidak lagi merusak sinkron.** Versi data selalu naik, bukan bergantung pada jam perangkat.
+4. **Perubahan offline digabung saat aplikasi dibuka lagi**, tidak menimpa perubahan orang lain. Mode luar jaringan Inventori kini benar-benar bisa dipakai (dulu data perusahaan terakhir tidak pernah tersimpan) dan memakai peran terakhir, bukan Admin.
+5. **Pembayaran dari Keuangan langsung masuk ke Inventori** (bayar utang, terima piutang, atau persetujuan pengeluaran di Keuangan maupun di ZUI ERP). Dulu baru diterapkan saat ada yang membuka Inventori, sehingga utang di Inventori dan Pantauan tertinggal.
+6. **Serah bahan dan terima hasil produksi aman dari balapan.** Gudang mengklaim permintaan di Manufaktur dulu sebelum stok berubah: permintaan yang sudah dibatalkan tidak lagi mengurangi stok, dan hasil produksi tidak bisa diterima dua kali dari dua perangkat.
+7. **Permintaan bahan, hasil lulus mutu, dan pembayaran tampil langsung di Inventori** tanpa perlu membuka ulang aplikasi. Stok di Manufaktur juga ikut diperbarui saat Inventori berubah.
+8. **Manufaktur menolak aksi dengan status basi** (mis. membatalkan permintaan yang sudah diserahkan gudang) dan riwayat produksi tidak lagi tertimpa.
+9. **Karyawan: Admin/Pemilik kini melihat data kehadiran.** Dulu daftar kehadiran Admin selalu kosong, sehingga Admin tidak bisa absen pulang dan absen masuk bisa tertimpa.
+10. **Nomor pembelian/penjualan** melanjutkan nomor terbesar tahun ini (tidak bentrok setelah ada pembelian dihapus atau dibuat bersamaan).
+11. **Terjemahan English/Melayu kembali berfungsi** pada teks yang sebelumnya diganti menjadi "ZUI ERP".
+
+Tidak ada perubahan Firestore Rules. Cache service worker naik: sys v42, inv v24, mfg v22, keu v21, kar v20.
+
 # Pembaruan v6 (16 Okt 2026, malam): pindah ke erp.zuisystem.com, animasi 10 detik
 
 1. **Tautan modul mengikuti alamat ZUI SYSTEM ERP.** Dulu alamat modul tertulis tetap https://zuisystem.com/inventori/ dan seterusnya, sehingga setelah pindah ke erp.zuisystem.com tombol buka modul mengarah ke website. Sekarang alamat modul dihitung dari alamat ZUI SYSTEM ERP itu sendiri (mis. https://erp.zuisystem.com/inventori/). Tautan kembali dari modul ke ZUI SYSTEM ERP juga mengikuti alamatnya.
