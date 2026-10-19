@@ -1,3 +1,11 @@
+# Pembaruan v9 (19 Okt 2026): tampilan
+
+1. Tombol di jendela dokumen (Terima ke gudang, Cetak, Kirim, Tutup) dan dialog lain kini rapi dan tidak terpotong di layar HP.
+2. Kaki Pengaturan dirapikan dengan garis pemisah: Syarat dan Kebijakan Privasi, **ZUI ERP versi 26.01**, "Aplikasi ZUI ERP dikelola oleh ZUI System, PT. Zaor Utama Indonesia", dan "Jelajahi aplikasi lain di zuisystem.com".
+3. **Ikon pesan** di pojok kanan atas semua aplikasi (Pemilik/Admin): membuka Langganan dan bantuan (chat ke Zui Admin), dengan titik merah bila ada balasan baru.
+
+Cache service worker naik: sys v44, inv v26, mfg v24, keu v23, kar v22.
+
 # Pembaruan v8 (19 Okt 2026): syarat, bantuan, versi, ubah nama
 
 1. **Syarat dan Kebijakan Privasi di semua modul.** Layar masuk Inventori, Manufaktur, Keuangan, dan Karyawan kini memuat "Dengan masuk atau mendaftar, Anda menyetujui Syarat dan Kebijakan Privasi" (satu halaman `syarat.html` untuk semua aplikasi).
