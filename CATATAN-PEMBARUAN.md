@@ -1,3 +1,16 @@
+# Pembaruan v14 (20 Okt 2026): satu warna per aplikasi, Pengaturan selebar layar, tampilan HP
+
+1. **Satu warna per aplikasi.** Tombol aktif, tombol utama (mis. Simpan), tombol + di pojok, tautan, dan garis atas kini memakai warna aplikasi masing-masing: ZUI ERP biru (sama dengan kartu ZUI ERP; dulu garis atas dan tombol berwarna biru muda kehijauan), Inventori hijau, Manufaktur oranye, Karyawan ungu, Keuangan merah muda. Tab aktif di semua aplikasi bergaris bawah warna aplikasi. Bilah status di HP Android kini mengikuti latar aplikasi (dulu biru kehijauan).
+2. **Bahasa dan Tampilan masing-masing satu tombol.** Tombol menampilkan pilihan yang aktif (mis. "Indonesia", "Gelap"); ketuk untuk membuka daftar pilihan.
+3. **Bentuk tombol seragam**: semua tombol bersudut 8px dengan ukuran yang sama (tidak ada lagi tombol bulat lonjong di samping tombol kotak, atau tombol Simpan yang lebih besar).
+4. **Pengaturan di laptop/PC selebar halaman** (dulu satu kolom sempit di tengah). Kolom isian tetap selebar wajar agar mudah dibaca.
+5. **Kaki halaman lebih rapat ke bawah** dan tulisannya sedikit lebih kecil, di semua aplikasi.
+6. **Tampilan HP tidak lagi menempel di tepi layar.** Baris tab di atas dulu digeser sampai tab menempel di tepi kiri/kanan layar sehingga terlihat terpotong; sekarang tab aktif selalu utuh di dalam batas tepi, tab lain memudar di tepi. Angka ringkasan (mis. saldo) di HP kecil tidak lagi terpotong "…".
+7. **Perbaikan:** di Keuangan, Karyawan, dan Manufaktur tombol "Buka ZUI ERP" dan "Keluar" tersasar ke bagian Tampilan/Peran; sekarang ada di bagian Akun.
+8. Alat potret `uji/foto.mjs` bisa memotret setiap tab sepanjang isinya (`node foto.mjs hasil dark penuh`) dan memeriksa otomatis isi yang keluar layar, terpotong "…", atau tab aktif yang keluar batas.
+
+Tidak ada perubahan Rules. Cache service worker naik: sys v51, inv v33, keu v30, mfg v31, kar v26. Uji: 28 uji data + 22 uji peramban lulus.
+
 # Pembaruan v13 (20 Okt 2026): tampilan seragam di semua aplikasi
 
 1. **Daftar berbentuk kartu seperti kartu aplikasi di ZUI ERP** di semua aplikasi (ZUI ERP, Inventori, Keuangan, Manufaktur, Karyawan): garis atas menyala dengan warna modul (ZUI ERP biru, Inventori hijau, Manufaktur oranye, Karyawan ungu, Keuangan merah muda), tersusun 1 kolom di HP dan beberapa kolom di laptop.

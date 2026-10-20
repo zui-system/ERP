@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="id"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#1D6E8C"><title>ZUI ERP</title><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-192.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<meta name="theme-color" content="#0F141B"><title>ZUI ERP</title><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-192.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600&family=Outfit:wght@300;400;600&display=swap">
 <style>
 
@@ -196,7 +196,7 @@ html:root[data-app="navy"] dialog{background:#161E29}
 .zfb{display:flex;justify-content:center;margin:28px 0 0}.zfb .ab,.zfb a{font-size:13px}.zfn{margin:28px 0 0;text-align:center;font-size:12px;color:var(--mu)}
 .top.tl{position:relative}.zmsg{margin-left:auto;align-self:flex-start;position:relative;width:40px;height:40px;border-radius:50%;border:1px solid var(--ln);background:transparent;color:var(--ink);display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer}
 .zmsg svg{width:20px;height:20px}.zmsg i{position:absolute;top:6px;right:6px;width:9px;height:9px;border-radius:50%;background:var(--bad);display:none}.zmsg.on i{display:block}
-</style><link rel="stylesheet" href="zui-ui.css?v=2"><style>:root{--k:#2F6BFF}</style><script src="zui-ui.js?v=1" defer></script></head><body><div id="zsp" aria-hidden="true" style="--zc:#2F6BFF;--zls:.45em"><div class="zsl"><div class="z1"><span class="zr">Z</span><span class="zr">U</span><span class="zr">I</span></div><div class="z2"><span>S</span><span>Y</span><span>S</span><span>T</span><span>E</span><span>M</span></div><div class="z3"><u></u><em>ERP</em><u></u></div></div><svg viewBox="0 0 390 360" fill="none" stroke="#2F6BFF" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+</style><link rel="stylesheet" href="zui-ui.css?v=3"><style>:root{--k:#2F6BFF}</style><script src="zui-ui.js?v=2" defer></script></head><body><div id="zsp" aria-hidden="true" style="--zc:#2F6BFF;--zls:.45em"><div class="zsl"><div class="z1"><span class="zr">Z</span><span class="zr">U</span><span class="zr">I</span></div><div class="z2"><span>S</span><span>Y</span><span>S</span><span>T</span><span>E</span><span>M</span></div><div class="z3"><u></u><em>ERP</em><u></u></div></div><svg viewBox="0 0 390 360" fill="none" stroke="#2F6BFF" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 <g stroke-opacity="0.05"><path class="zd" pathLength="100" d="M195 230 L-650 360 M195 230 L-371 360 M195 230 L-93 360 M195 230 L195 360 M195 230 L483 360 M195 230 L761 360 M195 230 L1040 360"/><path class="zd" pathLength="100" d="M0 240 H390 M0 254 H390 M0 274 H390 M0 304 H390 M0 344 H390"/></g>
 <g transform="translate(0 30)">
 <g stroke-opacity="0.06"><path class="zd" pathLength="100" d="M0 200 V168 H20 V140 H38 V158 H58 V118 H74 V146 H96 V160 H118 V128 H134 V150 H160 V136 H182 V112 H198 V150 H222 V132 H240 V160 H262 V124 H280 V146 H300 V106 H318 V140 H340 V156 H362 V130 H378 V162 H390"/></g>
@@ -716,8 +716,8 @@ const ldS=u=>new Promise((ok,no)=>{const s=document.createElement('script');s.sr
 const pv=$('#pv'),hd=$('#hd'),hdi=$('#hdi');hdi.innerHTML=N.map((n,i)=>`<button role="tab" onclick="go(${i})">${n}</button>`).join('');const bt=[...hdi.children];
 function go(i){pv.scrollTo({left:i*pv.clientWidth,behavior:'smooth'})}
 function fa(){}
-function sync(){const w=pv.clientWidth||1,p=pv.scrollLeft/w,i=Math.max(0,Math.min(Math.floor(p),LN)),f=p-i,a=bt[i].offsetLeft,b=bt[Math.min(i+1,LN)].offsetLeft,mx=Math.max(0,hdi.offsetWidth-(hd.clientWidth-20));
-hdi.style.transform='translateX('+(-Math.min(a+(b-a)*f,mx))+'px)';const k=Math.max(0,Math.min(Math.round(p),LN));bt.forEach((e,j)=>{e.classList.toggle('on',j===k);e.setAttribute('aria-selected',j===k)});cur=k;if(k===1&&CID&&!PANL&&isAdm()&&Date.now()-PANT>60000)ldPantau()}
+function sync(){const w=pv.clientWidth||1,p=pv.scrollLeft/w,i=Math.max(0,Math.min(Math.floor(p),LN)),f=p-i,o=parseFloat(getComputedStyle(hd).paddingLeft)||0,L=hdi.getBoundingClientRect().left,a=bt[i].getBoundingClientRect().left-L,b=bt[Math.min(i+1,LN)].getBoundingClientRect().left-L,mx=Math.max(0,hdi.offsetWidth-(hd.clientWidth-2*o)),x=Math.min(a+(b-a)*f,mx);
+hdi.style.transform='translateX('+(-x)+'px)';window.zTabMask&&zTabMask(x,hd.clientWidth-2*o,o);const k=Math.max(0,Math.min(Math.round(p),LN));bt.forEach((e,j)=>{e.classList.toggle('on',j===k);e.setAttribute('aria-selected',j===k)});cur=k;if(k===1&&CID&&!PANL&&isAdm()&&Date.now()-PANT>60000)ldPantau()}
 pv.addEventListener('scroll',()=>requestAnimationFrame(sync));addEventListener('resize',sync);
 ap();sync();$('#au').style.display='flex';ivlUi();
 (async()=>{try{for(const f of ['app','auth','firestore'])await ldS('https://www.gstatic.com/firebasejs/10.12.2/firebase-'+f+'-compat.js')}catch(e){msg('Tidak dapat memuat layanan login. Periksa koneksi internet.',1);return}

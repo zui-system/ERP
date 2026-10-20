@@ -1,6 +1,6 @@
 // Potret semua halaman kelima aplikasi (laptop dan HP) dengan data contoh di emulator.
 // Jalankan emulator dulu (npx firebase emulators:start --config ../firebase.json --project demo-zui --only firestore,auth),
-// lalu: node foto.mjs <folder-hasil> [tema: dark|light|navy]
+// lalu: node foto.mjs <folder-hasil> [tema: dark|light|navy] [penuh = potret setiap tab sepanjang isinya]
 import { chromium } from 'playwright-core';
 import { initializeTestEnvironment } from '@firebase/rules-unit-testing';
 import 'firebase/compat/firestore';
@@ -9,7 +9,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(new URL('..', import.meta.url).pathname), NM = path.resolve(new URL('node_modules/firebase', import.meta.url).pathname);
-const OUT = path.resolve(process.argv[2] || 'foto'), TEMA = process.argv[3] || 'dark', PW = 'Rahasia123', CID = 'cofoto';
+const OUT = path.resolve(process.argv[2] || 'foto'), TEMA = process.argv[3] || 'dark', PENUH = process.argv[4] === 'penuh', PW = 'Rahasia123', CID = 'cofoto';
 fs.mkdirSync(OUT, { recursive: true });
 const HOOK = `;(function(){var o=firebase.initializeApp;firebase.initializeApp=function(){var a=o.apply(this,arguments);a.firestore().useEmulator('127.0.0.1',8080);a.auth().useEmulator('http://127.0.0.1:9099',{disableWarnings:true});return a}})();`;
 const MT = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.webmanifest': 'application/manifest+json', '.png': 'image/png' };
@@ -77,7 +77,24 @@ for (const [nm, url] of APPS) {
     const n = await page.evaluate(() => N.length);
     for (let i = 0; i < n; i++) {
       await page.evaluate(i => { pv.scrollTo({ left: i * pv.clientWidth }) }, i); await new Promise(r => setTimeout(r, 700));
+      if (PENUH) { const h = await page.evaluate(i => { const s = document.querySelectorAll('.pv>section')[i]; return s.getBoundingClientRect().top + s.scrollHeight }, i); await page.setViewportSize({ width: vw.width, height: Math.max(vw.height, Math.ceil(h)) }); await new Promise(r => setTimeout(r, 300)) }
       await page.screenshot({ path: path.join(OUT, `${nm}-${i}-${lb}.png`) });
+      // periksa: tidak ada isi yang keluar dari layar atau terpotong "…" (khususnya di HP)
+      const luber = await page.evaluate(i => {
+        const s = document.querySelectorAll('.pv>section')[i], W = document.documentElement.clientWidth, r = [];
+        for (const e of [s, ...s.querySelectorAll('*')]) {
+          const b = e.getBoundingClientRect(); if (!b.width || getComputedStyle(e).visibility === 'hidden' || e.closest('.sc2,.zddm,[style*="display: none"]')) continue;
+          const st = getComputedStyle(e), txt = (e.textContent || '').trim().slice(0, 40);
+          if (b.right > W + 1 || b.left < -1) r.push('keluar layar: ' + e.tagName + '.' + e.className + ' "' + txt + '"');
+          else if (st.textOverflow === 'ellipsis' && e.scrollWidth > e.clientWidth + 1) r.push('terpotong: ' + e.tagName + '.' + e.className + ' "' + txt + '"');
+        }
+        // tab aktif utuh di dalam batas tepi kiri-kanan
+        const hd = document.getElementById('hd'), on = hd && hd.querySelector('.hdi .on');
+        if (on) { const g = parseFloat(getComputedStyle(hd).paddingLeft) || 0, b = on.getBoundingClientRect(); if (b.left < g - 1 || b.right > W - g + 1) r.push('tab aktif keluar batas: ' + on.textContent + ' ' + Math.round(b.left) + '..' + Math.round(b.right)) }
+        return [...new Set(r)].slice(0, 6);
+      }, i);
+      for (const x of luber) errs.push(`${nm} tab ${i} ${lb}: ${x}`);
+      if (PENUH) await page.setViewportSize(vw);
     }
     await ctx.close();
   }
