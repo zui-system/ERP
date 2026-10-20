@@ -26,21 +26,32 @@ html:root[data-app="light"]{--gl:.4}
 .cd:hover,.cd:focus-visible{border-color:color-mix(in srgb,var(--k) 65%,var(--ln))}
 .cg{margin-bottom:20px}
 
-/* ---- tombol: ukuran seragam, tidak terlalu besar ---- */
-.act button,.sg,.bt,.ab{padding:6px 12px;font-size:12.5px;line-height:1.3;border-radius:8px;min-height:30px}
-.sg{border-radius:99px;padding:6px 14px}
+/* ---- satu warna per aplikasi: tombol aktif, tombol utama, tautan, dan garis atas memakai warna modul (--k).
+   --ac diturunkan dari --k agar tulisan di atasnya tetap terbaca: lebih gelap di tema terang, lebih muda di tema gelap. ---- */
+:root{--ac:color-mix(in srgb,var(--k) 72%,#000)!important}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--ac:color-mix(in srgb,var(--k) 72%,#fff)!important}}
+:root[data-theme="dark"],html:root[data-app="dark"],html:root[data-app="navy"]{--ac:color-mix(in srgb,var(--k) 72%,#fff)!important}
+html:root[data-app="light"]{--ac:color-mix(in srgb,var(--k) 72%,#000)!important}
+.hd:after{background:var(--k);box-shadow:0 0 3px var(--k),0 0 9px color-mix(in srgb,var(--k) calc(var(--gl)*55%),transparent)}
+.hd:before{background:linear-gradient(color-mix(in srgb,var(--k) calc(var(--gl)*20%),transparent),transparent)}
+.hdi button{padding-bottom:5px;border-bottom:2px solid transparent}.hdi button.on{border-bottom-color:var(--k)}
+
+/* ---- tombol: satu bentuk dan ukuran di semua aplikasi (sudut 8px); yang aktif/utama berwarna modul ---- */
+.act button,.sg,.bt,.ab,.zdd,.pv section .go{padding:6px 12px;font-size:12.5px;line-height:1.3;border-radius:8px;min-height:30px;border-width:1px;border-style:solid}
+.sg.on,.pv section .go,.zddm button.on{background:var(--ac);border-color:var(--ac);color:var(--bg)}
+.pv section .go{padding:6px 14px!important;border-radius:8px!important;font-weight:600}
+.act button:active,.sg:active,.bt:active,.ab:active,.zdd:active{transform:scale(.96)}
 .btn{justify-content:flex-end;gap:8px}
 .btn>*{flex:0 1 auto}
 .btn button{padding:8px 16px;font-size:14px;line-height:1.3;border-radius:8px;min-width:88px}
 .btn .go{padding:8px 18px}
 .btn:has(>:nth-child(3)) .go{flex-basis:auto}
-.apy,.apx{padding:6px 16px!important;font-size:13px!important}
-.fab{padding:10px 16px;font-size:13px}
+.apy,.apx{padding:6px 16px!important;font-size:13px!important;border-radius:8px!important}
+.fab{padding:10px 16px;font-size:13px;background:var(--ac);color:var(--bg)}
 @media(max-width:480px){.btn>*{flex:1 1 auto}.btn:has(>:nth-child(3)) .go{flex-basis:100%}}
 
-/* ---- Pengaturan: sederhana, satu kolom, bagian dipisah garis tipis; urutan sama di semua aplikasi (zui-ui.js) ---- */
-#p_set{display:block}
-#p_set>.zs,#p_set>.zt{max-width:760px;margin:0 auto}
+/* ---- Pengaturan: selebar halaman, bagian dipisah garis tipis; urutan sama di semua aplikasi (zui-ui.js) ---- */
+#p_set{display:block;padding-bottom:0}
 #p_set>.zs{padding:6px 0 16px;border-bottom:1px solid var(--ln)}
 #p_set>.zs:has(+.zt),#p_set>.zs:last-child{border-bottom:0}
 #p_set>.zs>.hh:first-child{margin-top:12px}
@@ -48,4 +59,23 @@ html:root[data-app="light"]{--gl:.4}
 #p_set>.zs .it:before,#p_set>.zs .it:after{display:none}
 #p_set>.zs .it:last-of-type{border-bottom:0}
 #p_set>.zs .sgs{margin-bottom:4px}
-#p_set>.zs .g2{align-items:end}
+#p_set>.zs .g2{align-items:end;max-width:720px}
+#p_set>.zs .ni:not(textarea),#p_set>.zs select.ni{max-width:520px}
+#p_set>.zs .g2 .ni{max-width:none}
+#p_set>.zs .g2>button{justify-self:start}
+/* Bahasa dan Tampilan: satu tombol dengan daftar pilihan (zui-ui.js) */
+.zsel{position:relative;display:inline-block;margin:6px 0 4px}
+.zdd{display:inline-flex;align-items:center;gap:8px;color:var(--ink);border-color:color-mix(in srgb,var(--k) 55%,var(--ln))}
+.zdd:after{content:"";width:6px;height:6px;border:solid var(--mu);border-width:0 1.5px 1.5px 0;transform:translateY(-2px) rotate(45deg);transition:transform .2s}
+.zdd[aria-expanded="true"]:after{transform:translateY(1px) rotate(-135deg)}
+.zddm{position:absolute;left:0;top:calc(100% + 6px);z-index:20;min-width:100%;display:grid;gap:2px;padding:4px;border:1px solid var(--ln);border-radius:8px;background:var(--sf);box-shadow:0 12px 28px -12px rgba(0,0,0,.45)}
+.zddm[hidden]{display:none}
+.zddm button{text-align:left;white-space:nowrap;padding:7px 12px;font-size:12.5px;line-height:1.3;border-radius:6px;border:1px solid transparent}
+.zddm button:not(.on):hover{background:color-mix(in srgb,var(--k) 12%,transparent)}
+/* kaki halaman: rapat ke bawah, tulisan lebih kecil */
+#p_set .zfb{margin-top:24px}
+#p_set .zft{margin:24px 0 0;padding:12px 0 calc(10px + env(safe-area-inset-bottom,0px));font-size:10.5px;line-height:1.55}
+#p_set .zft .zv{font-size:11.5px;margin-top:6px}#p_set .zft .zx{margin-top:6px}
+
+/* ---- layar HP: angka ringkasan muat tanpa terpotong ---- */
+@media(max-width:480px){.kp b{font-size:clamp(13px,3.7vw,18px);white-space:normal;text-overflow:clip;overflow-wrap:anywhere;line-height:1.25}}
