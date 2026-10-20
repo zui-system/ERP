@@ -6,7 +6,9 @@
 4. **Firestore Rules per koleksi dan per peran** (mengikuti hak akses yang sudah ada, tidak ada perubahan alur): Kasir/Keuangan hanya boleh mengubah stok, HPP, dan lokasi barang serta jumlah batch; Gudang tidak bisa mengubah penjualan; Kasir tidak bisa mengubah pembelian; riwayat mutasi hanya bisa ditambah; Produksi/Mutu hanya membaca. Perubahan yang ditolak dikembalikan dan diberi tahu.
 5. **Saldo Keuangan tanpa batas 1.500.** Saldo tersimpan per akun (`akun.sal`) dan diperbarui di tulisan yang sama dengan transaksi kas (catat, setujui di Keuangan atau ZUI ERP, hapus). Rules memastikan saldo tidak bisa berubah tanpa transaksinya. Akun lama diisi sekali dari seluruh riwayat kas. Ringkasan bulan ini dan pengajuan menunggu juga tidak lagi terpotong.
 6. Keuangan, Manufaktur, dan ZUI ERP (Pantauan, persetujuan pembelian dan kas, Hapus/Unduh data perusahaan) membaca koleksi baru dan ikut diperbarui otomatis.
-7. `firestore.rules` kini disimpan di repo, bersama uji emulator (`uji/`: 25 uji Rules/data + 14 uji peramban).
+7. **Simpan lebih cepat untuk data sangat besar.** Pemeriksaan perubahan sebelum simpan untuk 30.000 barang + 200.000 mutasi turun dari ±3 detik menjadi ±0,4 detik (`node uji/ukur-simpan.mjs`).
+8. **Riwayat mutasi lama dimuat hanya saat dibutuhkan.** Saat dibuka, Inventori hanya memuat mutasi 180 hari terakhir (tampilan Ringkasan, Mutasi, dan Laporan memang hanya memakai yang terbaru). Mutasi lebih lama dimuat otomatis sebelum Ekspor cadangan JSON, Pulihkan cadangan, dan Hapus semua, lalu tersimpan di perangkat. Perangkat baru jadi jauh lebih hemat kuota baca.
+9. `firestore.rules` kini disimpan di repo, bersama uji emulator (`uji/`: 27 uji Rules/data + 15 uji peramban).
 
 ## Urutan pemasangan (penting)
 1. Unduh cadangan: ZUI ERP > Pengaturan > Data dan akun > **Unduh cadangan data** (Pemilik).
@@ -15,7 +17,7 @@
 4. Pemilik/Admin membuka ZUI ERP lalu Inventori sekali (pemindahan berjalan otomatis; tunggu "Tersinkron ✓"), lalu Keuangan (saldo akun diisi).
 5. Minta anggota menutup dan membuka ulang aplikasi (cache baru). Aplikasi lama yang masih terbuka akan gagal menyimpan Inventori (data lama dikunci) sampai dibuka ulang.
 
-Cache service worker naik: sys v46, inv v28, keu v25, mfg v26 (kar tetap v23).
+Cache service worker naik: sys v47, inv v29, keu v26, mfg v27 (kar tetap v23).
 
 # Pembaruan v10 (20 Okt 2026): email bisnis
 
