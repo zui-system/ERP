@@ -1,0 +1,15 @@
+{
+  "name": "zui-erp-uji",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "uji": "firebase emulators:exec --config ../firebase.json --project demo-zui --only firestore,auth \"node uji-data.mjs && node uji-e2e.mjs\"",
+    "uji:data": "firebase emulators:exec --config ../firebase.json --project demo-zui --only firestore \"node uji-data.mjs\""
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^3.0.4",
+    "firebase": "10.12.2",
+    "firebase-tools": "^13.35.1",
+    "playwright-core": "^1.56.0"
+  }
+}

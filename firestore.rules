@@ -238,14 +238,68 @@ service cloud.firestore {
       }
 
       // ---- Zui Keuangan ----
+      // saldo tersimpan per akun: sal = jumlah semua transaksi kas sah (di luar saldo awal 'awal').
+      // sal hanya boleh berubah bersama transaksi kas lk dalam tulisan yang sama, sebesar pengaruh transaksi itu.
+      function kasP(cid, k) {
+        return /databases/$(database)/documents/perusahaan/$(cid)/kas/$(k);
+      }
+      function akP(cid, a) {
+        return /databases/$(database)/documents/perusahaan/$(cid)/akun/$(a);
+      }
+      function kSah(k) {
+        return k.get('st', 'disetujui') == 'disetujui';
+      }
+      // pengaruh transaksi kas k ke saldo akun a
+      function kEff(k, a) {
+        return !kSah(k) ? 0
+          : (k.akun == a ? (k.jenis == 'masuk' ? k.jml : 0 - k.jml) : 0)
+            + ((k.jenis == 'transfer' && k.get('akun2', '') == a) ? k.jml : 0);
+      }
+      function kEffB(cid, k, a) {
+        return exists(kasP(cid, k)) ? kEff(get(kasP(cid, k)).data, a) : 0;
+      }
+      function kEffA(cid, k, a) {
+        return existsAfter(kasP(cid, k)) ? kEff(getAfter(kasP(cid, k)).data, a) : 0;
+      }
+      function salGerak(cid, a) {
+        let k = request.resource.data.lk;
+        let d = request.resource.data.sal - resource.data.sal;
+        let e = kEffA(cid, k, a) - kEffB(cid, k, a);
+        return k is string && k.size() > 0 && e != 0 && math.abs(d - e) < 0.001;
+      }
+      // dipanggil dari aturan kas: saldo akun a ikut diperbarui dalam tulisan ini
+      function salKena(cid, id, a) {
+        return getAfter(akP(cid, a)).data.get('lk', '') == id
+          && getAfter(akP(cid, a)).data.sal != get(akP(cid, a)).data.sal;
+      }
+      // perubahan pengaruh kas id (sebelum: kb, sesudah: ka) wajib tercermin di saldo akun yang terkena
+      function salSah(cid, id, kb, ka) {
+        let a1 = kb != null ? kb.akun : ka.akun;
+        let a2 = kb != null ? (kb.jenis == 'transfer' ? kb.get('akun2', '') : '') : (ka.jenis == 'transfer' ? ka.get('akun2', '') : '');
+        let e1 = (ka != null ? kEff(ka, a1) : 0) - (kb != null ? kEff(kb, a1) : 0);
+        let e2 = a2 == '' || a2 == a1 ? 0 : (ka != null ? kEff(ka, a2) : 0) - (kb != null ? kEff(kb, a2) : 0);
+        return (e1 == 0 || salKena(cid, id, a1)) && (e2 == 0 || salKena(cid, id, a2));
+      }
       match /akun/{id} {
         allow read: if mem(cid);
         allow create: if aktifCo(cid) && rin(cid, ['pemilik', 'admin', 'keuangan'])
-          && request.resource.data.keys().hasOnly(['nama', 'tipe', 'awal', 'aktif', 'by', 'uid', 'ts', 'mod'])
+          && request.resource.data.keys().hasOnly(['nama', 'tipe', 'awal', 'aktif', 'by', 'uid', 'ts', 'mod', 'sal', 'lk'])
           && request.resource.data.tipe in ['kas', 'bank']
-          && request.resource.data.awal is number;
+          && request.resource.data.awal is number
+          && request.resource.data.get('sal', 0) == 0;
         allow update: if aktifCo(cid) && rin(cid, ['pemilik', 'admin', 'keuangan'])
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['aktif', 'mod']);
+        // perubahan saldo bersama transaksi kas
+        allow update: if aktifCo(cid) && rin(cid, ['pemilik', 'admin', 'keuangan'])
+          && 'sal' in resource.data
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['sal', 'lk', 'mod'])
+          && request.resource.data.sal is number
+          && salGerak(cid, id);
+        // pengisian saldo pertama kali (dihitung dari seluruh riwayat kas oleh aplikasi)
+        allow update: if aktifCo(cid) && rin(cid, ['pemilik', 'admin', 'keuangan'])
+          && !('sal' in resource.data)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['sal', 'lk', 'mod'])
+          && request.resource.data.sal is number;
         allow delete: if dl(cid);
       }
 
@@ -259,14 +313,17 @@ service cloud.firestore {
           && request.resource.data.jml is number && request.resource.data.jml > 0
           && (request.resource.data.st == 'menunggu'
             || (request.resource.data.st == 'disetujui'
-              && (request.resource.data.jenis == 'masuk' || peran(cid) == 'pemilik' || !alurOn(cid))));
+              && (request.resource.data.jenis == 'masuk' || peran(cid) == 'pemilik' || !alurOn(cid))
+              && salSah(cid, id, null, request.resource.data)));
         // satu-satunya perubahan: keputusan Pemilik/Admin, bukan untuk pengajuan sendiri (kecuali pemilik)
         allow update: if aktifCo(cid) && adm(cid)
           && resource.data.st == 'menunggu'
           && request.resource.data.st in ['disetujui', 'ditolak']
           && (resource.data.uid != request.auth.uid || peran(cid) == 'pemilik')
-          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['st', 'apv', 'mod']);
-        allow delete: if (aktifCo(cid) && adm(cid) && (resource.data.get('rf', null) == null || resource.data.st != 'disetujui')) || dl(cid);
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['st', 'apv', 'mod'])
+          && salSah(cid, id, resource.data, request.resource.data);
+        allow delete: if (aktifCo(cid) && adm(cid) && (resource.data.get('rf', null) == null || resource.data.st != 'disetujui')
+            && salSah(cid, id, resource.data, null)) || dl(cid);
       }
 
       // instruksi pembayaran dari Keuangan, diterapkan ke Inventori saat dibuka
@@ -330,21 +387,138 @@ service cloud.firestore {
         allow delete: if dl(cid);
       }
 
-      // data Zui Inventori (dipecah per potongan karena batas 1 MB per dokumen)
+      // ---- Zui Inventori format lama (satu JSON dipecah per potongan) ----
+      // tetap dibaca sebagai cadangan; tidak bisa ditulis lagi setelah data dipindahkan (invcfg/v2 ada)
       match /inv/{d} {
         allow read: if mem(cid);
-        allow create, update: if aktifCo(cid) && mem(cid) && peran(cid) in ['pemilik', 'admin', 'gudang', 'kasir', 'keuangan']
+        allow create, update: if aktifCo(cid) && invPre(cid) && mem(cid) && peran(cid) in ['pemilik', 'admin', 'gudang', 'kasir', 'keuangan']
           && request.resource.data.keys().hasOnly(['n', 'u', 'by'])
           && request.resource.data.n is int && request.resource.data.n >= 1 && request.resource.data.n <= 40;
         allow delete: if (aktifCo(cid) && adm(cid)) || dl(cid);
       }
       match /invc/{c} {
         allow read: if mem(cid);
-        allow create, update: if aktifCo(cid) && mem(cid) && peran(cid) in ['pemilik', 'admin', 'gudang', 'kasir', 'keuangan']
+        allow create, update: if aktifCo(cid) && invPre(cid) && mem(cid) && peran(cid) in ['pemilik', 'admin', 'gudang', 'kasir', 'keuangan']
           && request.resource.data.keys().hasOnly(['d'])
           && request.resource.data.d is string
           && request.resource.data.d.size() <= 300000;
-        allow delete: if (aktifCo(cid) && mem(cid) && peran(cid) in ['pemilik', 'admin', 'gudang', 'kasir', 'keuangan']) || dl(cid);
+        allow delete: if (aktifCo(cid) && invPre(cid) && mem(cid) && peran(cid) in ['pemilik', 'admin', 'gudang', 'kasir', 'keuangan']) || dl(cid);
+      }
+
+      // ---- Zui Inventori per dokumen (format v2) ----
+      // tiap dokumen: isi baris + _u (waktu server, wajib = request.time), _by (uid penulis); hapus = tombstone {_del: true}
+      function invPre(cid) {
+        return !exists(/databases/$(database)/documents/perusahaan/$(cid)/invcfg/v2);
+      }
+      function invW(cid) {
+        return rin(cid, ['pemilik', 'admin', 'gudang', 'kasir', 'keuangan']);
+      }
+      // sebelum pemindahan selesai, peran yang dulu boleh menulis data Inventori boleh mengisi koleksi baru
+      function invMig(cid) {
+        return invPre(cid) && invW(cid);
+      }
+      function invMeta() {
+        return request.resource.data._u == request.time && request.resource.data._by == request.auth.uid;
+      }
+      function invTomb() {
+        return request.resource.data.get('_del', false) == true
+          && request.resource.data.keys().hasOnly(['_del', '_t', '_u', '_by']);
+      }
+      function invLive() {
+        return !('_del' in request.resource.data);
+      }
+      function wasLive() {
+        return resource == null || resource.data.get('_del', false) != true;
+      }
+      // hanya kolom tertentu yang berubah (selain _u, _by)
+      function invOnly(ks) {
+        return resource != null && wasLive() && invLive()
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(ks.concat(['_u', '_by']));
+      }
+      // dokumen baru (atau tombstone yang dihidupkan lagi dengan id sama)
+      function invNew() {
+        return (resource == null || !wasLive()) && invLive();
+      }
+      function invBase(cid) {
+        return aktifCo(cid) && invMeta();
+      }
+
+      // barang: Gudang/Pemilik/Admin penuh; Keuangan boleh menambah barang baru dari pembelian;
+      // Kasir/Keuangan hanya stok, HPP, dan lokasi (penjualan, penerimaan, retur)
+      match /barang/{id} {
+        allow read: if mem(cid);
+        allow create, update: if invBase(cid) && (
+          rin(cid, ['pemilik', 'admin', 'gudang'])
+          || (rin(cid, ['keuangan']) && invNew())
+          || (rin(cid, ['kasir', 'keuangan']) && invOnly(['stock', 'cost', 'loc']))
+          || invMig(cid));
+        allow delete: if dl(cid);
+      }
+      // batch: Kasir/Keuangan menambah batch (penerimaan, retur) dan mengubah sisa jumlah saja
+      match /batch/{id} {
+        allow read: if mem(cid);
+        allow create, update: if invBase(cid) && (
+          rin(cid, ['pemilik', 'admin', 'gudang'])
+          || (rin(cid, ['kasir', 'keuangan']) && (invNew() || invOnly(['q'])))
+          || invMig(cid));
+        allow delete: if dl(cid);
+      }
+      match /pembelian/{id} {
+        allow read: if mem(cid);
+        allow create, update: if invBase(cid) && (rin(cid, ['pemilik', 'admin', 'gudang', 'keuangan']) || invMig(cid));
+        allow delete: if dl(cid);
+      }
+      match /penjualan/{id} {
+        allow read: if mem(cid);
+        allow create, update: if invBase(cid) && (rin(cid, ['pemilik', 'admin', 'kasir', 'keuangan']) || invMig(cid));
+        allow delete: if dl(cid);
+      }
+      // riwayat mutasi stok: hanya bisa ditambah (Pemilik/Admin boleh menghapus lewat "Hapus semua"/pulihkan)
+      match /mutasi/{id} {
+        allow read: if mem(cid);
+        allow create, update: if invBase(cid) && (
+          (invW(cid) && invNew())
+          || adm(cid)
+          || invMig(cid));
+        allow delete: if dl(cid);
+      }
+      // kontak: Kasir/Pemilik/Admin penuh; Gudang/Keuangan menambah vendor atau pelanggan baru dari formulir
+      match /kontak/{id} {
+        allow read: if mem(cid);
+        allow create, update: if invBase(cid) && (
+          rin(cid, ['pemilik', 'admin', 'kasir'])
+          || (invW(cid) && invNew())
+          || invMig(cid));
+        allow delete: if dl(cid);
+      }
+      // batch dibuang (kerugian)
+      match /buang/{id} {
+        allow read: if mem(cid);
+        allow create, update: if invBase(cid) && (
+          adm(cid)
+          || (rin(cid, ['gudang']) && invNew())
+          || invMig(cid));
+        allow delete: if dl(cid);
+      }
+      // penanda sekali-pakai: kd_ (pembayaran Keuangan sudah diterapkan), mi_/md_ (serah bahan / terima hasil produksi), no_ (nomor nota)
+      // tidak bisa diubah; Pemilik/Admin boleh menghapus (tombstone) lewat "Hapus semua"
+      match /invtanda/{id} {
+        allow read: if mem(cid);
+        allow create, update: if invBase(cid) && (
+          (invW(cid) && invNew() && request.resource.data.keys().hasOnly(['v', 'i', '_u', '_by']))
+          || (adm(cid) && invTomb())
+          || invMig(cid));
+        allow delete: if dl(cid);
+      }
+      // set = pengaturan Inventori; v2 = penanda data sudah dipindahkan; mig = kunci selama pemindahan
+      match /invcfg/{id} {
+        allow read: if mem(cid);
+        allow create, update: if invBase(cid) && id == 'set' && (adm(cid) || invMig(cid));
+        allow create: if invBase(cid) && id == 'v2' && invMig(cid)
+          && request.resource.data.keys().hasOnly(['ts', 'by', 'u', 'n', '_u', '_by']);
+        allow create, update: if invBase(cid) && id == 'mig' && invMig(cid)
+          && request.resource.data.keys().hasOnly(['ts', 'by', '_u', '_by']);
+        allow delete: if (id == 'mig' && aktifCo(cid) && invW(cid)) || dl(cid);
       }
     }
 
