@@ -204,6 +204,33 @@ await t('Perubahan offline dari Inventori versi lama (localStorage) digabung, ti
   await g.ctx.close();
 });
 
+console.log('Uang penjualan ke kas Keuangan');
+await t('Kasir: HPP tidak tampil; penjualan tunai jadi setoran, Keuangan menerima, saldo naik', async () => {
+  eq(await kas.page.evaluate(() => { go(1); return document.querySelector('#p_brg').textContent.includes('HPP') }), false, 'HPP tampil di layar Kasir');
+  const sal0 = (await get('akun', 'ak1')).sal;
+  const sid = await kas.page.evaluate(async () => { nsale(); await new Promise(r => setTimeout(r, 300)); document.querySelector('#sl .sq').value = 2; document.querySelector('#sl .sp').value = 10000; ss(); return D.so[D.so.length - 1].id });
+  let st = null; for (let i = 0; i < 60 && !st; i++) { await adminDb(async co => { const q = await co.collection('setoran').where('rf.i', '==', sid).get(); st = q.docs[0] ? Object.assign({ id: q.docs[0].id }, q.docs[0].data()) : null }); if (!st) await new Promise(r => setTimeout(r, 250)) }
+  yes(st && st.st === 'menunggu' && st.jml === 20000, 'setoran ' + JSON.stringify(st));
+  await wait(keu.page, id => STR.some(x => x.id === id), st.id, 20000);
+  await keu.page.evaluate(async id => { stOk(id); await stOk2(id) }, st.id);
+  eq((await get('setoran', st.id)).st, 'diterima'); eq((await get('kas', 'st' + st.id)).jml, 20000);
+  eq((await get('akun', 'ak1')).sal, sal0 + 20000);
+  // dikonfirmasi dua kali tidak bisa
+  let dua = 'tidak'; await keu.page.evaluate(async id => { const m = Date.now(); try { await coRef().collection('setoran').doc(id).update({ st: 'diterima', akun: 'ak1', kas: 'st' + id, apv: null, mod: m }); return 'bisa' } catch (e) { return 'tidak' } }, st.id).then(x => { dua = x });
+  eq(dua, 'tidak');
+});
+await t('Pemilik terima cicilan di Inventori: langsung masuk kas akun yang dipilih', async () => {
+  const sal0 = (await get('akun', 'ak1')).sal;
+  const sid = await own.page.evaluate(async () => { nsale(); await new Promise(r => setTimeout(r, 300)); document.querySelector('#sl .sq').value = 1; document.querySelector('#sl .sp').value = 50000; $('#sr').checked = false; ss(); return D.so[D.so.length - 1].id });
+  await own.page.evaluate(id => bys(id), sid);
+  await wait(own.page, () => $('#kak') && $('#kak').value === 'ak1', null, 15000);
+  await own.page.evaluate(id => { $('#by').value = 30000; bys2(id) }, sid);
+  for (let i = 0; i < 60 && (await get('akun', 'ak1')).sal !== sal0 + 30000; i++) await new Promise(r => setTimeout(r, 250));
+  eq((await get('akun', 'ak1')).sal, sal0 + 30000);
+  await wait(own.page, () => !PB && !dirty(), null, 20000);
+  eq((await get('penjualan', sid)).paid, 30000);
+});
+
 console.log('Manufaktur');
 await t('Manufaktur membaca stok dari koleksi barang', async () => {
   const m = await open('pemilik', '/manufaktur/');

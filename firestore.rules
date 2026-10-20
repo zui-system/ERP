@@ -343,6 +343,26 @@ service cloud.firestore {
         allow delete: if dl(cid);
       }
 
+      // setoran: uang penjualan tunai/cicilan yang diterima Kasir di Inventori, masuk kas setelah dikonfirmasi Keuangan.
+      // Konfirmasi = transaksi kas sah 'st' + id setoran (dibuat di tulisan yang sama, saldo akun ikut diperbarui oleh aturan kas)
+      match /setoran/{id} {
+        allow read: if mem(cid) && (peran(cid) in ['pemilik', 'admin', 'keuangan'] || resource.data.uid == request.auth.uid);
+        allow create: if aktifCo(cid) && rin(cid, ['pemilik', 'admin', 'kasir', 'keuangan'])
+          && request.resource.data.keys().hasOnly(['rf', 'jml', 'tgl', 'kat', 'by', 'uid', 'ts', 'st'])
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.st == 'menunggu'
+          && request.resource.data.jml is number && request.resource.data.jml > 0;
+        allow update: if aktifCo(cid) && rin(cid, ['pemilik', 'admin', 'keuangan'])
+          && resource.data.st == 'menunggu'
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['st', 'akun', 'kas', 'apv', 'mod'])
+          && (request.resource.data.st == 'ditolak'
+            || (request.resource.data.st == 'diterima'
+              && request.resource.data.kas == 'st' + id
+              && getAfter(/databases/$(database)/documents/perusahaan/$(cid)/kas/$('st' + id)).data.st == 'disetujui'
+              && getAfter(/databases/$(database)/documents/perusahaan/$(cid)/kas/$('st' + id)).data.jml == resource.data.jml));
+        allow delete: if dl(cid);
+      }
+
       // ---- Zui Karyawan ----
       match /karyawan/{id} {
         // daftar karyawan (termasuk nomor HP) hanya untuk Pemilik/Admin; anggota lain hanya melihat datanya sendiri
