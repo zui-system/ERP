@@ -19,6 +19,10 @@ cache, perubahan offline versi lama), Keuangan (saldo dari 1.600 transaksi, baya
 ZUI ERP (setujui kas & pembelian, Pantauan), Manufaktur (stok), setoran Kasir → Keuangan, harga otomatis,
 kategori & kode otomatis, HPP produksi dengan biaya lain, kartu barang dan detail.
 
+## Potret semua halaman
+Jalankan emulator (`npx firebase emulators:start --config ../firebase.json --project demo-zui --only firestore,auth`), lalu
+`node foto.mjs folder-hasil [dark|light|navy]`: memotret setiap tab kelima aplikasi di ukuran laptop dan HP dengan data contoh.
+
 ## 2. Uji di Firebase asli sebelum tayang
 Aplikasi bisa dijalankan dari komputer sendiri terhadap project `zuisystem` (localhost sudah diizinkan Firebase Auth).
 Pakai **perusahaan uji** (akun email terpisah), bukan perusahaan pelanggan.
