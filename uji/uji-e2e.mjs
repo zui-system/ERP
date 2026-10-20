@@ -46,6 +46,8 @@ for (let i = 0; i < 300; i++) {
   OLD.bt.push({ id: 'bt' + id, iid: id, no: 'B-' + i, exp: '2027-06-01', q: 20, q0: 20, cost: 4000, vid: 'v1', ref: '', ts: i });
   OLD.mv.push({ id: 'mv' + id, iid: id, nm: 'Barang ' + i, t: 'in', q: 20, note: 'Stok awal', d: '2026-10-01', ts: i, by: 'Pemilik' });
 }
+for (let i = 0; i < 20; i++) OLD.mv.push({ id: 'mvlama' + String(i).padStart(2, '0'), iid: 'it0000', nm: 'Barang 0', t: 'in', q: 1, note: 'mutasi lama', d: '2025-03-01', ts: i, by: 'Pemilik' });
+OLD.mv.sort((a, b) => a.id < b.id ? -1 : 1);
 OLD.po.push({ id: 'po1', no: 'PO-2026-0001', vid: 'v1', d: '2026-10-02', due: '2026-10-30', lines: [{ iid: 'it0001', q: 10, c: 4000 }], paid: 0, st: 'diterima', by: 'Pemilik', bu: U.pemilik });
 OLD.po.push({ id: 'po2', no: 'PO-2026-0002', vid: 'v1', d: '2026-10-03', due: '', lines: [{ iid: 'it0002', q: 5, c: 4000 }], paid: 0, st: 'draf', by: 'Gudang', bu: U.gudang });
 OLD.so.push({ id: 'so1', no: 'INV-2026-0001', cid: 'c1', ch: '', d: '2026-10-04', lines: [{ iid: 'it0003', q: 2, p: 10000, bn: [{ no: 'B-3', q: 2 }] }], disc: 0, paid: 0, due: '', st: 'selesai' });
@@ -89,7 +91,8 @@ const own = await open('pemilik', '/inventori/');
 await t('Pemilik membuka Inventori: data lama dipindahkan otomatis, semua baris ada', async () => {
   await wait(own.page, () => typeof ZS !== 'undefined' && ZS && /Tersinkron/.test(SY), null, 60000);
   eq(await own.page.evaluate(() => [D.items.length, D.bt.length, D.mv.length, D.po.length, D.so.length, D.set.name]), [300, 300, 300, 2, 1, 'Toko uji']);
-  const v = await get('invcfg', 'v2'); yes(v && v.n === 300 * 3 + 2 + 1 + 2 + 1, 'penanda v2 ' + JSON.stringify(v));
+  const v = await get('invcfg', 'v2'); yes(v && v.n === 300 * 3 + 20 + 2 + 1 + 2 + 1, 'penanda v2 ' + JSON.stringify(v));
+  yes(await get('mutasi', 'mvlama00'), 'mutasi lama ikut dipindahkan');
   yes(await get('inv', 'meta'), 'data lama tetap ada sebagai cadangan');
 });
 await t('Pemilik mengeluarkan stok: batch, barang, mutasi tersimpan per dokumen', async () => {
@@ -125,6 +128,13 @@ await t('Muat ulang: data dari cache perangkat + perubahan terbaru', async () =>
   await wait(kas.page, () => typeof FA !== 'undefined' && FA);
   await wait(kas.page, () => typeof ZS !== 'undefined' && ZS && /Tersinkron/.test(SY), null, 60000);
   eq(await kas.page.evaluate(() => [D.items.length, D.items.find(i => i.id === 'it0050').name, D.bt.find(b => b.id === 'btit0020').q]), [300, 'Diubah server', 11]);
+});
+
+await t('Mutasi lebih dari 180 hari tidak dimuat saat dibuka; dimuat lengkap sebelum ekspor', async () => {
+  eq(await kas.page.evaluate(() => [D.mv.filter(m => m.note === 'mutasi lama').length, zFull()]), [0, false]);
+  eq(await kas.page.evaluate(() => zOld().then(() => [D.mv.filter(m => m.note === 'mutasi lama').length, zFull(), dirty()])), [20, true, false]);
+  const ids = await kas.page.evaluate(() => D.mv.map(m => m.id)); eq(ids.slice().sort(), ids, 'urutan mutasi');
+  yes((await get('mutasi', 'mvlama00'))._del !== true, 'tidak terhapus');
 });
 
 console.log('Keuangan');

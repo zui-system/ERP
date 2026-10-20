@@ -190,6 +190,35 @@ await t('ditolak server (peran): perubahan lokal dikembalikan', async () => {
   yes(/ditolak/.test(note)); eq(a.cur0().items.find(i => i.id === 'i00030').price, 1030);
 });
 
+console.log('Simpan cepat dan mutasi lama');
+await t('jalur cepat: ubah di tempat, ubah dari server, hapus tetap terdeteksi', async () => {
+  const a = S('admin'); const Da = await a.open(); a.setD(Da);
+  eq(a.diff(Da).length, 0); eq(a.diff(Da).length, 0);
+  Da.items.find(i => i.id === 'i00100').price = 1; eq(a.diff(Da).map(x => x.id), ['i00100']);
+  Da.items.find(i => i.id === 'i00100').price = 1100; eq(a.diff(Da).length, 0);
+  const b = S('gudang'); const Db = await b.open(); b.setD(Db); Db.items.find(i => i.id === 'i00101').price = 5; await b.push();
+  await a.catchUp(Da); eq(a.diff(Da).length, 0); eq(Da.items.find(i => i.id === 'i00101').price, 5);
+  Da.mv = Da.mv.slice(); Da.mv.splice(3, 1); eq(a.diff(Da).map(x => x.k + ':' + (x.l ? 'ubah' : 'hapus')), ['mv:hapus']);
+});
+await t('mutasi lama tidak dimuat saat dibuka, tidak dianggap terhapus, dimuat lewat loadOld', async () => {
+  await env.withSecurityRulesDisabled(async c => {
+    const f = c.firestore(), b = f.batch();
+    for (let i = 0; i < 50; i++) b.set(co(f).collection('mutasi').doc('lama' + String(i).padStart(3, '0')), { iid: 'i00000', nm: 'Barang 0', t: 'in', q: 1, note: 'lama', d: '2025-01-0' + (1 + i % 9), ts: i, by: 'x', _u: firebase.firestore.FieldValue.serverTimestamp(), _by: 'x' });
+    await b.commit();
+  });
+  const a = new ZINV.Store({ fs: db('admin'), cid: CID, me: me('admin'), write: true, lazy: 180, getD: () => Da, setD: x => { Da = x } }); let Da = await a.open();
+  yes(!Da.mv.some(m => m.note === 'lama'), 'mutasi lama tidak dimuat'); yes(Da.mv.length > 1000, 'mutasi baru dimuat');
+  eq(a.diff(Da).length, 0, 'tidak ada hapus palsu');
+  Da.mv.push({ id: 'zbaru1', iid: 'i00000', nm: 'B', t: 'out', q: -1, note: 'baru', d: '2026-10-20', ts: 9, by: 'x' }); await a.push();
+  yes((await co(db('admin')).collection('mutasi').doc('lama000').get()).data()._del !== true, 'mutasi lama tetap ada di server');
+  await a.loadOld(); eq(Da.mv.filter(m => m.note === 'lama').length, 50); yes(a.full);
+  const ids = Da.mv.map(m => m.id); eq(ids.slice().sort(), ids, 'urut');
+  eq(a.diff(Da).length, 0);
+  // hapus semua (seperti tombol "Hapus semua") setelah memuat lama: mutasi lama ikut dihapus
+  Da.mv = []; await a.push();
+  yes((await co(db('admin')).collection('mutasi').doc('lama000').get()).data()._del === true, 'mutasi lama ikut terhapus');
+});
+
 console.log('Modul lain');
 await t('editDoc: Admin menyetujui pembelian', async () => {
   const p = await ZINV.editDoc(db('admin'), CID, me('admin'), 'po', 'p1', p => { p.st = 'disetujui' });

@@ -32,7 +32,7 @@ Pemilik tidak bisa diubah atau dikeluarkan oleh siapa pun. Satu akun hanya bisa 
 
 ## Batasan yang perlu diketahui
 - Rules kini membatasi data Inventori per koleksi dan per peran (lihat tabel di bawah), tetapi pembacaan belum dibedakan per kolom: anggota yang boleh membaca Inventori secara teknis dapat membaca semua isinya, termasuk HPP.
-- Perangkat yang pertama kali membuka Inventori membaca seluruh dokumen sekali; berikutnya hanya perubahan sejak terakhir (cache di perangkat).
+- Perangkat yang pertama kali membuka Inventori membaca seluruh dokumen sekali (kecuali mutasi lebih dari 180 hari, yang dibaca hanya saat ekspor/pulihkan/hapus semua); berikutnya hanya perubahan sejak terakhir (cache di perangkat).
 
 ## Data Inventori per dokumen (sejak v11)
 Data Inventori disimpan per baris di koleksi `perusahaan/{cid}/…`:
@@ -57,7 +57,7 @@ Kode bersama untuk semua modul ada di `zdata.js` (ZINV = data Inventori, ZKAS = 
 `akun/{id}.sal` = jumlah semua transaksi kas sah (di luar saldo awal `awal`). Setiap transaksi kas yang sah, disetujui, atau dihapus wajib memperbarui `sal` di tulisan yang sama (Rules memeriksa besarnya). Akun lama diisi otomatis sekali dari seluruh riwayat kas saat Keuangan atau persetujuan ZUI ERP dibuka. Tidak ada lagi batas 1.500 transaksi untuk saldo.
 
 ## Uji
-Folder `uji/`: `npm install` lalu `npm run uji` (butuh Java 11+). Menjalankan emulator Firestore + Auth, 25 uji Rules/data dan 14 uji peramban. Lihat `uji/README.md` untuk uji di Firebase asli.
+Folder `uji/`: `npm install` lalu `npm run uji` (butuh Java 11+). Menjalankan emulator Firestore + Auth, 27 uji Rules/data dan 15 uji peramban. Lihat `uji/README.md` untuk uji di Firebase asli.
 
 ## Menunggu tindakan Anda
 Tab Aplikasi menampilkan daftar pekerjaan yang menunggu peran Anda dari semua aplikasi (persetujuan BoM, permintaan bahan, uji mutu, hasil menunggu diterima, pembelian menunggu persetujuan atau konfirmasi keuangan), lengkap dengan tombol Buka ke aplikasinya.

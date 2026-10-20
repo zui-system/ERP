@@ -73,14 +73,17 @@
     return Object.assign({ v: enc(clone(v.v)) }, m);
   }
 
+  // panggil f(k, id, v) untuk setiap baris di D
+  function walk(D, f) {
+    for (const k in KINDS) for (const r of (D[k] || [])) if (r && r.id) f(k, String(r.id), r);
+    for (const id in (D.kasDone || {})) f('kd', id, { v: D.kasDone[id] });
+    for (const id in (D.mfgIss || {})) f('mi', id, { v: D.mfgIss[id] });
+    for (const id of (D.mfgDone || [])) f('md', String(id), { v: 1 });
+    if (D.set) f('set', 'set', { v: D.set });
+  }
   // D -> Map(key -> {k,id,v,j})
   function explode(D) {
-    const M = new Map(), put = (k, id, v) => { const key = keyOf(k, id); M.set(key, { k, id, v, j: canon(v) }) };
-    for (const k in KINDS) for (const r of (D[k] || [])) if (r && r.id) put(k, String(r.id), r);
-    for (const id in (D.kasDone || {})) put('kd', id, { v: D.kasDone[id] });
-    for (const id in (D.mfgIss || {})) put('mi', id, { v: D.mfgIss[id] });
-    for (const id of (D.mfgDone || [])) put('md', String(id), { v: 1 });
-    if (D.set) put('set', 'set', { v: D.set });
+    const M = new Map(); walk(D, (k, id, v) => M.set(keyOf(k, id), { k, id, v, j: canon(v) }));
     return M;
   }
   // Map entri -> D baru
@@ -297,18 +300,26 @@
   /* ---------- Store: cache + muat inkremental + simpan ---------- */
   function Store(o) {
     this.fs = o.fs; this.cid = o.cid; this.me = o.me; this.co = o.fs ? o.fs.collection('perusahaan').doc(o.cid) : null;
-    this.cols = o.cols || COLS; this.write = !!o.write; this.ro = new Set(o.ro || []); this.getD = o.getD; this.setD = o.setD;
+    this.cols = o.cols || COLS; this.write = !!o.write; this.ro = new Set(o.ro || []);
+    // lazy = jumlah hari mutasi yang dimuat saat dibuka; mutasi lebih lama dimuat lewat loadOld() bila perlu
+    this.cut = o.lazy && this.cols.includes('mutasi') ? new Date(Date.now() - o.lazy * 864e5).toLocaleDateString('sv-SE') : '';
+    this.mvSrv = ''; this.full = !this.cut; this.getD = o.getD; this.setD = o.setD;
     this.onChange = o.onChange || (() => { }); this.onNote = o.onNote || (() => { });
-    this.B = new Map(); this.cur = 0; this.un = []; this.q = []; this.busy = 0; this.again = 0; this.pt = 0; this.mode = 'v2';
+    this.B = new Map(); this.S = new Map(); this.W = new WeakMap(); this.live = 0; this.cur = 0; this.un = []; this.q = []; this.busy = 0; this.again = 0; this.pt = 0; this.mode = 'v2';
   }
+  // ubah isi cache server untuk satu kunci (salinan cepat S untuk kunci itu tidak berlaku lagi)
+  Store.prototype.counts = function (e) { return !!e && e.j !== null && e.k !== 'no' && !this.ro.has(e.k) };
+  Store.prototype.setB = function (key, e) { const o = this.B.get(key); this.live += (this.counts(e) ? 1 : 0) - (this.counts(o) ? 1 : 0); this.B.set(key, e); this.S.delete(key) };
   Store.prototype.ns = function () { return this.cid + '|' + this.cols.join(',') };
   Store.prototype.D = function () { return implode(this.B.values()) };
   // muat dari cache perangkat, lalu ambil perubahan dari server sejak terakhir
   Store.prototype.open = async function (offline) {
     const ns = this.ns(), [rows, meta] = await Promise.all([idbAll('b', ns), idbMeta(ns)]);
     const same = !!meta && meta.uid === this.me.uid;
-    if (same) { for (const e of rows) this.B.set(keyOf(e.k, e.id), e); this.cur = meta.cur || 0 }
-    else { this.cur = 0; await idbPut('b', ns, [], [], true); await idbPut('l', ns, [], [], true) }
+    const old = e => this.cut && e.k === 'mv' && e.v && e.v.d && e.v.d < this.cut;
+    if (same) { for (const e of rows) if (!old(e)) this.setB(keyOf(e.k, e.id), e); this.cur = meta.cur || 0; this.mvSrv = meta.mvSrv || '' }
+    else { this.cur = 0; this.mvSrv = this.cut; await idbPut('b', ns, [], [], true); await idbPut('l', ns, [], [], true) }
+    // mvSrv: mutasi dengan tanggal sebelum ini belum pernah diambil dari server di perangkat ini
     let loc = [];
     if (this.write && same) loc = (await idbAll('l', ns)).filter(x => x);
     const D = this.D(); for (const x of loc) setRec(D, x.k, x.id, x.v);
@@ -318,16 +329,36 @@
   };
   Store.prototype.saveIdb = function (puts, dels, clear) {
     const ns = this.ns();
-    return idbPut('b', ns, puts.map(e => [keyOf(e.k, e.id), e]), dels, clear).then(() => idbMeta(ns, { cur: this.cur, uid: this.me.uid }));
+    return idbPut('b', ns, puts.map(e => [keyOf(e.k, e.id), e]), dels, clear).then(() => idbMeta(ns, { cur: this.cur, uid: this.me.uid, mvSrv: this.mvSrv }));
   };
-  Store.prototype.q1 = function (c) {
+  Store.prototype.q1 = function (c, first) {
     let q = this.co.collection(c);
     if (this.cur) q = q.where('_u', '>', TSF().fromMillis(Math.max(0, this.cur - 120000)));
+    else if (first && c === 'mutasi' && this.mvSrv) q = q.where('d', '>=', this.mvSrv);
     return q;
+  };
+  // muat mutasi lama (dari cache perangkat, lalu dari server bila belum pernah); untuk ekspor, pulihkan, hapus semua
+  Store.prototype.loadOld = async function () {
+    if (this.full) return;
+    const D = this.write ? this.getD() : null, ns = this.ns(), puts = [], cut = this.cut;
+    this.cut = '';
+    for (const e of await idbAll('b', ns)) {
+      const key = keyOf(e.k, e.id);
+      if (e.k !== 'mv' || this.B.has(key)) continue;
+      this.setB(key, e); puts.push(e); if (D && e.v) setRec(D, 'mv', e.id, e.v);
+    }
+    if (this.mvSrv) {
+      if (!this.co) { this.cut = cut; throw new Error('Riwayat mutasi lama belum tersimpan di perangkat ini. Sambungkan ke internet.') }
+      const s = await this.co.collection('mutasi').where('d', '<', this.mvSrv).get({ source: 'server' });
+      this.applyRemote(s.docs.map(d => ['mutasi', d]), D); this.mvSrv = '';
+    }
+    this.full = true;
+    await this.saveIdb([]);
+    if (D) { D.mv.sort((a, b) => String(a.id) < String(b.id) ? -1 : String(a.id) > String(b.id) ? 1 : 0); this.setD(D) }
   };
   Store.prototype.catchUp = async function (D) {
     const ch = [];
-    await Promise.all(this.cols.map(async c => { const s = await this.q1(c).get({ source: 'server' }); s.docs.forEach(d => ch.push([c, d])) }));
+    await Promise.all(this.cols.map(async c => { const s = await this.q1(c, true).get({ source: 'server' }); s.docs.forEach(d => ch.push([c, d])) }));
     const r = this.applyRemote(ch, D); return r;
   };
   // terapkan dokumen dari server ke cache dan ke D (gabung bila ada perubahan lokal)
@@ -339,6 +370,8 @@
       const key = keyOf(e.k, e.id), b = this.B.get(key);
       if (b && e.u && b.u && e.u <= b.u) continue;
       if (b && e.v === null) e.k = b.k;
+      // mutasi lama yang belum dimuat: cukup simpan di cache perangkat (dipakai loadOld)
+      if (this.cut && e.k === 'mv' && !b && e.v && e.v.d && e.v.d < this.cut) { e.j = canon(e.v); puts.push(e); continue }
       e.j = e.v ? canon(e.v) : null;
       if (b && b.j === e.j) { b.u = e.u; puts.push(b); continue }
       if (D) {
@@ -346,7 +379,7 @@
         let m; try { m = mergeEntry(e.k, bv, l === null ? null : clone(l), e.v) } catch (x) { if (x === CONFLICT) { conflict = true; m = e.v } else throw x }
         if (canon(m) !== canon(l)) setRec(D, e.k, e.id, m);
       }
-      this.B.set(key, e); puts.push(e); any = true;
+      this.setB(key, e); puts.push(e); any = true;
     }
     if (puts.length) this.saveIdb(puts);
     return { any, conflict };
@@ -374,10 +407,27 @@
   Store.prototype.reset = function (msg) {
     const D = this.D(); this.setD(D); idbPut('l', this.ns(), [], [], true); this.onChange(D); if (msg) this.onNote(msg, 1);
   };
+  // baris yang berbeda dari cache server. Jalur cepat: JSON.stringify bawaan dibandingkan dengan salinan terakhir
+  // yang sudah diketahui sama dengan server (S); canon (lebih lambat) hanya untuk baris yang berubah.
   Store.prototype.diff = function (D) {
-    const cur = explode(D), out = [];
-    for (const [key, e] of cur) { if (this.ro.has(e.k)) continue; const b = this.B.get(key); if (!b || b.j !== e.j) out.push({ key, k: e.k, id: e.id, b: b && b.v ? b.v : null, l: clone(e.v), lj: e.j }) }
-    for (const [key, b] of this.B) if (b.j !== null && b.k !== 'no' && !this.ro.has(b.k) && !cur.has(key)) out.push({ key, k: b.k, id: b.id, b: b.v, l: null, lj: null });
+    // mutasi tidak pernah diubah di tempat (hanya ditambah/diganti objek baru): cukup cek objek yang sama (W)
+    const out = [], S = this.S, B = this.B, W = this.W, ro = this.ro; let n = 0;
+    walk(D, (k, id, v) => {
+      if (ro.has(k)) return;
+      const key = keyOf(k, id), b = B.get(key);
+      if (b && b.j !== null) n++;
+      if (k === 'mv' && b && W.get(v) === b) return;
+      const s = JSON.stringify(v);
+      if (b && b.j !== null && S.get(key) === s) return;
+      const j = canon(v);
+      if (b && b.j === j) { S.set(key, s); if (k === 'mv') W.set(v, b); return }
+      out.push({ key, k, id, b: b && b.v ? b.v : null, l: JSON.parse(s), lj: j });
+    });
+    // baris yang hilang dari D = dihapus; dihitung ulang hanya bila jumlahnya tidak cocok
+    if (n !== this.live) {
+      const seen = new Set(); walk(D, (k, id) => seen.add(keyOf(k, id)));
+      for (const [key, b] of B) if (this.counts(b) && !seen.has(key)) out.push({ key, k: b.k, id: b.id, b: b.v, l: null, lj: null });
+    }
     return out;
   };
   Store.prototype.dirty = function () { return this.write && this.diff(this.getD()).length > 0 };
@@ -441,12 +491,12 @@
       const D = this.getD(), puts = [];
       for (const o of out) {
         const e = { k: o.d.k, id: o.d.id, v: o.res === null ? null : clone(o.res), j: o.resj, u: o.ru };
-        this.B.set(o.d.key, e); puts.push(e);
+        this.setB(o.d.key, e); puts.push(e);
         const now = getRec(D, o.d.k, o.d.id), nj = now === null ? null : canon(now);
         if (nj === o.d.lj) { if (nj !== o.resj) setRec(D, o.d.k, o.d.id, o.res) }
         else { let m; try { m = mergeEntry(o.d.k, o.d.l, now === null ? null : clone(now), o.res) } catch (x) { m = o.res } setRec(D, o.d.k, o.d.id, m) }
       }
-      for (const n of nos) { const e = { k: 'no', id: n.key.slice(12), v: { i: n.d.id }, j: canon({ i: n.d.id }), u: '' }; this.B.set(n.key, e); puts.push(e) }
+      for (const n of nos) { const e = { k: 'no', id: n.key.slice(12), v: { i: n.d.id }, j: canon({ i: n.d.id }), u: '' }; this.setB(n.key, e); puts.push(e) }
       await this.saveIdb(puts);
       this.setD(D);
       return true;
@@ -505,8 +555,8 @@
       try { V.u = co.collection('inv').doc('meta').onSnapshot(() => { if (f) { f = false; return } clearTimeout(t); t = setTimeout(async () => { V.D = await get(); o.onChange && o.onChange(V.D) }, 1200) }, () => { }) } catch (e) { }
       return V;
     }
-    const S = new Store({ fs: o.fs, cid: o.cid, me: o.me, cols: COLS.filter(c => need.has(c)), write: false, onChange: D => { V.D = D; o.onChange && o.onChange(D) } });
-    const V = { mode: 'v2', S, D: null, stop() { S.stop() }, async reload() { await S.catchUp(null); V.D = S.D(); return V.D } };
+    const S = new Store({ fs: o.fs, cid: o.cid, me: o.me, cols: COLS.filter(c => need.has(c)), write: false, lazy: o.lazy, onChange: D => { V.D = D; o.onChange && o.onChange(D) } });
+    const V = { mode: 'v2', S, D: null, stop() { S.stop() }, async reload() { await S.catchUp(null); V.D = S.D(); return V.D }, async loadOld() { await S.loadOld(); V.D = S.D(); return V.D } };
     await S.open(); V.D = S.D(); S.listen();
     return V;
   }
