@@ -243,7 +243,7 @@ await t('Kategori dengan kode & keuntungan: kode barang otomatis, harga = HPP + 
     return { sku, prev, price: i.price, ha: i.ha, sku2: j.sku, p2: j.price, sat: D.set.sat.includes('pcs'), kat: D.set.kat.map(k => k.n) };
   });
   eq([r.sku, r.price, r.ha, r.sku2, r.p2], ['PRF-001', 15000, true, 'PRD-001', 13500]);
-  yes(/33,3% dari harga jual/.test(r.prev), r.prev); yes(r.sat && r.kat.includes('Umum'), JSON.stringify(r));
+  yes(/33,3% dari harga jual/.test(r.prev), r.prev); yes(r.sat && r.kat.filter(k => k === 'Umum').length === 1 && r.kat.filter(k => k === 'Parfum').length === 1, JSON.stringify(r.kat));
   await own.page.evaluate(() => pushNow()); await wait(own.page, () => !PB && !dirty());
   eq((await get('invcfg', 'set')).v.kat.find(k => k.n === 'Parfum').k, 'PRF');
 });
@@ -261,6 +261,13 @@ await t('Barang lama tetap manual sampai dinyalakan; harga di formulir penjualan
 await t('Hasil produksi: HPP = bahan + biaya lain, harga jual otomatis', async () => {
   const r = await own.page.evaluate(() => { const x = mfgFin({ real: { qty: 10, bn: 'PX', exp: '2027-01-01', pakai: [] }, isu: [], sku: 'PRD-HASIL', nama: 'Hasil Uji', unit: 'pcs', no: 'PRD-9', bl: 5000 }, 'pq-uji'); const i = D.items.find(z => z.sku === 'PRD-HASIL'); return { m: x.m, cost: i.cost, price: i.price } });
   eq([r.cost, r.price], [500, 1000]); yes(/HPP Rp\s?500\/pcs \(bahan Rp\s?0 \+ biaya lain Rp\s?5\.000\)/.test(r.m), r.m);
+});
+
+await t('Daftar barang berbentuk kartu; ketuk kartu membuka detail (Kasir tanpa HPP dan tanpa tombol ubah)', async () => {
+  const r = await kas.page.evaluate(async () => { go(1); Q = 'Barang 7'; bl(); const n = document.querySelectorAll('#bl .cd').length; document.querySelector('#bl .cd').click(); await new Promise(r => setTimeout(r, 200)); const d = $('#dp'); const o = [n, d.open, d.textContent.includes('Batch'), d.textContent.includes('HPP'), !!d.querySelector('button[onclick^="xiD"]')]; d.close(); Q = ''; return o });
+  eq(r, [11, true, true, false, false]);
+  const o = await own.page.evaluate(async () => { go(1); Q = 'Barang 70'; bl(); document.querySelector('#bl .cd').click(); await new Promise(r => setTimeout(r, 200)); const d = $('#dp'); const x = [d.textContent.includes('HPP'), !!d.querySelector('button[onclick^="xiD"]')]; d.close(); Q = ''; bl(); return x });
+  eq(o, [true, true]);
 });
 
 console.log('Manufaktur');

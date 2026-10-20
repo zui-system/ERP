@@ -48,6 +48,7 @@ Data Inventori disimpan per baris di koleksi `perusahaan/{cid}/…`:
 | `buang` | batch dibuang | Gudang (tambah) |
 | `invtanda` | penanda sekali-pakai: `kd_` pembayaran Keuangan diterapkan, `mi_`/`md_` serah bahan/terima hasil produksi, `no_` nomor nota | semua peran penulis Inventori, tidak bisa diubah |
 | `invcfg` | `set` pengaturan Inventori, `v2` penanda data sudah dipindahkan | Pemilik/Admin |
+| `setoran` | uang penjualan tunai/cicilan dari Kasir, menunggu konfirmasi Keuangan | Kasir membuat; Keuangan/Pemilik/Admin menerima (bersama transaksi kas sah) |
 
 Tiap dokumen memuat `_u` (waktu server, dipakai untuk muat inkremental) dan `_by` (uid penulis). Hapus = tombstone `{_del: true}` agar perangkat lain ikut menghapus. Produksi dan Mutu hanya membaca.
 
@@ -57,7 +58,7 @@ Kode bersama untuk semua modul ada di `zdata.js` (ZINV = data Inventori, ZKAS = 
 `akun/{id}.sal` = jumlah semua transaksi kas sah (di luar saldo awal `awal`). Setiap transaksi kas yang sah, disetujui, atau dihapus wajib memperbarui `sal` di tulisan yang sama (Rules memeriksa besarnya). Akun lama diisi otomatis sekali dari seluruh riwayat kas saat Keuangan atau persetujuan ZUI ERP dibuka. Tidak ada lagi batas 1.500 transaksi untuk saldo.
 
 ## Uji
-Folder `uji/`: `npm install` lalu `npm run uji` (butuh Java 11+). Menjalankan emulator Firestore + Auth, 27 uji Rules/data dan 15 uji peramban. Lihat `uji/README.md` untuk uji di Firebase asli.
+Folder `uji/`: `npm install` lalu `npm run uji` (butuh Java 11+). Menjalankan emulator Firestore + Auth, 28 uji Rules/data dan 22 uji peramban. Lihat `uji/README.md` untuk uji di Firebase asli.
 
 ## Menunggu tindakan Anda
 Tab Aplikasi menampilkan daftar pekerjaan yang menunggu peran Anda dari semua aplikasi (persetujuan BoM, permintaan bahan, uji mutu, hasil menunggu diterima, pembelian menunggu persetujuan atau konfirmasi keuangan), lengkap dengan tombol Buka ke aplikasinya.

@@ -1,4 +1,4 @@
-const C='zui-mfg-v27',A=['./','index.html','manifest.webmanifest','../zdata.js?v=2'];
+const C='zui-mfg-v28',A=['./','index.html','manifest.webmanifest','../zdata.js?v=2'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(A)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C&&x.startsWith('zui-mfg-')).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',e=>{

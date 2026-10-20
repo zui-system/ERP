@@ -1,3 +1,24 @@
+# Pembaruan v12 (20 Okt 2026): kas dari penjualan, harga otomatis, kartu barang
+
+1. **Uang penjualan masuk kas Keuangan** (bila perusahaan memakai Zui Keuangan). Penjualan yang dibayar lunas dan "Terima bayar" (cicilan) di Inventori:
+   - Pemilik, Admin, Keuangan: langsung menjadi transaksi kas masuk di akun yang dipilih di formulir (saldo akun ikut naik).
+   - Kasir: menjadi **setoran** yang menunggu konfirmasi. Keuangan menerima di Zui Keuangan > Ringkasan > Perlu tindakan (Terima ke akun / Tolak dengan alasan). Kasir tetap tidak bisa menulis kas langsung.
+   - Tidak bisa dicatat dua kali (dijaga Rules). Retur penjualan yang mengembalikan uang belum otomatis keluar dari kas.
+2. **HPP tidak tampil di layar Kasir** (daftar barang, Ringkasan, cetak/CSV daftar stok, detail penjualan). Datanya masih bisa dibaca secara teknis; ini pembatasan tampilan.
+3. **Harga jual otomatis** (Pengaturan > Harga jual otomatis, Pemilik/Admin):
+   - Harga = HPP + keuntungan % (markup), dibulatkan ke atas (bawaan Rp500; Ringgit/Dolar 0,50).
+   - HPP naik (pembelian atau hasil produksi) → harga ikut naik. HPP turun → hanya muncul saran, dengan tombol Pakai.
+   - Keuntungan bawaan, per kategori, atau khusus per barang; harga reseller dengan % sendiri (opsional).
+   - Barang baru otomatis (bisa dimatikan); barang lama tetap manual sampai Anda menekan "Pakai harga otomatis untuk barang lama".
+   - Harga di formulir penjualan tidak pernah di bawah harga otomatis.
+4. **Kategori dan satuan** di Pengaturan: tambah, ubah, hapus. Kategori punya kode awalan dan % keuntungan. Formulir barang memilih dari daftar (atau ketik baru). Kategori/satuan yang sudah dipakai otomatis masuk daftar.
+5. **Kode barang otomatis per kategori** (mis. PRF-001). Kategori tanpa kode tetap memakai kode tipe (PRD/RM/PK). Kode lama tidak diubah.
+6. **Biaya lain produksi**: kolom "Biaya lain per batch" di BoM Manufaktur (tenaga kerja, listrik, gas). HPP hasil produksi = bahan + biaya lain; pesan saat menerima hasil menampilkan rinciannya dan harga jual.
+7. **Daftar barang berbentuk kartu**: nama, kode, stok (merah = habis, kuning = menipis), tipe, kategori, lokasi, kedaluwarsa, harga jual, HPP. Ketuk kartu untuk detail: harga dan keuntungan, batch, mutasi terakhir, dan tombol Masuk/Keluar/Batch/Ubah/Hapus.
+8. Teks baru belum diterjemahkan ke English/Melayu (tampil dalam Bahasa Indonesia).
+
+Rules berubah (koleksi `setoran`, kolom `bl` di `bom` dan `produksi`): **publikasikan ulang `firestore.rules`**. Cache service worker naik: sys v48, inv v30, keu v27, mfg v28. Uji: 28 uji data + 22 uji peramban.
+
 # Pembaruan v11 (20 Okt 2026): pondasi untuk perusahaan besar (Tahap 1)
 
 1. **Data Inventori per dokumen.** Dulu seluruh data Inventori satu JSON besar (batas ±8 MB per perusahaan). Sekarang tiap barang, batch, pembelian, penjualan, mutasi, kontak, dan batch dibuang adalah dokumen sendiri (koleksi `barang`, `batch`, `pembelian`, `penjualan`, `mutasi`, `kontak`, `buang`, `invtanda`, `invcfg`). Tidak ada lagi batas ukuran total.
