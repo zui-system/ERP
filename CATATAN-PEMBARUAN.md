@@ -1,12 +1,12 @@
 # Pembaruan v13 (20 Okt 2026): tampilan seragam di semua aplikasi
 
 1. **Daftar berbentuk kartu seperti kartu aplikasi di ZUI ERP** di semua aplikasi (ZUI ERP, Inventori, Keuangan, Manufaktur, Karyawan): garis atas menyala dengan warna modul (ZUI ERP biru, Inventori hijau, Manufaktur oranye, Karyawan ungu, Keuangan merah muda), tersusun 1 kolom di HP dan beberapa kolom di laptop.
-2. **Pengaturan lebih rapi**: tiap bagian menjadi kotak sendiri, dua kolom di laptop, urutan sama di semua aplikasi: Akun → pengaturan khusus aplikasi → Pasang dan bagikan → Bahasa → Tampilan → Data → bantuan dan kaki halaman.
+2. **Pengaturan lebih rapi dan sederhana**: satu kolom di tengah, tiap bagian dipisah garis tipis (tanpa kotak/garis menyala), urutan sama di semua aplikasi: Akun → pengaturan khusus aplikasi → Pasang dan bagikan → Bahasa → Tampilan → Data → bantuan dan kaki halaman.
 3. **Ukuran tombol seragam**: tombol aksi kecil, tombol dialog tidak lagi melebar penuh di laptop (tetap lebar penuh di HP agar mudah diketuk), tombol Setujui/Tolak dan tombol + di pojok sedikit lebih kecil.
 4. **Kategori dan Satuan di formulir barang berupa pilihan** (bukan kolom ketik panjang). Satuan yang ditambah di Pengaturan langsung muncul; "+ Lainnya (ketik baru)…" untuk satuan/kategori baru. Saran satuan di formulir pembelian juga memakai daftar dari Pengaturan.
 5. Gaya bersama ada di `zui-ui.css` dan `zui-ui.js` (dimuat semua aplikasi). Alat potret semua halaman: `uji/foto.mjs`.
 
-Tidak ada perubahan Rules. Cache service worker naik: sys v49, inv v31, keu v28, mfg v29, kar v24.
+Tidak ada perubahan Rules. Cache service worker naik: sys v50, inv v32, keu v29, mfg v30, kar v25.
 
 # Pembaruan v12 (20 Okt 2026): kas dari penjualan, harga otomatis, kartu barang
 
