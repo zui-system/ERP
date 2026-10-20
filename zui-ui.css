@@ -1,0 +1,53 @@
+/* ZUI ERP: tampilan bersama semua aplikasi (ZUI ERP, Inventori, Keuangan, Manufaktur, Karyawan).
+   Dimuat setelah gaya masing-masing aplikasi. --k = warna modul (diatur tiap aplikasi), --gl = kekuatan cahaya garis. */
+:root{--k:var(--ac);--gl:.4}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--gl:1}}
+:root[data-theme="dark"],html:root[data-app="dark"],html:root[data-app="navy"]{--gl:1}
+html:root[data-app="light"]{--gl:.4}
+
+/* ---- daftar: setiap baris menjadi kartu seperti kartu aplikasi di ZUI ERP ---- */
+.pv>section{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));grid-auto-rows:max-content;column-gap:12px;align-content:start}
+.pv>section>*:not(.it){grid-column:1/-1}
+.pv>section>:is(button,a,.bt,.ab,.go){justify-self:start}
+.pv>section div:has(>.it):not(.zs){display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));grid-auto-rows:max-content;column-gap:12px;align-content:start}
+.pv>section div:has(>.it):not(.zs)>*:not(.it){grid-column:1/-1}
+.pv>section .it,.zcard{position:relative;overflow:hidden;min-width:0;margin:12px 0 0;padding:12px 14px;border:1px solid color-mix(in srgb,var(--k) 35%,var(--ln));border-radius:8px;
+  background:color-mix(in srgb,var(--sf) 90%,var(--bg));box-shadow:0 -1px 8px -4px color-mix(in srgb,var(--k) calc(var(--gl)*70%),transparent),0 10px 22px -20px rgba(14,34,48,.4)}
+.pv>section .it:before,.zcard:before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:var(--k);box-shadow:0 0 3px var(--k),0 0 8px color-mix(in srgb,var(--k) calc(var(--gl)*55%),transparent)}
+.pv>section .it:after,.zcard:after{content:"";position:absolute;left:0;right:0;top:2px;height:18px;background:linear-gradient(color-mix(in srgb,var(--k) calc(var(--gl)*16%),transparent),transparent);pointer-events:none}
+.pv>section .it>*{position:relative;z-index:1}
+.pv>section .it .row{align-items:flex-start}
+.pv>section .it .act{margin-top:10px}
+.pv>section .it.tap:hover,.pv>section .it:has(>.tap):hover{border-color:color-mix(in srgb,var(--k) 60%,var(--ln))}
+/* kartu barang Inventori memakai gaya yang sama */
+.cd{border-color:color-mix(in srgb,var(--k) 35%,var(--ln));border-radius:8px;background:color-mix(in srgb,var(--sf) 90%,var(--bg));position:relative;overflow:hidden;
+  box-shadow:0 -1px 8px -4px color-mix(in srgb,var(--k) calc(var(--gl)*70%),transparent),0 10px 22px -20px rgba(14,34,48,.4)}
+.cd:before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:var(--k);box-shadow:0 0 3px var(--k),0 0 8px color-mix(in srgb,var(--k) calc(var(--gl)*55%),transparent)}
+.cd:hover,.cd:focus-visible{border-color:color-mix(in srgb,var(--k) 65%,var(--ln))}
+.cg{margin-bottom:20px}
+
+/* ---- tombol: ukuran seragam, tidak terlalu besar ---- */
+.act button,.sg,.bt,.ab{padding:6px 12px;font-size:12.5px;line-height:1.3;border-radius:8px;min-height:30px}
+.sg{border-radius:99px;padding:6px 14px}
+.btn{justify-content:flex-end;gap:8px}
+.btn>*{flex:0 1 auto}
+.btn button{padding:8px 16px;font-size:14px;line-height:1.3;border-radius:8px;min-width:88px}
+.btn .go{padding:8px 18px}
+.btn:has(>:nth-child(3)) .go{flex-basis:auto}
+.apy,.apx{padding:6px 16px!important;font-size:13px!important}
+.fab{padding:10px 16px;font-size:13px}
+@media(max-width:480px){.btn>*{flex:1 1 auto}.btn:has(>:nth-child(3)) .go{flex-basis:100%}}
+
+/* ---- Pengaturan: bagian dikelompokkan menjadi kotak, urutan sama di semua aplikasi (zui-ui.js) ---- */
+#p_set{grid-template-columns:repeat(auto-fill,minmax(min(100%,440px),1fr));gap:12px;align-items:start}
+#p_set>.zs{grid-column:auto;position:relative;overflow:hidden;min-width:0;padding:4px 16px 16px;border:1px solid color-mix(in srgb,var(--k) 30%,var(--ln));border-radius:8px;
+  background:color-mix(in srgb,var(--sf) 90%,var(--bg));box-shadow:0 10px 22px -20px rgba(14,34,48,.4);margin-top:12px}
+#p_set>.zs:before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:var(--k);box-shadow:0 0 3px var(--k),0 0 8px color-mix(in srgb,var(--k) calc(var(--gl)*55%),transparent)}
+#p_set>.zs>.hh:first-child{margin-top:14px}
+#p_set>.zs .it{margin:0;padding:10px 0;border:0;border-bottom:1px solid var(--ln);border-radius:0;background:none;box-shadow:none}
+#p_set>.zs .it:before,#p_set>.zs .it:after{display:none}
+#p_set>.zs .it:last-of-type{border-bottom:0}
+#p_set>.zs .ni,#p_set>.zs select{max-width:100%}
+#p_set>.zs .sgs{margin-bottom:4px}
+#p_set>.zs .g2{align-items:end}
+#p_set>.zt{grid-column:1/-1}

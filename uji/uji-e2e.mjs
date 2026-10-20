@@ -246,6 +246,9 @@ await t('Kategori dengan kode & keuntungan: kode barang otomatis, harga = HPP + 
   yes(/33,3% dari harga jual/.test(r.prev), r.prev); yes(r.sat && r.kat.filter(k => k === 'Umum').length === 1 && r.kat.filter(k => k === 'Parfum').length === 1, JSON.stringify(r.kat));
   await own.page.evaluate(() => pushNow()); await wait(own.page, () => !PB && !dirty());
   eq((await get('invcfg', 'set')).v.kat.find(k => k.n === 'Parfum').k, 'PRF');
+  // satuan yang ditambah di Pengaturan muncul di pilihan formulir barang; "Lainnya" untuk satuan baru
+  const u = await own.page.evaluate(() => { go(6); r(); $('#stn').value = 'jerigen'; stA(); ai(); const o = [...$('#un').options].map(x => x.value); $('#n').value = 'Satuan baru'; $('#un').value = '__baru'; selN($('#un')); $('#un_n').value = 'karung'; si(); return [o.includes('jerigen'), o.includes('__baru'), D.items.find(i => i.name === 'Satuan baru').unit] });
+  eq(u, [true, true, 'karung']);
 });
 await t('HPP naik: harga ikut naik; HPP turun: hanya saran; Pakai saran', async () => {
   const r = await own.page.evaluate(() => {
