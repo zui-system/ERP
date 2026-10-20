@@ -296,7 +296,7 @@
 
   /* ---------- Store: cache + muat inkremental + simpan ---------- */
   function Store(o) {
-    this.fs = o.fs; this.cid = o.cid; this.me = o.me; this.co = o.fs.collection('perusahaan').doc(o.cid);
+    this.fs = o.fs; this.cid = o.cid; this.me = o.me; this.co = o.fs ? o.fs.collection('perusahaan').doc(o.cid) : null;
     this.cols = o.cols || COLS; this.write = !!o.write; this.ro = new Set(o.ro || []); this.getD = o.getD; this.setD = o.setD;
     this.onChange = o.onChange || (() => { }); this.onNote = o.onNote || (() => { });
     this.B = new Map(); this.cur = 0; this.un = []; this.q = []; this.busy = 0; this.again = 0; this.pt = 0; this.mode = 'v2';
