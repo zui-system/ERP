@@ -34,4 +34,6 @@ Pakai **perusahaan uji** (akun email terpisah), bukan perusahaan pelanggan.
    - ZUI ERP > Pantauan: angka Inventori dan saldo tampil.
    - Manufaktur: stok bahan terbaca.
 5. Bila ada masalah: Rules lama ada di riwayat git (`git show 756b36e:firestore.rules`). Data lama tidak dihapus,
-   jadi kembali ke versi lama cukup dengan Rules lama + menghapus dokumen `invcfg/v2` di Firestore Console.
+   jadi kembali ke versi lama = Rules lama + kode lama + hapus dokumen `invcfg/v2` di Firestore Console.
+   Perubahan Inventori yang dibuat **setelah** pemindahan hanya ada di koleksi baru dan tidak ikut kembali,
+   karena itu uji dulu dengan perusahaan uji.
