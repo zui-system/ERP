@@ -1,3 +1,12 @@
+# Pembaruan v10 (20 Okt 2026): email bisnis
+
+- Tombol Langganan (email) kini ke **admin@zuisystem.com**.
+- Halaman Syarat dan Kebijakan Privasi: kontak **info@zuisystem.com**.
+- Kaki Pengaturan semua aplikasi: "Kontak: **support@zuisystem.com**".
+- Akun admin utama di Firestore Rules tetap admin.zuisystem@gmail.com (tidak berubah).
+
+Cache service worker naik: sys v45, inv v27, mfg v25, keu v24, kar v23.
+
 # Pembaruan v9 (19 Okt 2026): tampilan
 
 1. Tombol di jendela dokumen (Terima ke gudang, Cetak, Kirim, Tutup) dan dialog lain kini rapi dan tidak terpotong di layar HP.
