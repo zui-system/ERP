@@ -1,3 +1,22 @@
+# Pembaruan v11 (20 Okt 2026): pondasi untuk perusahaan besar (Tahap 1)
+
+1. **Data Inventori per dokumen.** Dulu seluruh data Inventori satu JSON besar (batas ±8 MB per perusahaan). Sekarang tiap barang, batch, pembelian, penjualan, mutasi, kontak, dan batch dibuang adalah dokumen sendiri (koleksi `barang`, `batch`, `pembelian`, `penjualan`, `mutasi`, `kontak`, `buang`, `invtanda`, `invcfg`). Tidak ada lagi batas ukuran total.
+2. **Pemindahan otomatis tanpa kehilangan data.** Saat Inventori, Keuangan, atau ZUI ERP dibuka oleh Pemilik/Admin/Gudang/Kasir/Keuangan, data lama dipindahkan, dibaca ulang dan dicocokkan baris per baris, baru ditandai selesai (`invcfg/v2`). Data lama tetap disimpan sebagai cadangan (tidak dihapus), tetapi tidak bisa ditulis lagi. Perubahan yang belum terkirim dari Inventori versi lama di perangkat ikut digabung. Selama pemindahan, perangkat lain menunggu.
+3. **Lebih cepat dan hemat.** Inventori menyimpan salinan di perangkat (IndexedDB) dan hanya mengambil perubahan sejak terakhir dibuka. Simpan hanya mengirim baris yang berubah; perubahan bersamaan pada baris yang sama digabung (mis. dua kasir menjual dari batch yang sama: kedua pengurangan tersimpan). Nomor nota yang sama dari dua perangkat otomatis diganti.
+4. **Firestore Rules per koleksi dan per peran** (mengikuti hak akses yang sudah ada, tidak ada perubahan alur): Kasir/Keuangan hanya boleh mengubah stok, HPP, dan lokasi barang serta jumlah batch; Gudang tidak bisa mengubah penjualan; Kasir tidak bisa mengubah pembelian; riwayat mutasi hanya bisa ditambah; Produksi/Mutu hanya membaca. Perubahan yang ditolak dikembalikan dan diberi tahu.
+5. **Saldo Keuangan tanpa batas 1.500.** Saldo tersimpan per akun (`akun.sal`) dan diperbarui di tulisan yang sama dengan transaksi kas (catat, setujui di Keuangan atau ZUI ERP, hapus). Rules memastikan saldo tidak bisa berubah tanpa transaksinya. Akun lama diisi sekali dari seluruh riwayat kas. Ringkasan bulan ini dan pengajuan menunggu juga tidak lagi terpotong.
+6. Keuangan, Manufaktur, dan ZUI ERP (Pantauan, persetujuan pembelian dan kas, Hapus/Unduh data perusahaan) membaca koleksi baru dan ikut diperbarui otomatis.
+7. `firestore.rules` kini disimpan di repo, bersama uji emulator (`uji/`: 25 uji Rules/data + 14 uji peramban).
+
+## Urutan pemasangan (penting)
+1. Unduh cadangan: ZUI ERP > Pengaturan > Data dan akun > **Unduh cadangan data** (Pemilik).
+2. Firebase Console > Firestore > Rules: tempel **seluruh** `firestore.rules` versi ini > **Publish**. Rules baru tetap menerima aplikasi lama untuk Inventori sampai data dipindahkan.
+3. **Segera** setelah itu gabungkan ke `main` (GitHub Pages tayang). Selama jeda antara langkah 2 dan 3, Keuangan versi lama tidak bisa mencatat transaksi kas yang sah (Rules mewajibkan saldo akun ikut diperbarui).
+4. Pemilik/Admin membuka ZUI ERP lalu Inventori sekali (pemindahan berjalan otomatis; tunggu "Tersinkron ✓"), lalu Keuangan (saldo akun diisi).
+5. Minta anggota menutup dan membuka ulang aplikasi (cache baru). Aplikasi lama yang masih terbuka akan gagal menyimpan Inventori (data lama dikunci) sampai dibuka ulang.
+
+Cache service worker naik: sys v46, inv v28, keu v25, mfg v26 (kar tetap v23).
+
 # Pembaruan v10 (20 Okt 2026): email bisnis
 
 - Tombol Langganan (email) kini ke **admin@zuisystem.com**.

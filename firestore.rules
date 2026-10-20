@@ -1,0 +1,602 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function vf() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+    function mref(cid) {
+      return /databases/$(database)/documents/perusahaan/$(cid)/anggota/$(request.auth.uid);
+    }
+    function mem(cid) {
+      return vf() && exists(mref(cid)) && get(mref(cid)).data.aktif == true;
+    }
+    function peran(cid) {
+      return get(mref(cid)).data.peran;
+    }
+    function adm(cid) {
+      return mem(cid) && peran(cid) in ['pemilik', 'admin'];
+    }
+    function mail() {
+      return request.auth.token.email.lower();
+    }
+    // admin utama Zui (pemilik produk): kelola izin, permintaan akses, dan langganan
+    function sa() {
+      return vf() && mail() == 'admin.zuisystem@gmail.com';
+    }
+
+    // penghapusan perusahaan oleh pemiliknya: hanya setelah pemilik menandai perusahaan (hapus = true)
+    function dl(cid) {
+      let c = get(/databases/$(database)/documents/perusahaan/$(cid)).data;
+      return vf() && c.owner == request.auth.uid && c.get('hapus', false) == true;
+    }
+
+    // masa aktif: langganan.sampai (Timestamp, diisi lewat Firebase Console) atau uji coba 14 hari sejak perusahaan dibuat
+    function aktifCo(cid) {
+      let c = get(/databases/$(database)/documents/perusahaan/$(cid)).data;
+      let s = c.get('langganan', {}).get('sampai', null);
+      return s != null ? request.time <= s : request.time.toMillis() <= c.ts + 1209600000;
+    }
+
+    // penunjuk perusahaan milik tiap akun
+    match /profil/{uid} {
+      allow read: if vf() && request.auth.uid == uid;
+      allow create, update: if vf() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['cid', 'bahasa'])
+        && request.resource.data.cid is string
+        && (!('bahasa' in request.resource.data) || request.resource.data.bahasa in ['id', 'en', 'ms']);
+      allow delete: if vf() && request.auth.uid == uid;
+    }
+
+    // (tidak lagi dipakai untuk pembuatan perusahaan: pendaftaran uji coba terbuka untuk email terverifikasi; koleksi ini tetap boleh dipakai sebagai catatan) email yang boleh membuat perusahaan baru: diisi manual lewat Firebase Console, tidak bisa ditulis dari aplikasi
+    match /izin/{em} {
+      allow get: if vf() && (mail() == em || sa());
+      allow list: if sa();
+      allow create, update: if sa() && em == em.lower()
+        && request.resource.data.keys().hasOnly(['ts', 'by', 'nama']);
+      allow delete: if sa();
+    }
+
+    // permintaan akses dari calon pengguna (dikirim dari layar Zui System), diputuskan admin utama
+    match /permintaan/{em} {
+      allow get: if vf() && (mail() == em || sa());
+      allow list: if sa();
+      allow create, update: if vf() && mail() == em
+        && request.resource.data.keys().hasOnly(['email', 'nama', 'usaha', 'hp', 'ts', 'st'])
+        && request.resource.data.email == em
+        && request.resource.data.st == 'baru'
+        && request.resource.data.ts is int
+        && request.resource.data.nama is string && request.resource.data.nama.size() <= 60
+        && request.resource.data.usaha is string && request.resource.data.usaha.size() <= 80
+        && request.resource.data.hp is string && request.resource.data.hp.size() <= 30
+        && !exists(/databases/$(database)/documents/izin/$(em));
+      allow update: if sa()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['st'])
+        && request.resource.data.st in ['disetujui', 'ditolak'];
+      allow delete: if sa() || (vf() && mail() == em);
+    }
+
+    // undangan (dicari oleh orang yang diundang): id dokumen = email huruf kecil
+    match /undangan/{em} {
+      allow get: if vf() && (mail() == em || adm(resource.data.cid));
+      allow create, update: if vf() && em == em.lower()
+        && request.resource.data.keys().hasOnly(['cid', 'peran', 'nama', 'by', 'ts'])
+        && adm(request.resource.data.cid)
+        && request.resource.data.peran in ['admin', 'gudang', 'produksi', 'mutu', 'kasir', 'keuangan'];
+      allow delete: if vf() && (mail() == em || adm(resource.data.cid));
+    }
+
+    match /perusahaan/{cid} {
+      allow read: if mem(cid) || sa();
+      allow create: if vf()
+        && request.resource.data.owner == request.auth.uid
+        && !exists(/databases/$(database)/documents/profil/$(request.auth.uid))
+        && request.resource.data.ts is int
+        && request.resource.data.ts >= request.time.toMillis() - 600000
+        && request.resource.data.ts <= request.time.toMillis() + 600000
+        && request.resource.data.keys().hasOnly(['nama', 'owner', 'ts', 'apps']);
+      // admin utama mengatur masa langganan
+      allow update: if sa()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['langganan'])
+        && (!('langganan' in request.resource.data)
+          || (request.resource.data.langganan.keys().hasOnly(['paket', 'sampai'])
+            && request.resource.data.langganan.paket is string
+            && request.resource.data.langganan.sampai is timestamp));
+      // pemilik menandai perusahaan untuk dihapus (tahap pertama penghapusan data)
+      allow update: if vf() && resource.data.owner == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['hapus'])
+        && request.resource.data.hapus == true;
+      allow delete: if vf() && resource.data.owner == request.auth.uid && resource.data.get('hapus', false) == true;
+      allow update: if aktifCo(cid) && adm(cid)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['nama', 'apps', 'logo', 'alur', 'bahasa', 'mata'])
+        && (!('logo' in request.resource.data) || (request.resource.data.logo is string && request.resource.data.logo.size() <= 80000))
+        && (!('alur' in request.resource.data) || request.resource.data.alur is bool)
+        && (!('bahasa' in request.resource.data) || request.resource.data.bahasa in ['id', 'en', 'ms'])
+        && (!('mata' in request.resource.data) || request.resource.data.mata in ['IDR', 'MYR', 'USD']);
+
+      // salinan undangan untuk daftar "menunggu" milik admin
+      match /undangan/{em} {
+        allow read: if adm(cid);
+        allow delete: if adm(cid) || dl(cid);
+        allow create, update: if aktifCo(cid) && adm(cid) && em == em.lower()
+          && request.resource.data.keys().hasOnly(['peran', 'nama', 'by', 'ts'])
+          && request.resource.data.peran in ['admin', 'gudang', 'produksi', 'mutu', 'kasir', 'keuangan'];
+      }
+
+      match /anggota/{uid} {
+        allow read: if mem(cid) || sa();
+        // pemilik pertama
+        allow create: if aktifCo(cid) && vf() && request.auth.uid == uid
+          && get(/databases/$(database)/documents/perusahaan/$(cid)).data.owner == uid
+          && request.resource.data.peran == 'pemilik'
+          && request.resource.data.aktif == true
+          && request.resource.data.keys().hasOnly(['email', 'nama', 'peran', 'aktif', 'ts']);
+        // bergabung lewat undangan
+        allow create: if aktifCo(cid) && vf() && request.auth.uid == uid
+          && exists(/databases/$(database)/documents/undangan/$(mail()))
+          && get(/databases/$(database)/documents/undangan/$(mail())).data.cid == cid
+          && request.resource.data.peran == get(/databases/$(database)/documents/undangan/$(mail())).data.peran
+          && request.resource.data.aktif == true
+          && request.resource.data.keys().hasOnly(['email', 'nama', 'peran', 'aktif', 'ts']);
+        // admin/pemilik mengatur anggota (pemilik tidak bisa diubah)
+        allow update: if aktifCo(cid) && adm(cid) && resource.data.peran != 'pemilik'
+          && request.resource.data.peran != 'pemilik'
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['peran', 'aktif', 'nama']);
+        // anggota mengubah nama sendiri
+        allow update: if aktifCo(cid) && mem(cid) && request.auth.uid == uid
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['nama']);
+        // keluar sendiri (non-pemilik) atau pemilik yang menghapus perusahaan
+        allow delete: if (aktifCo(cid) && adm(cid) && resource.data.peran != 'pemilik')
+          || (vf() && request.auth.uid == uid && (resource.data.peran != 'pemilik' || !exists(/databases/$(database)/documents/perusahaan/$(cid))))
+          || dl(cid);
+      }
+
+      // jejak aktivitas: hanya bisa ditambah, tidak bisa diubah atau dihapus
+      match /log/{id} {
+        allow create: if aktifCo(cid) && mem(cid) && request.resource.data.uid == request.auth.uid
+          && request.resource.data.keys().hasOnly(['uid', 'nama', 'app', 'aksi', 'ket', 'ts'])
+          && request.resource.data.ts is int;
+        allow read: if mem(cid) && peran(cid) in ['pemilik', 'admin', 'keuangan'];
+        allow update: if false;
+        allow delete: if dl(cid);
+      }
+
+      // ---- Zui Manufaktur ----
+      function rin(cid, L) {
+        return mem(cid) && peran(cid) in L;
+      }
+      // alur persetujuan dan serah-terima wajib kecuali pemilik mematikannya di Zui System
+      function alurOn(cid) {
+        return get(/databases/$(database)/documents/perusahaan/$(cid)).data.get('alur', true) == true;
+      }
+
+      match /bom/{id} {
+        function bomShape() {
+          return request.resource.data.keys().hasOnly(['kode', 'nama', 'sku', 'pn', 'unit', 'qty', 'umur', 'items', 'qc', 'ket', 'aktif', 'st', 'apv', 'by', 'uid', 'ts', 'mod'])
+            && request.resource.data.items is list && request.resource.data.items.size() <= 60
+            && request.resource.data.qty is number && request.resource.data.qty > 0;
+        }
+        allow read: if mem(cid);
+        // BoM baru berstatus draf; pemilik (atau perusahaan tanpa alur wajib) boleh langsung disetujui
+        allow create: if aktifCo(cid) && bomShape() && (
+          (adm(cid) && (request.resource.data.st == 'draf' || peran(cid) == 'pemilik' || !alurOn(cid)))
+          || (rin(cid, ['produksi']) && (request.resource.data.st == 'draf' || !alurOn(cid))));
+        // pemilik/admin: ubah apa saja, tetapi menyetujui BoM sendiri hanya boleh pemilik
+        allow update: if aktifCo(cid) && bomShape() && adm(cid) && (
+          request.resource.data.get('st', 'disetujui') != 'disetujui'
+          || resource.data.get('st', 'disetujui') == 'disetujui'
+          || resource.data.uid != request.auth.uid
+          || peran(cid) == 'pemilik'
+          || !alurOn(cid));
+        // produksi: setiap perubahan mengembalikan BoM ke draf
+        allow update: if aktifCo(cid) && bomShape() && rin(cid, ['produksi'])
+          && (request.resource.data.get('st', 'disetujui') == 'draf' || !alurOn(cid));
+        // mutu: menyetujui atau menolak draf orang lain
+        allow update: if aktifCo(cid) && rin(cid, ['mutu'])
+          && resource.data.get('st', 'disetujui') == 'draf'
+          && request.resource.data.st in ['disetujui', 'ditolak']
+          && resource.data.uid != request.auth.uid
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['st', 'apv', 'mod']);
+        allow delete: if (aktifCo(cid) && adm(cid)) || dl(cid);
+      }
+
+      match /produksi/{id} {
+        // urutan tahap yang boleh dijalankan Produksi
+        function alurProduksi(a, b) {
+          return (a == 'rencana' && b in ['rencana', 'diminta', 'batal'])
+            || (a == 'diminta' && b in ['diminta', 'rencana'])
+            || (a == 'diserahkan' && b in ['diserahkan', 'berjalan'])
+            || (a == 'berjalan' && b in ['berjalan', 'mutu']);
+        }
+        allow read: if mem(cid);
+        allow create: if aktifCo(cid) && rin(cid, ['pemilik', 'admin', 'produksi'])
+          && request.resource.data.keys().hasOnly(['no', 'bomId', 'bom', 'nama', 'sku', 'unit', 'mult', 'target', 'plan', 'qcp', 'umur', 'tgl', 'pic', 'cat', 'st', 'by', 'uid', 'ts', 'mod', 'hist'])
+          && request.resource.data.st == 'rencana'
+          && request.resource.data.uid == request.auth.uid;
+        // pemilik/admin: semua tahap
+        allow update: if aktifCo(cid) && adm(cid)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['st', 'pic', 'mulai', 'real', 'req', 'tolak', 'isu', 'isuBy', 'isuTs', 'hist', 'cat', 'qc', 'mod']);
+        // produksi: minta bahan, mulai setelah bahan diserahkan, selesaikan; tidak bisa meluluskan
+        allow update: if aktifCo(cid) && rin(cid, ['produksi'])
+          && (alurProduksi(resource.data.st, request.resource.data.st)
+            || (!alurOn(cid) && resource.data.st == 'rencana' && request.resource.data.st == 'berjalan'))
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['st', 'pic', 'mulai', 'real', 'req', 'tolak', 'hist', 'mod']);
+        // mutu: hanya memutuskan hasil uji
+        allow update: if aktifCo(cid) && rin(cid, ['mutu'])
+          && resource.data.st in ['mutu', 'tahan']
+          && request.resource.data.st in ['lulus', 'tahan', 'gagal']
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['st', 'qc', 'hist', 'mod']);
+        // gudang/pemilik/admin: hasil lulus sudah diterima di Inventori
+        allow update: if aktifCo(cid) && rin(cid, ['pemilik', 'admin', 'gudang'])
+          && resource.data.st == 'lulus'
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['ap', 'apBy', 'apTs']);
+        // gudang/pemilik/admin: menyerahkan atau menolak permintaan bahan
+        allow update: if aktifCo(cid) && rin(cid, ['pemilik', 'admin', 'gudang'])
+          && resource.data.st == 'diminta'
+          && request.resource.data.st in ['diserahkan', 'rencana']
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['st', 'isu', 'isuBy', 'isuTs', 'tolak', 'req', 'hist', 'mod']);
+        allow delete: if (aktifCo(cid) && adm(cid)) || dl(cid);
+      }
+
+      // ---- Zui Keuangan ----
+      // saldo tersimpan per akun: sal = jumlah semua transaksi kas sah (di luar saldo awal 'awal').
+      // sal hanya boleh berubah bersama transaksi kas lk dalam tulisan yang sama, sebesar pengaruh transaksi itu.
+      function kasP(cid, k) {
+        return /databases/$(database)/documents/perusahaan/$(cid)/kas/$(k);
+      }
+      function akP(cid, a) {
+        return /databases/$(database)/documents/perusahaan/$(cid)/akun/$(a);
+      }
+      function kSah(k) {
+        return k.get('st', 'disetujui') == 'disetujui';
+      }
+      // pengaruh transaksi kas k ke saldo akun a
+      function kEff(k, a) {
+        return !kSah(k) ? 0
+          : (k.akun == a ? (k.jenis == 'masuk' ? k.jml : 0 - k.jml) : 0)
+            + ((k.jenis == 'transfer' && k.get('akun2', '') == a) ? k.jml : 0);
+      }
+      function kEffB(cid, k, a) {
+        return exists(kasP(cid, k)) ? kEff(get(kasP(cid, k)).data, a) : 0;
+      }
+      function kEffA(cid, k, a) {
+        return existsAfter(kasP(cid, k)) ? kEff(getAfter(kasP(cid, k)).data, a) : 0;
+      }
+      function salGerak(cid, a) {
+        let k = request.resource.data.lk;
+        let d = request.resource.data.sal - resource.data.sal;
+        let e = kEffA(cid, k, a) - kEffB(cid, k, a);
+        return k is string && k.size() > 0 && e != 0 && math.abs(d - e) < 0.001;
+      }
+      // dipanggil dari aturan kas: saldo akun a ikut diperbarui dalam tulisan ini
+      function salKena(cid, id, a) {
+        return getAfter(akP(cid, a)).data.get('lk', '') == id
+          && getAfter(akP(cid, a)).data.sal != get(akP(cid, a)).data.sal;
+      }
+      // perubahan pengaruh kas id (sebelum: kb, sesudah: ka) wajib tercermin di saldo akun yang terkena
+      function salSah(cid, id, kb, ka) {
+        let a1 = kb != null ? kb.akun : ka.akun;
+        let a2 = kb != null ? (kb.jenis == 'transfer' ? kb.get('akun2', '') : '') : (ka.jenis == 'transfer' ? ka.get('akun2', '') : '');
+        let e1 = (ka != null ? kEff(ka, a1) : 0) - (kb != null ? kEff(kb, a1) : 0);
+        let e2 = a2 == '' || a2 == a1 ? 0 : (ka != null ? kEff(ka, a2) : 0) - (kb != null ? kEff(kb, a2) : 0);
+        return (e1 == 0 || salKena(cid, id, a1)) && (e2 == 0 || salKena(cid, id, a2));
+      }
+      match /akun/{id} {
+        allow read: if mem(cid);
+        allow create: if aktifCo(cid) && rin(cid, ['pemilik', 'admin', 'keuangan'])
+          && request.resource.data.keys().hasOnly(['nama', 'tipe', 'awal', 'aktif', 'by', 'uid', 'ts', 'mod', 'sal', 'lk'])
+          && request.resource.data.tipe in ['kas', 'bank']
+          && request.resource.data.awal is number
+          && request.resource.data.get('sal', 0) == 0;
+        allow update: if aktifCo(cid) && rin(cid, ['pemilik', 'admin', 'keuangan'])
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['aktif', 'mod']);
+        // perubahan saldo bersama transaksi kas
+        allow update: if aktifCo(cid) && rin(cid, ['pemilik', 'admin', 'keuangan'])
+          && 'sal' in resource.data
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['sal', 'lk', 'mod'])
+          && request.resource.data.sal is number
+          && salGerak(cid, id);
+        // pengisian saldo pertama kali (dihitung dari seluruh riwayat kas oleh aplikasi)
+        allow update: if aktifCo(cid) && rin(cid, ['pemilik', 'admin', 'keuangan'])
+          && !('sal' in resource.data)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['sal', 'lk', 'mod'])
+          && request.resource.data.sal is number;
+        allow delete: if dl(cid);
+      }
+
+      match /kas/{id} {
+        allow read: if rin(cid, ['pemilik', 'admin', 'keuangan']);
+        // uang masuk langsung sah; keluar dan transfer menunggu persetujuan (kecuali pemilik atau alur dimatikan)
+        allow create: if aktifCo(cid) && rin(cid, ['pemilik', 'admin', 'keuangan'])
+          && request.resource.data.keys().hasOnly(['tgl', 'jenis', 'akun', 'akun2', 'jml', 'kat', 'ket', 'rf', 'st', 'apv', 'by', 'uid', 'ts', 'mod'])
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.jenis in ['masuk', 'keluar', 'transfer']
+          && request.resource.data.jml is number && request.resource.data.jml > 0
+          && (request.resource.data.st == 'menunggu'
+            || (request.resource.data.st == 'disetujui'
+              && (request.resource.data.jenis == 'masuk' || peran(cid) == 'pemilik' || !alurOn(cid))
+              && salSah(cid, id, null, request.resource.data)));
+        // satu-satunya perubahan: keputusan Pemilik/Admin, bukan untuk pengajuan sendiri (kecuali pemilik)
+        allow update: if aktifCo(cid) && adm(cid)
+          && resource.data.st == 'menunggu'
+          && request.resource.data.st in ['disetujui', 'ditolak']
+          && (resource.data.uid != request.auth.uid || peran(cid) == 'pemilik')
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['st', 'apv', 'mod'])
+          && salSah(cid, id, resource.data, request.resource.data);
+        allow delete: if (aktifCo(cid) && adm(cid) && (resource.data.get('rf', null) == null || resource.data.st != 'disetujui')
+            && salSah(cid, id, resource.data, null)) || dl(cid);
+      }
+
+      // instruksi pembayaran dari Keuangan, diterapkan ke Inventori saat dibuka
+      match /bayar/{id} {
+        allow read: if mem(cid);
+        allow create: if aktifCo(cid) && rin(cid, ['pemilik', 'admin', 'keuangan'])
+          && request.resource.data.keys().hasOnly(['t', 'i', 'no', 'a', 'tgl', 'by', 'uid', 'ts', 'pend'])
+          && request.resource.data.pend == true
+          && request.resource.data.t in ['po', 'so']
+          && request.resource.data.a is number && request.resource.data.a > 0
+          && getAfter(/databases/$(database)/documents/perusahaan/$(cid)/kas/$(id)).data.st == 'disetujui'
+          && getAfter(/databases/$(database)/documents/perusahaan/$(cid)/kas/$(id)).data.jml == request.resource.data.a;
+        allow update: if aktifCo(cid) && rin(cid, ['pemilik', 'admin', 'gudang', 'kasir', 'keuangan'])
+          && resource.data.pend == true
+          && request.resource.data.pend == false
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['pend', 'apBy', 'apTs', 'a2']);
+        allow delete: if dl(cid);
+      }
+
+      // ---- Zui Karyawan ----
+      match /karyawan/{id} {
+        // daftar karyawan (termasuk nomor HP) hanya untuk Pemilik/Admin; anggota lain hanya melihat datanya sendiri
+        allow read: if mem(cid) && (peran(cid) in ['pemilik', 'admin'] || resource.data.get('uid', '') == request.auth.uid);
+        allow create, update: if aktifCo(cid) && adm(cid)
+          && request.resource.data.keys().hasOnly(['nama', 'jab', 'div', 'tgl', 'hp', 'jatah', 'uid', 'aktif', 'by', 'ts', 'mod'])
+          && request.resource.data.nama is string && request.resource.data.nama.size() > 0
+          && request.resource.data.jatah is number;
+        allow delete: if (aktifCo(cid) && adm(cid)) || dl(cid);
+      }
+
+      // absen: id dokumen = uid_tanggal, hanya diri sendiri; pulang boleh diisi sekali
+      match /hadir/{id} {
+        allow read: if mem(cid) && (resource.data.uid == request.auth.uid || peran(cid) in ['pemilik', 'admin']);
+        allow create: if aktifCo(cid) && mem(cid)
+          && request.resource.data.keys().hasOnly(['uid', 'nama', 'tgl', 'masuk', 'pulang', 'ket'])
+          && request.resource.data.uid == request.auth.uid
+          && id == request.auth.uid + '_' + request.resource.data.tgl
+          && request.resource.data.pulang == null;
+        allow update: if aktifCo(cid) && mem(cid) && resource.data.uid == request.auth.uid
+          && resource.data.pulang == null
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['pulang']);
+        allow delete: if dl(cid);
+      }
+
+      // cuti: diajukan sendiri, diputuskan Pemilik/Admin (bukan pengajuan sendiri kecuali pemilik)
+      match /cuti/{id} {
+        allow read: if mem(cid) && (resource.data.uid == request.auth.uid || peran(cid) in ['pemilik', 'admin']);
+        allow create: if aktifCo(cid) && mem(cid)
+          && request.resource.data.keys().hasOnly(['uid', 'nama', 'jenis', 'dari', 'sampai', 'hari', 'ket', 'st', 'apv', 'ts', 'mod'])
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.st == 'menunggu'
+          && request.resource.data.hari is int && request.resource.data.hari > 0;
+        allow update: if aktifCo(cid) && adm(cid)
+          && resource.data.st == 'menunggu'
+          && request.resource.data.st in ['disetujui', 'ditolak']
+          && (resource.data.uid != request.auth.uid || peran(cid) == 'pemilik')
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['st', 'apv', 'mod']);
+        allow update: if aktifCo(cid) && mem(cid) && resource.data.uid == request.auth.uid
+          && resource.data.st == 'menunggu' && request.resource.data.st == 'batal'
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['st', 'mod']);
+        allow delete: if dl(cid);
+      }
+
+      // ---- Zui Inventori format lama (satu JSON dipecah per potongan) ----
+      // tetap dibaca sebagai cadangan; tidak bisa ditulis lagi setelah data dipindahkan (invcfg/v2 ada)
+      match /inv/{d} {
+        allow read: if mem(cid);
+        allow create, update: if aktifCo(cid) && invPre(cid) && mem(cid) && peran(cid) in ['pemilik', 'admin', 'gudang', 'kasir', 'keuangan']
+          && request.resource.data.keys().hasOnly(['n', 'u', 'by'])
+          && request.resource.data.n is int && request.resource.data.n >= 1 && request.resource.data.n <= 40;
+        allow delete: if (aktifCo(cid) && adm(cid)) || dl(cid);
+      }
+      match /invc/{c} {
+        allow read: if mem(cid);
+        allow create, update: if aktifCo(cid) && invPre(cid) && mem(cid) && peran(cid) in ['pemilik', 'admin', 'gudang', 'kasir', 'keuangan']
+          && request.resource.data.keys().hasOnly(['d'])
+          && request.resource.data.d is string
+          && request.resource.data.d.size() <= 300000;
+        allow delete: if (aktifCo(cid) && invPre(cid) && mem(cid) && peran(cid) in ['pemilik', 'admin', 'gudang', 'kasir', 'keuangan']) || dl(cid);
+      }
+
+      // ---- Zui Inventori per dokumen (format v2) ----
+      // tiap dokumen: isi baris + _u (waktu server, wajib = request.time), _by (uid penulis); hapus = tombstone {_del: true}
+      function invPre(cid) {
+        return !exists(/databases/$(database)/documents/perusahaan/$(cid)/invcfg/v2);
+      }
+      function invW(cid) {
+        return rin(cid, ['pemilik', 'admin', 'gudang', 'kasir', 'keuangan']);
+      }
+      // sebelum pemindahan selesai, peran yang dulu boleh menulis data Inventori boleh mengisi koleksi baru
+      function invMig(cid) {
+        return invPre(cid) && invW(cid);
+      }
+      function invMeta() {
+        return request.resource.data._u == request.time && request.resource.data._by == request.auth.uid;
+      }
+      function invTomb() {
+        return request.resource.data.get('_del', false) == true
+          && request.resource.data.keys().hasOnly(['_del', '_t', '_u', '_by']);
+      }
+      function invLive() {
+        return !('_del' in request.resource.data);
+      }
+      function wasLive() {
+        return resource == null || resource.data.get('_del', false) != true;
+      }
+      // hanya kolom tertentu yang berubah (selain _u, _by)
+      function invOnly(ks) {
+        return resource != null && wasLive() && invLive()
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(ks.concat(['_u', '_by']));
+      }
+      // dokumen baru (atau tombstone yang dihidupkan lagi dengan id sama)
+      function invNew() {
+        return (resource == null || !wasLive()) && invLive();
+      }
+      function invBase(cid) {
+        return aktifCo(cid) && invMeta();
+      }
+
+      // barang: Gudang/Pemilik/Admin penuh; Keuangan boleh menambah barang baru dari pembelian;
+      // Kasir/Keuangan hanya stok, HPP, dan lokasi (penjualan, penerimaan, retur)
+      match /barang/{id} {
+        allow read: if mem(cid);
+        allow create, update: if invBase(cid) && (
+          rin(cid, ['pemilik', 'admin', 'gudang'])
+          || (rin(cid, ['keuangan']) && invNew())
+          || (rin(cid, ['kasir', 'keuangan']) && invOnly(['stock', 'cost', 'loc']))
+          || invMig(cid));
+        allow delete: if dl(cid);
+      }
+      // batch: Kasir/Keuangan menambah batch (penerimaan, retur) dan mengubah sisa jumlah saja
+      match /batch/{id} {
+        allow read: if mem(cid);
+        allow create, update: if invBase(cid) && (
+          rin(cid, ['pemilik', 'admin', 'gudang'])
+          || (rin(cid, ['kasir', 'keuangan']) && (invNew() || invOnly(['q'])))
+          || invMig(cid));
+        allow delete: if dl(cid);
+      }
+      match /pembelian/{id} {
+        allow read: if mem(cid);
+        allow create, update: if invBase(cid) && (rin(cid, ['pemilik', 'admin', 'gudang', 'keuangan']) || invMig(cid));
+        allow delete: if dl(cid);
+      }
+      match /penjualan/{id} {
+        allow read: if mem(cid);
+        allow create, update: if invBase(cid) && (rin(cid, ['pemilik', 'admin', 'kasir', 'keuangan']) || invMig(cid));
+        allow delete: if dl(cid);
+      }
+      // riwayat mutasi stok: hanya bisa ditambah (Pemilik/Admin boleh menghapus lewat "Hapus semua"/pulihkan)
+      match /mutasi/{id} {
+        allow read: if mem(cid);
+        allow create, update: if invBase(cid) && (
+          (invW(cid) && invNew())
+          || adm(cid)
+          || invMig(cid));
+        allow delete: if dl(cid);
+      }
+      // kontak: Kasir/Pemilik/Admin penuh; Gudang/Keuangan menambah vendor atau pelanggan baru dari formulir
+      match /kontak/{id} {
+        allow read: if mem(cid);
+        allow create, update: if invBase(cid) && (
+          rin(cid, ['pemilik', 'admin', 'kasir'])
+          || (invW(cid) && invNew())
+          || invMig(cid));
+        allow delete: if dl(cid);
+      }
+      // batch dibuang (kerugian)
+      match /buang/{id} {
+        allow read: if mem(cid);
+        allow create, update: if invBase(cid) && (
+          adm(cid)
+          || (rin(cid, ['gudang']) && invNew())
+          || invMig(cid));
+        allow delete: if dl(cid);
+      }
+      // penanda sekali-pakai: kd_ (pembayaran Keuangan sudah diterapkan), mi_/md_ (serah bahan / terima hasil produksi), no_ (nomor nota)
+      // tidak bisa diubah; Pemilik/Admin boleh menghapus (tombstone) lewat "Hapus semua"
+      match /invtanda/{id} {
+        allow read: if mem(cid);
+        allow create, update: if invBase(cid) && (
+          (invW(cid) && invNew() && request.resource.data.keys().hasOnly(['v', 'i', '_u', '_by']))
+          || (adm(cid) && invTomb())
+          || invMig(cid));
+        allow delete: if dl(cid);
+      }
+      // set = pengaturan Inventori; v2 = penanda data sudah dipindahkan; mig = kunci selama pemindahan
+      match /invcfg/{id} {
+        allow read: if mem(cid);
+        allow create, update: if invBase(cid) && id == 'set' && (adm(cid) || invMig(cid));
+        allow create: if invBase(cid) && id == 'v2' && invMig(cid)
+          && request.resource.data.keys().hasOnly(['ts', 'by', 'u', 'n', '_u', '_by']);
+        allow create, update: if invBase(cid) && id == 'mig' && invMig(cid)
+          && request.resource.data.keys().hasOnly(['ts', 'by', '_u', '_by']);
+        allow delete: if (id == 'mig' && aktifCo(cid) && invW(cid)) || dl(cid);
+      }
+    }
+
+    // data pembayaran dan harga paket (QRIS untuk Rupiah, DuitNow QR untuk Ringgit): dibaca semua akun terverifikasi, hanya admin utama (aplikasi Zui Admin terpisah) yang mengubah
+    match /sistem/{d} {
+      allow read: if vf();
+      allow create, update: if sa() && d == 'bayar'
+        && request.resource.data.keys().hasOnly(['usaha', 'bank', 'norek', 'an', 'wa', 'catatan', 'catatanMY', 'promo', 'promoSampai', 'qris', 'duitnow', 'paket', 'jam', 'waktu', 'kode', 'ts'])
+        && (!('qris' in request.resource.data) || (request.resource.data.qris is string && request.resource.data.qris.size() <= 300000))
+        && (!('paket' in request.resource.data) || (request.resource.data.paket is list && request.resource.data.paket.size() <= 4))
+        && (!('duitnow' in request.resource.data) || (request.resource.data.duitnow is string && request.resource.data.duitnow.size() <= 300000))
+        && (!('kode' in request.resource.data) || request.resource.data.kode is bool);
+    }
+
+    // kotak bantuan dan pengajuan langganan: satu percakapan per perusahaan antara Pemilik/Admin dan admin utama Zui
+    match /bantuan/{cid} {
+      allow read: if sa() || adm(cid);
+      allow create: if adm(cid)
+        && request.resource.data.keys().hasOnly(['cid', 'nama', 'oe', 'tp', 'dr', 'bu', 'ba', 'st', 'tx', 'pk'])
+        && request.resource.data.cid == cid
+        && request.resource.data.nama is string && request.resource.data.nama.size() <= 80
+        && request.resource.data.oe == mail()
+        && request.resource.data.tp is int
+        && request.resource.data.dr == 'u' && request.resource.data.bu == true && request.resource.data.ba == false
+        && request.resource.data.st in ['chat', 'langganan', 'resit']
+        && request.resource.data.tx is string && request.resource.data.tx.size() <= 120
+        && request.resource.data.pk is string && request.resource.data.pk.size() <= 3;
+      allow update: if (adm(cid)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['tp', 'dr', 'bu', 'ba', 'st', 'nama', 'oe', 'tx', 'pk'])
+          && request.resource.data.dr == 'u' && request.resource.data.bu == true && request.resource.data.ba == false
+          && request.resource.data.oe == mail()
+          && request.resource.data.st in ['chat', 'langganan', 'resit']
+          && request.resource.data.tp is int
+          && request.resource.data.tx is string && request.resource.data.tx.size() <= 120
+          && request.resource.data.pk is string && request.resource.data.pk.size() <= 3)
+        || (adm(cid)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['ba'])
+          && request.resource.data.ba == false)
+        || (sa()
+          && request.resource.data.keys().hasOnly(['cid', 'nama', 'oe', 'tp', 'dr', 'bu', 'ba', 'st', 'tx', 'pk']));
+      allow create: if sa()
+        && request.resource.data.keys().hasOnly(['cid', 'nama', 'oe', 'tp', 'dr', 'bu', 'ba', 'st', 'tx', 'pk']);
+      allow delete: if sa();
+
+      match /pesan/{id} {
+        allow read: if sa() || adm(cid);
+        allow create: if request.resource.data.keys().hasOnly(['dari', 'uid', 'nama', 'teks', 'jenis', 'paket', 'rid', 'jml', 'ref', 'ts'])
+          && request.resource.data.teks is string && request.resource.data.teks.size() >= 1 && request.resource.data.teks.size() <= 1000
+          && request.resource.data.ts is int
+          && request.resource.data.uid == request.auth.uid
+          && (!('rid' in request.resource.data) || (request.resource.data.rid is string && request.resource.data.rid.size() <= 30))
+          && (!('jml' in request.resource.data) || request.resource.data.jml is number)
+          && (!('ref' in request.resource.data) || (request.resource.data.ref is string && request.resource.data.ref.size() <= 20))
+          && ((adm(cid) && request.resource.data.dari == 'u' && request.resource.data.jenis in ['chat', 'langganan', 'resit'])
+            || (sa() && request.resource.data.dari == 'a' && request.resource.data.jenis in ['chat', 'aktif']));
+        allow delete: if sa();
+      }
+
+      // gambar resit pembayaran (dikompres di perangkat); dibaca saat dibuka, tidak ikut daftar pesan
+      match /resit/{id} {
+        allow read: if sa() || adm(cid);
+        allow create: if adm(cid)
+          && request.resource.data.keys().hasOnly(['img', 'ts', 'uid'])
+          && request.resource.data.img is string && request.resource.data.img.size() <= 400000
+          && request.resource.data.ts is int
+          && request.resource.data.uid == request.auth.uid;
+        allow delete: if sa();
+      }
+    }
+
+    // referensi resit yang sudah dipakai untuk aktivasi (pencegah resit dipakai dua kali), hanya admin utama
+    match /resit/{ref} {
+      allow read, delete: if sa();
+      allow create, update: if sa() && request.resource.data.keys().hasOnly(['cid', 'ts', 'jml']);
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

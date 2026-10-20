@@ -6,7 +6,7 @@ Satu project Firebase (**zuisystem**) dipakai semua aplikasi Zui. Zui System men
 1. **Authentication > Sign-in method**: aktifkan **Email/Password** dan **Google**.
 2. **Authentication > Settings > Authorized domains**: tambahkan domain GitHub Pages Anda (mis. `namaanda.github.io`).
 3. **Firestore Database > Create database** (mode produksi, region terdekat).
-4. Tab **Rules**: tempel seluruh isi `firestore.rules` di folder ini (sudah memuat aturan Zui Manufaktur dan logo perusahaan), lalu **Publish**. Rules ini mengamankan data per perusahaan dan peran, jadi jangan dilewati.
+4. Tab **Rules**: tempel seluruh isi `firestore.rules` di folder ini (sudah memuat aturan semua modul, termasuk data Inventori per dokumen dan saldo per akun), lalu **Publish**. Rules ini mengamankan data per perusahaan dan peran, jadi jangan dilewati.
 
 ## Pasang di GitHub Pages
 Satu repo per aplikasi. Unggah `index.html`, `manifest.webmanifest`, `sw.js`, `icon-192.png`, `icon-512.png`, lalu Settings > Pages > Deploy from a branch > main / root.
@@ -31,8 +31,33 @@ Bila semua repo ada di akun GitHub yang sama (`namaanda.github.io/zui-system/`, 
 Pemilik tidak bisa diubah atau dikeluarkan oleh siapa pun. Satu akun hanya bisa tergabung di satu perusahaan.
 
 ## Batasan yang perlu diketahui
-- Pembatasan modul sekarang dijaga di aplikasi, dan Rules menjaga siapa yang boleh membaca atau menulis data Inventori. Rules belum membedakan kolom: anggota yang boleh membaca data Inventori secara teknis dapat membaca semua isinya, termasuk HPP.
-- Data Inventori masih satu kesatuan per perusahaan. Jika dua orang menyimpan hampir bersamaan, perubahan yang terbaru dimuat dan yang terlambat diminta diulang (aplikasi memberi tahu).
+- Rules kini membatasi data Inventori per koleksi dan per peran (lihat tabel di bawah), tetapi pembacaan belum dibedakan per kolom: anggota yang boleh membaca Inventori secara teknis dapat membaca semua isinya, termasuk HPP.
+- Perangkat yang pertama kali membuka Inventori membaca seluruh dokumen sekali; berikutnya hanya perubahan sejak terakhir (cache di perangkat).
+
+## Data Inventori per dokumen (sejak v11)
+Data Inventori disimpan per baris di koleksi `perusahaan/{cid}/…`:
+
+| Koleksi | Isi | Tulis (selain Pemilik/Admin) |
+|---|---|---|
+| `barang` | barang | Gudang; Keuangan menambah barang baru dari pembelian; Kasir/Keuangan hanya `stock`, `cost`, `loc` |
+| `batch` | batch stok | Gudang; Kasir/Keuangan menambah batch dan mengubah `q` saja |
+| `pembelian` | pembelian | Gudang, Keuangan |
+| `penjualan` | penjualan | Kasir, Keuangan |
+| `mutasi` | riwayat stok | semua peran penulis Inventori, **hanya tambah** |
+| `kontak` | vendor (`_t:'v'`) dan pelanggan (`_t:'c'`) | Kasir; Gudang/Keuangan hanya menambah |
+| `buang` | batch dibuang | Gudang (tambah) |
+| `invtanda` | penanda sekali-pakai: `kd_` pembayaran Keuangan diterapkan, `mi_`/`md_` serah bahan/terima hasil produksi, `no_` nomor nota | semua peran penulis Inventori, tidak bisa diubah |
+| `invcfg` | `set` pengaturan Inventori, `v2` penanda data sudah dipindahkan | Pemilik/Admin |
+
+Tiap dokumen memuat `_u` (waktu server, dipakai untuk muat inkremental) dan `_by` (uid penulis). Hapus = tombstone `{_del: true}` agar perangkat lain ikut menghapus. Produksi dan Mutu hanya membaca.
+
+Kode bersama untuk semua modul ada di `zdata.js` (ZINV = data Inventori, ZKAS = saldo kas). Data format lama (`inv/meta` + `invc/0..n`) dipindahkan otomatis saat Inventori, Keuangan, atau ZUI ERP dibuka oleh peran yang dulu boleh menulis Inventori; data lama **tidak dihapus** (tetap sebagai cadangan) tetapi tidak bisa ditulis lagi setelah `invcfg/v2` ada.
+
+## Saldo kas per akun (sejak v11)
+`akun/{id}.sal` = jumlah semua transaksi kas sah (di luar saldo awal `awal`). Setiap transaksi kas yang sah, disetujui, atau dihapus wajib memperbarui `sal` di tulisan yang sama (Rules memeriksa besarnya). Akun lama diisi otomatis sekali dari seluruh riwayat kas saat Keuangan atau persetujuan ZUI ERP dibuka. Tidak ada lagi batas 1.500 transaksi untuk saldo.
+
+## Uji
+Folder `uji/`: `npm install` lalu `npm run uji` (butuh Java 11+). Menjalankan emulator Firestore + Auth, 25 uji Rules/data dan 14 uji peramban. Lihat `uji/README.md` untuk uji di Firebase asli.
 
 ## Menunggu tindakan Anda
 Tab Aplikasi menampilkan daftar pekerjaan yang menunggu peran Anda dari semua aplikasi (persetujuan BoM, permintaan bahan, uji mutu, hasil menunggu diterima, pembelian menunggu persetujuan atau konfirmasi keuangan), lengkap dengan tombol Buka ke aplikasinya.
