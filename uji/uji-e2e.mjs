@@ -231,10 +231,42 @@ await t('Pemilik terima cicilan di Inventori: langsung masuk kas akun yang dipil
   eq((await get('penjualan', sid)).paid, 30000);
 });
 
+console.log('Harga otomatis, kategori, kode');
+await t('Kategori dengan kode & keuntungan: kode barang otomatis, harga = HPP + %, dibulatkan ke atas Rp500', async () => {
+  const r = await own.page.evaluate(async () => {
+    go(6); hjSet('mk', 30); hjSet('rb', 500);
+    ktF(-1); $('#kn').value = 'Parfum'; $('#kk').value = 'PRF'; $('#km').value = 50; ktS(-1);
+    ai(); $('#n').value = 'Parfum Uji'; $('#ct').value = 'Parfum'; tpc(); const sku = $('#sk').value; $('#cs').value = 10000; hjPrev(); const prev = $('#hji').textContent; si();
+    const i = D.items.find(x => x.name === 'Parfum Uji');
+    ai(); $('#n').value = 'Tanpa kategori'; tpc(); $('#cs').value = 10100; si();
+    const j = D.items.find(x => x.name === 'Tanpa kategori');
+    return { sku, prev, price: i.price, ha: i.ha, sku2: j.sku, p2: j.price, sat: D.set.sat.includes('pcs'), kat: D.set.kat.map(k => k.n) };
+  });
+  eq([r.sku, r.price, r.ha, r.sku2, r.p2], ['PRF-001', 15000, true, 'PRD-001', 13500]);
+  yes(/33,3% dari harga jual/.test(r.prev), r.prev); yes(r.sat && r.kat.includes('Umum'), JSON.stringify(r));
+  await own.page.evaluate(() => pushNow()); await wait(own.page, () => !PB && !dirty());
+  eq((await get('invcfg', 'set')).v.kat.find(k => k.n === 'Parfum').k, 'PRF');
+});
+await t('HPP naik: harga ikut naik; HPP turun: hanya saran; Pakai saran', async () => {
+  const r = await own.page.evaluate(() => {
+    const i = D.items.find(x => x.name === 'Parfum Uji'); addB(i, 1, { cost: 20000 }); const naik = [i.cost, i.price];
+    addB(i, 8, { cost: 1000 }); const turun = [Math.round(i.cost), i.price, hjSaran(i)]; hjPakai(i.id); return { naik, turun, akhir: i.price };
+  });
+  eq(r.naik, [20000, 30000]); eq(r.turun, [3111, 30000, 5000]); eq(r.akhir, 5000);
+});
+await t('Barang lama tetap manual sampai dinyalakan; harga di formulir penjualan tidak di bawah harga otomatis', async () => {
+  const r = await own.page.evaluate(() => { const i = D.items.find(x => x.id === 'it0100'); const a = [hjOn(i), i.price]; i.ha = true; i.cost = 9000; const p = prc(i); i.ha = false; i.cost = 4000; return a.concat([p]) });
+  eq(r, [false, 10000, 12000]);
+});
+await t('Hasil produksi: HPP = bahan + biaya lain, harga jual otomatis', async () => {
+  const r = await own.page.evaluate(() => { const x = mfgFin({ real: { qty: 10, bn: 'PX', exp: '2027-01-01', pakai: [] }, isu: [], sku: 'PRD-HASIL', nama: 'Hasil Uji', unit: 'pcs', no: 'PRD-9', bl: 5000 }, 'pq-uji'); const i = D.items.find(z => z.sku === 'PRD-HASIL'); return { m: x.m, cost: i.cost, price: i.price } });
+  eq([r.cost, r.price], [500, 1000]); yes(/HPP Rp\s?500\/pcs \(bahan Rp\s?0 \+ biaya lain Rp\s?5\.000\)/.test(r.m), r.m);
+});
+
 console.log('Manufaktur');
 await t('Manufaktur membaca stok dari koleksi barang', async () => {
   const m = await open('pemilik', '/manufaktur/');
-  await wait(m.page, () => typeof STK !== 'undefined' && STK.ok && STK.items.length === 300, null, 30000);
+  await wait(m.page, () => typeof STK !== 'undefined' && STK.ok && STK.items.length >= 300, null, 30000);
   eq(await m.page.evaluate(() => STK.items.find(i => i.sku === 'SKU-10').stock), 17);
   await m.ctx.close();
 });

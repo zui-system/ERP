@@ -171,7 +171,7 @@ service cloud.firestore {
 
       match /bom/{id} {
         function bomShape() {
-          return request.resource.data.keys().hasOnly(['kode', 'nama', 'sku', 'pn', 'unit', 'qty', 'umur', 'items', 'qc', 'ket', 'aktif', 'st', 'apv', 'by', 'uid', 'ts', 'mod'])
+          return request.resource.data.keys().hasOnly(['kode', 'nama', 'sku', 'pn', 'unit', 'qty', 'umur', 'items', 'qc', 'ket', 'bl', 'aktif', 'st', 'apv', 'by', 'uid', 'ts', 'mod'])
             && request.resource.data.items is list && request.resource.data.items.size() <= 60
             && request.resource.data.qty is number && request.resource.data.qty > 0;
         }
@@ -209,7 +209,7 @@ service cloud.firestore {
         }
         allow read: if mem(cid);
         allow create: if aktifCo(cid) && rin(cid, ['pemilik', 'admin', 'produksi'])
-          && request.resource.data.keys().hasOnly(['no', 'bomId', 'bom', 'nama', 'sku', 'unit', 'mult', 'target', 'plan', 'qcp', 'umur', 'tgl', 'pic', 'cat', 'st', 'by', 'uid', 'ts', 'mod', 'hist'])
+          && request.resource.data.keys().hasOnly(['no', 'bomId', 'bom', 'nama', 'sku', 'unit', 'mult', 'target', 'bl', 'plan', 'qcp', 'umur', 'tgl', 'pic', 'cat', 'st', 'by', 'uid', 'ts', 'mod', 'hist'])
           && request.resource.data.st == 'rencana'
           && request.resource.data.uid == request.auth.uid;
         // pemilik/admin: semua tahap
