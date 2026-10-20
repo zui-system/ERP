@@ -204,10 +204,76 @@ await t('Perubahan offline dari Inventori versi lama (localStorage) digabung, ti
   await g.ctx.close();
 });
 
+console.log('Uang penjualan ke kas Keuangan');
+await t('Kasir: HPP tidak tampil; penjualan tunai jadi setoran, Keuangan menerima, saldo naik', async () => {
+  eq(await kas.page.evaluate(() => { go(1); return document.querySelector('#p_brg').textContent.includes('HPP') }), false, 'HPP tampil di layar Kasir');
+  const sal0 = (await get('akun', 'ak1')).sal;
+  const sid = await kas.page.evaluate(async () => { nsale(); await new Promise(r => setTimeout(r, 300)); document.querySelector('#sl .sq').value = 2; document.querySelector('#sl .sp').value = 10000; ss(); return D.so[D.so.length - 1].id });
+  let st = null; for (let i = 0; i < 60 && !st; i++) { await adminDb(async co => { const q = await co.collection('setoran').where('rf.i', '==', sid).get(); st = q.docs[0] ? Object.assign({ id: q.docs[0].id }, q.docs[0].data()) : null }); if (!st) await new Promise(r => setTimeout(r, 250)) }
+  yes(st && st.st === 'menunggu' && st.jml === 20000, 'setoran ' + JSON.stringify(st));
+  await wait(keu.page, id => STR.some(x => x.id === id), st.id, 20000);
+  await keu.page.evaluate(async id => { stOk(id); await stOk2(id) }, st.id);
+  eq((await get('setoran', st.id)).st, 'diterima'); eq((await get('kas', 'st' + st.id)).jml, 20000);
+  eq((await get('akun', 'ak1')).sal, sal0 + 20000);
+  // dikonfirmasi dua kali tidak bisa
+  let dua = 'tidak'; await keu.page.evaluate(async id => { const m = Date.now(); try { await coRef().collection('setoran').doc(id).update({ st: 'diterima', akun: 'ak1', kas: 'st' + id, apv: null, mod: m }); return 'bisa' } catch (e) { return 'tidak' } }, st.id).then(x => { dua = x });
+  eq(dua, 'tidak');
+});
+await t('Pemilik terima cicilan di Inventori: langsung masuk kas akun yang dipilih', async () => {
+  const sal0 = (await get('akun', 'ak1')).sal;
+  const sid = await own.page.evaluate(async () => { nsale(); await new Promise(r => setTimeout(r, 300)); document.querySelector('#sl .sq').value = 1; document.querySelector('#sl .sp').value = 50000; $('#sr').checked = false; ss(); return D.so[D.so.length - 1].id });
+  await own.page.evaluate(id => bys(id), sid);
+  await wait(own.page, () => $('#kak') && $('#kak').value === 'ak1', null, 15000);
+  await own.page.evaluate(id => { $('#by').value = 30000; bys2(id) }, sid);
+  for (let i = 0; i < 60 && (await get('akun', 'ak1')).sal !== sal0 + 30000; i++) await new Promise(r => setTimeout(r, 250));
+  eq((await get('akun', 'ak1')).sal, sal0 + 30000);
+  await wait(own.page, () => !PB && !dirty(), null, 20000);
+  eq((await get('penjualan', sid)).paid, 30000);
+});
+
+console.log('Harga otomatis, kategori, kode');
+await t('Kategori dengan kode & keuntungan: kode barang otomatis, harga = HPP + %, dibulatkan ke atas Rp500', async () => {
+  const r = await own.page.evaluate(async () => {
+    go(6); hjSet('mk', 30); hjSet('rb', 500);
+    ktF(-1); $('#kn').value = 'Parfum'; $('#kk').value = 'PRF'; $('#km').value = 50; ktS(-1);
+    ai(); $('#n').value = 'Parfum Uji'; $('#ct').value = 'Parfum'; tpc(); const sku = $('#sk').value; $('#cs').value = 10000; hjPrev(); const prev = $('#hji').textContent; si();
+    const i = D.items.find(x => x.name === 'Parfum Uji');
+    ai(); $('#n').value = 'Tanpa kategori'; tpc(); $('#cs').value = 10100; si();
+    const j = D.items.find(x => x.name === 'Tanpa kategori');
+    return { sku, prev, price: i.price, ha: i.ha, sku2: j.sku, p2: j.price, sat: D.set.sat.includes('pcs'), kat: D.set.kat.map(k => k.n) };
+  });
+  eq([r.sku, r.price, r.ha, r.sku2, r.p2], ['PRF-001', 15000, true, 'PRD-001', 13500]);
+  yes(/33,3% dari harga jual/.test(r.prev), r.prev); yes(r.sat && r.kat.filter(k => k === 'Umum').length === 1 && r.kat.filter(k => k === 'Parfum').length === 1, JSON.stringify(r.kat));
+  await own.page.evaluate(() => pushNow()); await wait(own.page, () => !PB && !dirty());
+  eq((await get('invcfg', 'set')).v.kat.find(k => k.n === 'Parfum').k, 'PRF');
+});
+await t('HPP naik: harga ikut naik; HPP turun: hanya saran; Pakai saran', async () => {
+  const r = await own.page.evaluate(() => {
+    const i = D.items.find(x => x.name === 'Parfum Uji'); addB(i, 1, { cost: 20000 }); const naik = [i.cost, i.price];
+    addB(i, 8, { cost: 1000 }); const turun = [Math.round(i.cost), i.price, hjSaran(i)]; hjPakai(i.id); return { naik, turun, akhir: i.price };
+  });
+  eq(r.naik, [20000, 30000]); eq(r.turun, [3111, 30000, 5000]); eq(r.akhir, 5000);
+});
+await t('Barang lama tetap manual sampai dinyalakan; harga di formulir penjualan tidak di bawah harga otomatis', async () => {
+  const r = await own.page.evaluate(() => { const i = D.items.find(x => x.id === 'it0100'); const a = [hjOn(i), i.price]; i.ha = true; i.cost = 9000; const p = prc(i); i.ha = false; i.cost = 4000; return a.concat([p]) });
+  eq(r, [false, 10000, 12000]);
+});
+await t('Hasil produksi: HPP = bahan + biaya lain, harga jual otomatis', async () => {
+  const r = await own.page.evaluate(() => { const x = mfgFin({ real: { qty: 10, bn: 'PX', exp: '2027-01-01', pakai: [] }, isu: [], sku: 'PRD-HASIL', nama: 'Hasil Uji', unit: 'pcs', no: 'PRD-9', bl: 5000 }, 'pq-uji'); const i = D.items.find(z => z.sku === 'PRD-HASIL'); return { m: x.m, cost: i.cost, price: i.price } });
+  eq([r.cost, r.price], [500, 1000]); yes(/HPP Rp\s?500\/pcs \(bahan Rp\s?0 \+ biaya lain Rp\s?5\.000\)/.test(r.m), r.m);
+});
+
+await t('Daftar barang berbentuk kartu; ketuk kartu membuka detail (Kasir tanpa HPP dan tanpa tombol ubah)', async () => {
+  const r = await kas.page.evaluate(async () => { go(1); Q = 'Barang 7'; bl(); const n = document.querySelectorAll('#bl .cd').length; document.querySelector('#bl .cd').click(); await new Promise(r => setTimeout(r, 200)); const d = $('#dp'); const o = [n, d.open, d.textContent.includes('Batch'), d.textContent.includes('HPP'), !!d.querySelector('button[onclick^="xiD"]')]; d.close(); Q = ''; return o });
+  eq(r, [11, true, true, false, false]);
+  const o = await own.page.evaluate(async () => { go(1); Q = 'Barang 70'; bl(); document.querySelector('#bl .cd').click(); await new Promise(r => setTimeout(r, 200)); const d = $('#dp'); const x = [d.textContent.includes('HPP'), !!d.querySelector('button[onclick^="xiD"]')]; d.close(); Q = ''; bl(); return x });
+  eq(o, [true, true]);
+});
+
 console.log('Manufaktur');
 await t('Manufaktur membaca stok dari koleksi barang', async () => {
   const m = await open('pemilik', '/manufaktur/');
-  await wait(m.page, () => typeof STK !== 'undefined' && STK.ok && STK.items.length === 300, null, 30000);
+  await wait(m.page, () => typeof STK !== 'undefined' && STK.ok && STK.items.length >= 300, null, 30000);
   eq(await m.page.evaluate(() => STK.items.find(i => i.sku === 'SKU-10').stock), 17);
   await m.ctx.close();
 });

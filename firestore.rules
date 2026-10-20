@@ -171,7 +171,7 @@ service cloud.firestore {
 
       match /bom/{id} {
         function bomShape() {
-          return request.resource.data.keys().hasOnly(['kode', 'nama', 'sku', 'pn', 'unit', 'qty', 'umur', 'items', 'qc', 'ket', 'aktif', 'st', 'apv', 'by', 'uid', 'ts', 'mod'])
+          return request.resource.data.keys().hasOnly(['kode', 'nama', 'sku', 'pn', 'unit', 'qty', 'umur', 'items', 'qc', 'ket', 'bl', 'aktif', 'st', 'apv', 'by', 'uid', 'ts', 'mod'])
             && request.resource.data.items is list && request.resource.data.items.size() <= 60
             && request.resource.data.qty is number && request.resource.data.qty > 0;
         }
@@ -209,7 +209,7 @@ service cloud.firestore {
         }
         allow read: if mem(cid);
         allow create: if aktifCo(cid) && rin(cid, ['pemilik', 'admin', 'produksi'])
-          && request.resource.data.keys().hasOnly(['no', 'bomId', 'bom', 'nama', 'sku', 'unit', 'mult', 'target', 'plan', 'qcp', 'umur', 'tgl', 'pic', 'cat', 'st', 'by', 'uid', 'ts', 'mod', 'hist'])
+          && request.resource.data.keys().hasOnly(['no', 'bomId', 'bom', 'nama', 'sku', 'unit', 'mult', 'target', 'bl', 'plan', 'qcp', 'umur', 'tgl', 'pic', 'cat', 'st', 'by', 'uid', 'ts', 'mod', 'hist'])
           && request.resource.data.st == 'rencana'
           && request.resource.data.uid == request.auth.uid;
         // pemilik/admin: semua tahap
@@ -340,6 +340,26 @@ service cloud.firestore {
           && resource.data.pend == true
           && request.resource.data.pend == false
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['pend', 'apBy', 'apTs', 'a2']);
+        allow delete: if dl(cid);
+      }
+
+      // setoran: uang penjualan tunai/cicilan yang diterima Kasir di Inventori, masuk kas setelah dikonfirmasi Keuangan.
+      // Konfirmasi = transaksi kas sah 'st' + id setoran (dibuat di tulisan yang sama, saldo akun ikut diperbarui oleh aturan kas)
+      match /setoran/{id} {
+        allow read: if mem(cid) && (peran(cid) in ['pemilik', 'admin', 'keuangan'] || resource.data.uid == request.auth.uid);
+        allow create: if aktifCo(cid) && rin(cid, ['pemilik', 'admin', 'kasir', 'keuangan'])
+          && request.resource.data.keys().hasOnly(['rf', 'jml', 'tgl', 'kat', 'by', 'uid', 'ts', 'st'])
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.st == 'menunggu'
+          && request.resource.data.jml is number && request.resource.data.jml > 0;
+        allow update: if aktifCo(cid) && rin(cid, ['pemilik', 'admin', 'keuangan'])
+          && resource.data.st == 'menunggu'
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['st', 'akun', 'kas', 'apv', 'mod'])
+          && (request.resource.data.st == 'ditolak'
+            || (request.resource.data.st == 'diterima'
+              && request.resource.data.kas == 'st' + id
+              && getAfter(/databases/$(database)/documents/perusahaan/$(cid)/kas/$('st' + id)).data.st == 'disetujui'
+              && getAfter(/databases/$(database)/documents/perusahaan/$(cid)/kas/$('st' + id)).data.jml == resource.data.jml));
         allow delete: if dl(cid);
       }
 

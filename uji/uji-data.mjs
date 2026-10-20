@@ -285,6 +285,21 @@ await t('akun lama tanpa sal: diisi dari seluruh riwayat (lebih dari 1.500 trans
   await assertFails(c.collection('akun').doc('lama').update({ sal: 0, lk: '', mod: 1 }));
 });
 
+console.log('Setoran');
+await t('setoran: kasir membuat; konfirmasi wajib bersama transaksi kas sah dengan jumlah sama', async () => {
+  const fk = db('kasir'), ck = co(fk);
+  await assertSucceeds(ck.collection('setoran').doc('s1').set({ rf: { t: 'so', i: 's1', no: 'INV-1', nm: 'U' }, jml: 500, tgl: '2026-10-20', kat: 'Penjualan tunai', by: 'K', uid: 'kasir', ts: 1, st: 'menunggu' }));
+  await assertFails(ck.collection('setoran').doc('s2').set({ rf: {}, jml: 500, tgl: '', kat: '', by: 'K', uid: 'kasir', ts: 1, st: 'diterima' }));
+  await assertFails(ck.collection('setoran').doc('s1').update({ st: 'diterima', akun: 'a1', kas: 'sts1', mod: 2 }));
+  const f = db('keuangan'), c = co(f);
+  await assertFails(c.collection('setoran').doc('s1').update({ st: 'diterima', akun: 'a1', kas: 'sts1', mod: 2 }));
+  const k = kasDoc({ jenis: 'masuk', akun: 'a1', jml: 400, st: 'disetujui', uid: 'keuangan' });
+  const b0 = f.batch(); b0.set(c.collection('kas').doc('sts1'), k); ZKAS.salOps(b0, c, 'sts1', null, k); b0.update(c.collection('setoran').doc('s1'), { st: 'diterima', akun: 'a1', kas: 'sts1', mod: 2 }); await assertFails(b0.commit());
+  const k2 = Object.assign({}, k, { jml: 500 }), b = f.batch(); b.set(c.collection('kas').doc('sts1'), k2); ZKAS.salOps(b, c, 'sts1', null, k2); b.update(c.collection('setoran').doc('s1'), { st: 'diterima', akun: 'a1', kas: 'sts1', mod: 2 }); await assertSucceeds(b.commit());
+  await assertFails(co(db('gudang')).collection('setoran').doc('s1').get());
+  await assertSucceeds(ck.collection('setoran').doc('s1').get());
+});
+
 await env.cleanup();
 console.log(`\n${ok} lulus, ${bad} gagal`);
 process.exit(bad ? 1 : 0);

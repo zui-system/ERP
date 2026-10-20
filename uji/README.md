@@ -16,7 +16,8 @@ hak akses tiap peran per koleksi, gabung perubahan bersamaan (stok batch), nomor
 diterapkan dua kali, hapus antar perangkat, perubahan ditolak dikembalikan, saldo kas per akun (catat, setujui,
 transfer, hapus, isi dari 2.100 transaksi lama), lalu di peramban: Inventori (pindah, simpan, dua perangkat,
 cache, perubahan offline versi lama), Keuangan (saldo dari 1.600 transaksi, bayar utang, terima piutang),
-ZUI ERP (setujui kas & pembelian, Pantauan), Manufaktur (stok).
+ZUI ERP (setujui kas & pembelian, Pantauan), Manufaktur (stok), setoran Kasir → Keuangan, harga otomatis,
+kategori & kode otomatis, HPP produksi dengan biaya lain, kartu barang dan detail.
 
 ## 2. Uji di Firebase asli sebelum tayang
 Aplikasi bisa dijalankan dari komputer sendiri terhadap project `zuisystem` (localhost sudah diizinkan Firebase Auth).
