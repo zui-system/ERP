@@ -79,3 +79,8 @@ html:root[data-app="light"]{--ac:color-mix(in srgb,var(--k) 72%,#000)!important}
 
 /* ---- layar HP: angka ringkasan muat tanpa terpotong ---- */
 @media(max-width:480px){.kp b{font-size:clamp(13px,3.7vw,18px);white-space:normal;text-overflow:clip;overflow-wrap:anywhere;line-height:1.25}}
+/* isian kata sandi dengan tombol mata (zui-ui.js) */
+.zpw{position:relative;display:block}.zpw>input{padding-right:46px!important}
+.zpw>input::-ms-reveal,.zpw>input::-ms-clear{display:none}
+.zpe{position:absolute;top:0;right:2px;bottom:0;width:42px;display:flex;align-items:center;justify-content:center;padding:0;margin:0;border:0;background:transparent;color:var(--mu);cursor:pointer;border-radius:8px}
+.zpe svg{width:20px;height:20px}@media(hover:hover){.zpe:hover{color:var(--ink)}}
