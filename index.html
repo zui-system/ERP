@@ -75,7 +75,7 @@ textarea.ni{resize:vertical;font-size:12px;font-family:ui-monospace,monospace}
 #p_app .gr .card{margin:0;border-left:1px solid var(--ln);border-top:4px solid var(--k,var(--ac));display:flex;flex-direction:column;gap:12px;padding:14px;justify-content:space-between}
 .ti{display:flex;gap:12px;align-items:flex-start;text-decoration:none;color:inherit}.ti b{display:block;font-size:16px;font-weight:600;line-height:1.2}.ti small{display:block;color:var(--mu);font-size:12px;line-height:1.4;margin-top:3px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .ic{flex:none;width:40px;height:40px;border-radius:8px;background:var(--k,var(--ac));color:#fff;display:grid;place-items:center;font-size:16px;font-weight:600;letter-spacing:.02em}
-a.ti:hover .ic{filter:brightness(1.12)}a.ti:active{transform:scale(.98)}
+@media(hover:hover){a.ti:hover .ic{filter:brightness(1.12)}}a.ti:active{transform:scale(.98)}
 #p_app .gr .act{margin:0}
 @media(min-width:900px){.gr{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(min-width:1280px){.gr{grid-template-columns:repeat(4,minmax(0,1fr))}}@media(min-width:900px){.pv section .ni,.pv section select.ni{max-width:520px}}
 @media(max-width:340px){.gr{grid-template-columns:1fr}}
@@ -198,20 +198,21 @@ html:root[data-app="navy"] dialog{background:#161E29}
 /* halaman masuk/daftar di PC: penjelasan di kiri, formulir di kanan */
 .ai{display:none}
 @media(min-width:900px){.au:has(>.aw){padding:0}.au .aw{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(440px,1fr);width:100%;min-height:100%;margin:0}
-.aw .ac{display:flex;flex-direction:column;justify-content:center;border:0;border-radius:0;box-shadow:none;width:auto;padding:48px max(40px,calc((100% - 380px)/2))}
-.aw .ai{position:relative;display:flex;flex-direction:column;justify-content:center;padding:64px clamp(48px,6vw,110px) 220px;color:#E8ECF1;background:radial-gradient(circle at 30% 0%,rgba(47,107,255,.26) 0%,rgba(47,107,255,.08) 35%,rgba(47,107,255,0) 65%),#0F141B;overflow:hidden;font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif}
-.ai .aih{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:600;letter-spacing:.32em;color:#A3AAB5}.ai .aih u{width:26px;height:2px;background:#2F6BFF;box-shadow:0 0 8px #2F6BFF}
+.aw .ac{display:flex;flex-direction:column;justify-content:center;border:0;border-radius:0;box-shadow:none;width:auto;background:var(--sf);padding:48px max(40px,calc((100% - 380px)/2))}
+.aw .ai{position:relative;display:flex;flex-direction:column;justify-content:center;padding:64px clamp(48px,6vw,110px) 220px;color:#E8ECF1;background:radial-gradient(circle at 30% 0%,color-mix(in srgb,var(--k) 26%,transparent) 0%,color-mix(in srgb,var(--k) 8%,transparent) 35%,transparent 65%),#0F141B;overflow:hidden;font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif}
+.ai .aih{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:600;letter-spacing:.32em;color:#A3AAB5}.ai .aih u{width:26px;height:2px;background:var(--k);box-shadow:0 0 8px var(--k)}
 .ai h2{margin:0;font-size:clamp(30px,2.4vw,40px);line-height:1.2;font-weight:600;letter-spacing:-.01em;max-width:420px}
 .ai>p{margin:12px 0 0;font-size:14px;line-height:1.6;color:#A3AAB5;max-width:430px}
 .ai .aia{list-style:none;margin:26px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .ai .aia li{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid rgba(255,255,255,.08);border-left:3px solid var(--k);border-radius:8px;background:rgba(255,255,255,.03)}
 .ai .aia i{flex:none;width:30px;height:30px;border-radius:7px;display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:600;color:#0F141B;background:var(--k)}
 .ai .aia b{display:block;font-size:14px;font-weight:600}.ai .aia small{display:block;margin-top:2px;font-size:12px;line-height:1.4;color:#97A1AE}
-.ai .aif{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}.ai .aif span{font-size:12px;padding:5px 11px;border-radius:99px;border:1px solid rgba(47,107,255,.45);color:#C9D6FF;background:rgba(47,107,255,.10)}
+.ai .aif{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}.ai .aif span{font-size:12px;padding:5px 11px;border-radius:99px;border:1px solid color-mix(in srgb,var(--k) 45%,transparent);color:color-mix(in srgb,var(--k) 30%,#fff);background:color-mix(in srgb,var(--k) 10%,transparent)}
 .ai>*{position:relative;max-width:620px}.ai .aih{position:absolute;top:44px;left:clamp(48px,6vw,110px)}
 .ai .ail{position:absolute;left:0;right:0;bottom:0;max-width:none;display:flex;justify-content:center;pointer-events:none}.ai .ail svg{--w:min(86%,720px,62vh);width:var(--w);height:auto;margin-bottom:calc(var(--w)*-.16);-webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,0) 0%,#000 45%);mask-image:linear-gradient(to bottom,rgba(0,0,0,0) 0%,#000 45%)}
 .ai .ail .zw{opacity:.6}.ai .ail .zp{display:none}
 .ai .aico{position:absolute;left:0;right:0;bottom:24px;max-width:none;text-align:center;font-size:10px;font-weight:500;letter-spacing:.2em;color:#7D8693}}
+html{-webkit-tap-highlight-color:transparent}
 </style><style>/* tombol dialog rapi di layar sempit; kaki Pengaturan; ikon pesan */
 .btn{display:flex;flex-wrap:wrap;gap:8px}.btn>*{flex:1 1 auto}.btn button{white-space:nowrap;border:1px solid var(--ln);padding:10px 12px;border-radius:10px;margin:0}.btn:has(>:nth-child(3)) .go{flex-basis:100%}.btn .go{width:auto;border-color:transparent;padding:12px}
 .zft{margin:40px 0 0;padding:16px 0 calc(18px + env(safe-area-inset-bottom));border-top:1px solid var(--ln);text-align:center;font-size:11.5px;line-height:1.6;color:var(--mu)}
@@ -219,7 +220,7 @@ html:root[data-app="navy"] dialog{background:#161E29}
 .zfb{display:flex;justify-content:center;margin:28px 0 0}.zfb .ab,.zfb a{font-size:13px}.zfn{margin:28px 0 0;text-align:center;font-size:12px;color:var(--mu)}
 .top.tl{position:relative}.zmsg{margin-left:auto;align-self:flex-start;position:relative;width:40px;height:40px;border-radius:50%;border:1px solid var(--ln);background:transparent;color:var(--ink);display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer}
 .zmsg svg{width:20px;height:20px}.zmsg i{position:absolute;top:6px;right:6px;width:9px;height:9px;border-radius:50%;background:var(--bad);display:none}.zmsg.on i{display:block}
-</style><link rel="stylesheet" href="zui-ui.css?v=3"><style>:root{--k:#2F6BFF}</style><script src="zui-ui.js?v=2" defer></script></head><body><div id="zsp" aria-hidden="true" style="--zc:#2F6BFF;--zls:.45em"><div class="zsl"><div class="z1"><span class="zr">Z</span><span class="zr">U</span><span class="zr">I</span></div><div class="z2"><span>S</span><span>Y</span><span>S</span><span>T</span><span>E</span><span>M</span></div><div class="z3"><u></u><em>ERP</em><u></u></div></div><svg viewBox="0 0 390 360" fill="none" stroke="#2F6BFF" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+</style><link rel="stylesheet" href="zui-ui.css?v=4"><style>:root{--k:#2F6BFF}</style><script src="zui-ui.js?v=2" defer></script></head><body><div id="zsp" aria-hidden="true" style="--zc:#2F6BFF;--zls:.45em"><div class="zsl"><div class="z1"><span class="zr">Z</span><span class="zr">U</span><span class="zr">I</span></div><div class="z2"><span>S</span><span>Y</span><span>S</span><span>T</span><span>E</span><span>M</span></div><div class="z3"><u></u><em>ERP</em><u></u></div></div><svg viewBox="0 0 390 360" fill="none" stroke="#2F6BFF" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 <g stroke-opacity="0.05"><path class="zd" pathLength="100" d="M195 230 L-650 360 M195 230 L-371 360 M195 230 L-93 360 M195 230 L195 360 M195 230 L483 360 M195 230 L761 360 M195 230 L1040 360"/><path class="zd" pathLength="100" d="M0 240 H390 M0 254 H390 M0 274 H390 M0 304 H390 M0 344 H390"/></g>
 <g transform="translate(0 30)">
 <g stroke-opacity="0.06"><path class="zd" pathLength="100" d="M0 200 V168 H20 V140 H38 V158 H58 V118 H74 V146 H96 V160 H118 V128 H134 V150 H160 V136 H182 V112 H198 V150 H222 V132 H240 V160 H262 V124 H280 V146 H300 V106 H318 V140 H340 V156 H362 V130 H378 V162 H390"/></g>
@@ -742,7 +743,7 @@ try{localStorage.removeItem('zui.act')}catch(e){}await u.delete();m.textContent=
 const ldS=u=>new Promise((ok,no)=>{const s=document.createElement('script');s.src=u;s.onload=ok;s.onerror=no;document.head.appendChild(s)});
 /* ---------- pivot ---------- */
 const pv=$('#pv'),hd=$('#hd'),hdi=$('#hdi');hdi.innerHTML=N.map((n,i)=>`<button role="tab" onclick="go(${i})">${n}</button>`).join('');const bt=[...hdi.children];
-function go(i){pv.scrollTo({left:i*pv.clientWidth,behavior:'smooth'})}
+function go(i){const w=pv.clientWidth,s=pv.children[i];if(Math.abs(i-Math.round(pv.scrollLeft/(w||1)))<=1){pv.scrollTo({left:i*w,behavior:'smooth'});return}pv.scrollTo({left:i*w,behavior:'instant'});if(s&&s.animate)s.animate([{opacity:0},{opacity:1}],{duration:150,easing:'ease-out'})}
 function fa(){}
 function sync(){const w=pv.clientWidth||1,p=pv.scrollLeft/w,i=Math.max(0,Math.min(Math.floor(p),LN)),f=p-i,o=parseFloat(getComputedStyle(hd).paddingLeft)||0,L=hdi.getBoundingClientRect().left,a=bt[i].getBoundingClientRect().left-L,b=bt[Math.min(i+1,LN)].getBoundingClientRect().left-L,mx=Math.max(0,hdi.offsetWidth-(hd.clientWidth-2*o)),x=Math.min(a+(b-a)*f,mx);
 hdi.style.transform='translateX('+(-x)+'px)';window.zTabMask&&zTabMask(x,hd.clientWidth-2*o,o);const k=Math.max(0,Math.min(Math.round(p),LN));bt.forEach((e,j)=>{e.classList.toggle('on',j===k);e.setAttribute('aria-selected',j===k)});cur=k;if(k===1&&CID&&!PANL&&isAdm()&&Date.now()-PANT>60000)ldPantau()}
