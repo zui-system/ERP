@@ -65,7 +65,7 @@ textarea.ni{resize:vertical;font-size:12px;font-family:ui-monospace,monospace}
 .or{text-align:center;color:var(--mu);font-size:11px;margin:14px 0 4px;letter-spacing:.1em}.gbtn{width:100%;border:1px solid var(--ln);border-radius:10px;padding:11px;background:var(--sf);margin-top:8px}
 .lnk{display:block;margin:14px auto 0;color:var(--ac);font-size:13px}
 @media(max-width:480px){.top b{font-size:22px}.hdi{gap:14px}.hdi button{font-size:17px}}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(prefers-reduced-motion:reduce){*:not(#zsp,#zsp *){animation:none!important;transition:none!important}}
 
 .card{border:1px solid var(--ln);border-radius:12px;padding:14px;margin-top:12px;background:var(--sf)}
 .card b{font-size:16px;font-weight:600}.card .act{margin-top:10px}
@@ -145,7 +145,10 @@ html:root[data-app="navy"] dialog{background:#161E29}
 .zwm2 .zmw{display:flex;justify-content:space-between;font-weight:500;line-height:1}
 .zwm2 .zml{display:flex;margin-top:14px}
 .zwm2 .zml u{flex:1;height:2px;border-radius:2px;background:var(--zc);box-shadow:0 0 3px var(--zc),0 0 9px color-mix(in srgb,var(--zc) calc(var(--gl,1)*55%),transparent)}
-@media(prefers-reduced-motion:reduce){#zsp .zml u{transform:none!important;box-shadow:0 0 12px var(--zc),0 0 4px var(--zc)!important}#zsp .zr,#zsp .z2,#zsp .z3 em,#zsp .zco{opacity:1!important;transform:none!important}#zsp .z2{width:100%!important}#zsp .z3 u{transform:none!important;box-shadow:0 0 12px var(--zc),0 0 4px var(--zc)!important}#zsp .zd{stroke-dashoffset:0!important}#zsp .zw{opacity:.6!important}#zsp .zp{display:none}}
+/* layar pembuka di PC: logo dan ilustrasi satu kelompok, ilustrasi lebih lebar dengan tepi memudar */
+@media(min-width:700px){#zsp{--zw:min(100vw,900px,67vh)}#zsp .zsl{top:auto;bottom:calc(var(--zw)*.923*.88);transform:translateX(-50%)}#zsp svg{width:var(--zw);-webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,0) 0%,#000 45%),linear-gradient(to right,rgba(0,0,0,0) 0%,#000 9%,#000 91%,rgba(0,0,0,0) 100%);-webkit-mask-composite:source-in;mask-image:linear-gradient(to bottom,rgba(0,0,0,0) 0%,#000 45%),linear-gradient(to right,rgba(0,0,0,0) 0%,#000 9%,#000 91%,rgba(0,0,0,0) 100%);mask-composite:intersect}#zsp .zco{font-size:11px}}
+/* saat menutup, logo dan ilustrasi hilang lebih dulu supaya tidak ada logo dobel */
+#zsp .zsl,#zsp svg,#zsp .zco{transition:opacity .2s ease}#zsp.out .zsl,#zsp.out svg,#zsp.out .zco{opacity:0}
 </style><style>/* tombol dialog rapi di layar sempit; kaki Pengaturan; ikon pesan */
 .btn{display:flex;flex-wrap:wrap;gap:8px}.btn>*{flex:1 1 auto}.btn button{white-space:nowrap;border:1px solid var(--ln);padding:10px 12px;border-radius:10px;margin:0}.btn:has(>:nth-child(3)) .go{flex-basis:100%}.btn .go{width:auto;border-color:transparent;padding:12px}
 .zft{margin:40px 0 0;padding:16px 0 calc(18px + env(safe-area-inset-bottom));border-top:1px solid var(--ln);text-align:center;font-size:11.5px;line-height:1.6;color:var(--mu)}
@@ -178,7 +181,7 @@ html:root[data-app="navy"] dialog{background:#161E29}
 <rect class="zw" x="292" y="151" width="10" height="6" fill="#2F6BFF" stroke="none" style="filter:drop-shadow(0 0 2px #2F6BFF);animation-delay:5.50s"/>
 </g>
 <circle class="zp" cx="0" cy="230" r="2" fill="#2F6BFF" stroke="none" style="filter:drop-shadow(0 0 4px #2F6BFF)"/>
-</svg><div class="zco">PT. ZAOR UTAMA INDONESIA</div></div><script>(function(){var e=document.getElementById("zsp");if(!e)return;var k="zui.spl.mfg",s=null;try{s=sessionStorage.getItem(k)}catch(x){}if(s){e.remove();return}try{sessionStorage.setItem(k,"1")}catch(x){}var r=false;try{r=matchMedia("(prefers-reduced-motion: reduce)").matches}catch(x){}var t=r?1200:10000,done=function(){e.classList.add("out");setTimeout(function(){if(e.parentNode)e.remove()},600)};setTimeout(done,t);e.addEventListener("click",done)})()</script>
+</svg><div class="zco">PT. ZAOR UTAMA INDONESIA</div></div><script>(function(){var e=document.getElementById("zsp");if(!e)return;var k="zui.spl.mfg",s=null;try{s=sessionStorage.getItem(k)}catch(x){}if(s){e.remove();return}try{sessionStorage.setItem(k,"1")}catch(x){}var t=10000,done=function(){e.classList.add("out");setTimeout(function(){if(e.parentNode)e.remove()},600)};setTimeout(done,t);e.addEventListener("click",done)})()</script>
 <div class="app"><div class="top tl"><img id="lg" alt="" style="display:none"><div><b>MANUFAKTUR</b><small id="cn">BoM, produksi, mutu</small></div><button type="button" id="zmsg" class="zmsg" onclick="zMsg()" aria-label="Pesan" title="Pesan" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><i></i></button></div>
 <div class="hd" id="hd"><div class="hdi" id="hdi" role="tablist"></div></div>
 <div class="pv" id="pv"><section id="p_prd"></section><section id="p_bom"></section><section id="p_mu"></section><section id="p_pj"></section><section id="p_set"></section></div>
