@@ -1,3 +1,12 @@
+# Pembaruan v15 (22 Okt 2026): layar pembuka di PC, halaman Masuk/Daftar layar penuh, pindah tab tanpa bayangan
+
+1. **Layar pembuka di PC.** Animasi logo dan ilustrasi tetap berjalan walau Windows/perangkat meminta gerakan dikurangi (dulu animasi mati dan layar tertutup setelah 1,2 detik). Di layar lebar ilustrasi ikut membesar dengan tepi kiri-kanan memudar, logo selalu tepat di atas gedung, dan saat menutup logo hilang lebih dulu sehingga tidak ada logo dobel. Tampilan HP tidak berubah.
+2. **Halaman Masuk/Daftar di PC memenuhi layar**, di semua aplikasi: panel kiri biru malam berisi penjelasan aplikasi (ZUI ERP: empat aplikasi Zui; Inventori, Karyawan, Keuangan, Manufaktur: fitur utama masing-masing dengan warna aplikasinya) dan ilustrasi gedung; formulir di kanan. Teks panel tersedia dalam Indonesia, English, Melayu. Di HP tetap satu kolom.
+3. **Perbaikan formulir Daftar**: di layar pendek dulu terpotong atas-bawah dan tidak bisa digulir (tombol Daftar bisa tidak terjangkau); sekarang bisa digulir. Syarat kata sandi diberi jarak, ruang kosong di atas ATAU dihapus.
+4. **Pindah tab tanpa bayangan**, di semua aplikasi: menekan tab yang jauh dulu menggeser melewati semua halaman di antaranya (dan tab di antaranya menyala bergantian); sekarang langsung pindah dengan muncul singkat. Tab bersebelahan tetap bergeser halus. Kotak warna saat tombol disentuh di HP dihilangkan, dan sorotan kartu saat disentuh tidak lagi menempel di HP (hanya untuk mouse).
+
+Tidak ada perubahan Rules. Cache service worker naik: sys v52, inv v34, keu v31, mfg v32, kar v27; zui-ui.css v4. Uji: 28 uji data + 22 uji peramban lulus.
+
 # Pembaruan v14 (20 Okt 2026): satu warna per aplikasi, Pengaturan selebar layar, tampilan HP
 
 1. **Satu warna per aplikasi.** Tombol aktif, tombol utama (mis. Simpan), tombol + di pojok, tautan, dan garis atas kini memakai warna aplikasi masing-masing: ZUI ERP biru (sama dengan kartu ZUI ERP; dulu garis atas dan tombol berwarna biru muda kehijauan), Inventori hijau, Manufaktur oranye, Karyawan ungu, Keuangan merah muda. Tab aktif di semua aplikasi bergaris bawah warna aplikasi. Bilah status di HP Android kini mengikuti latar aplikasi (dulu biru kehijauan).
