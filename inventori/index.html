@@ -146,6 +146,9 @@ html:root[data-app="navy"] dialog{background:#161E29}
 @media(min-width:700px){#zsp{--zw:min(100vw,900px,67vh)}#zsp .zsl{top:auto;bottom:calc(var(--zw)*.923*.88);transform:translateX(-50%)}#zsp svg{width:var(--zw);-webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,0) 0%,#000 45%),linear-gradient(to right,rgba(0,0,0,0) 0%,#000 9%,#000 91%,rgba(0,0,0,0) 100%);-webkit-mask-composite:source-in;mask-image:linear-gradient(to bottom,rgba(0,0,0,0) 0%,#000 45%),linear-gradient(to right,rgba(0,0,0,0) 0%,#000 9%,#000 91%,rgba(0,0,0,0) 100%);mask-composite:intersect}#zsp .zco{font-size:11px}}
 /* saat menutup, logo dan ilustrasi hilang lebih dulu supaya tidak ada logo dobel */
 #zsp .zsl,#zsp svg,#zsp .zco{transition:opacity .2s ease}#zsp.out .zsl,#zsp.out svg,#zsp.out .zco{opacity:0}
+/* halaman masuk/daftar: bisa digulir di layar pendek, jarak syarat kata sandi rapi */
+.au{overflow-y:auto;align-items:flex-start}.au>.ac,.au>.aw{margin:auto 0}
+.pwr{margin:8px 0 12px}#am:empty{display:none}
 </style><style>/* tombol dialog rapi di layar sempit; kaki Pengaturan; ikon pesan */
 .btn{display:flex;flex-wrap:wrap;gap:8px}.btn>*{flex:1 1 auto}.btn button{white-space:nowrap;border:1px solid var(--ln);padding:10px 12px;border-radius:10px;margin:0}.btn:has(>:nth-child(3)) .go{flex-basis:100%}.btn .go{width:auto;border-color:transparent;padding:12px}
 .zft{margin:40px 0 0;padding:16px 0 calc(18px + env(safe-area-inset-bottom));border-top:1px solid var(--ln);text-align:center;font-size:11.5px;line-height:1.6;color:var(--mu)}
