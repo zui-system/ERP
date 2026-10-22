@@ -83,6 +83,27 @@
     if (window.matchMedia) { const q = matchMedia('(prefers-color-scheme: dark)'); q.addEventListener ? q.addEventListener('change', up) : q.addListener(up) }
     up();
   }
-  const go = () => { watch(); tabs(); bar() };
+  // isian kata sandi: tombol mata di dalam isian untuk melihat atau menyembunyikan kata sandi
+  const EYE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>';
+  const EYE_OFF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.9 5.2A10.4 10.4 0 0 1 12 5c6.5 0 10 7 10 7a17.6 17.6 0 0 1-2.6 3.6M6.6 6.6C3.8 8.4 2 12 2 12s3.5 7 10 7a10 10 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/><path d="M2 2l20 20"/></svg>';
+  function eye(inp) {
+    if (inp.dataset.zpw) return; inp.dataset.zpw = '1';
+    const w = document.createElement('span'), b = document.createElement('button');
+    w.className = 'zpw'; b.type = 'button'; b.className = 'zpe';
+    w.style.marginTop = getComputedStyle(inp).marginTop; inp.style.marginTop = '0';
+    inp.parentNode.insertBefore(w, inp); w.append(inp, b);
+    const up = () => {
+      const s = inp.type !== 'password', t = s ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi', l = window.ztr ? window.ztr(t) : t;
+      b.innerHTML = s ? EYE_OFF : EYE; b.title = l; b.setAttribute('aria-label', l); b.setAttribute('aria-pressed', String(s));
+      w.style.display = inp.style.display === 'none' ? 'none' : '';
+    };
+    b.onclick = () => { inp.type = inp.type === 'password' ? 'text' : 'password'; inp.focus() };
+    new MutationObserver(up).observe(inp, { attributes: true, attributeFilter: ['type', 'style'] }); up();
+  }
+  function eyes() {
+    const scan = () => document.querySelectorAll('input[type="password"]:not([data-zpw])').forEach(eye);
+    new MutationObserver(scan).observe(document.body, { childList: true, subtree: true }); scan();
+  }
+  const go = () => { watch(); tabs(); bar(); eyes() };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
 })();

@@ -1,3 +1,10 @@
+# Pembaruan v16 (22 Okt 2026): dokumen legal baru, kata sandi bisa dilihat
+
+1. **Syarat dan Kebijakan (`syarat.html`) mengikuti dokumen legal ZUI System**, disesuaikan untuk ZUI ERP: Syarat Layanan, Kebijakan Privasi (UU PDP No. 27/2022), Kebijakan Pengembalian Dana (dengan tabel harga), dan Kontak & Alamat (alamat PT, email bantuan dan informasi, WhatsApp, jam layanan). Di HP, daftar isi menjadi empat tombol.
+2. **Kata sandi bisa dilihat atau disembunyikan** dengan tombol mata di dalam isian, di halaman Masuk dan Daftar semua aplikasi dan di isian kata sandi lain (mis. konfirmasi hapus akun). Tautan "Tampilkan kata sandi" lama diganti tombol ini. Tombol mata bawaan Edge disembunyikan agar tidak dobel.
+
+Tidak ada perubahan Rules. Cache service worker naik: sys v53, inv v35, keu v32, mfg v33, kar v28; zui-ui.css v5, zui-ui.js v3.
+
 # Pembaruan v15 (22 Okt 2026): layar pembuka di PC, halaman Masuk/Daftar layar penuh, pindah tab tanpa bayangan
 
 1. **Layar pembuka di PC.** Animasi logo dan ilustrasi tetap berjalan walau Windows/perangkat meminta gerakan dikurangi (dulu animasi mati dan layar tertutup setelah 1,2 detik). Di layar lebar ilustrasi ikut membesar dengan tepi kiri-kanan memudar, logo selalu tepat di atas gedung, dan saat menutup logo hilang lebih dulu sehingga tidak ada logo dobel. Tampilan HP tidak berubah.
