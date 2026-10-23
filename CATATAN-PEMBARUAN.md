@@ -1,3 +1,11 @@
+# Pembaruan v17 (23 Okt 2026): nama PT dihapus, pengelola cukup ZUI System
+
+1. **Nama "PT. Zaor Utama Indonesia" dihapus** dari semua aplikasi (ZUI ERP, Inventori, Manufaktur, Keuangan, Karyawan). Kaki Pengaturan kini berbunyi "Aplikasi ZUI ERP dikelola oleh ZUI System" (Indonesia, English, Melayu).
+2. **Layar pembuka dan panel kiri halaman Masuk/Daftar** menampilkan `www.zuisystem.com` di tempat nama PT.
+3. **Syarat dan Kebijakan (`syarat.html`)**: pengelola cukup ZUI System, baris Perusahaan di Kontak menjadi Pengelola, kaki halaman memuat www.zuisystem.com. Alamat, email, WhatsApp, dan jam layanan tidak berubah. Tanggal berlaku 23 Oktober 2026.
+
+Tidak ada perubahan Rules. Cache service worker naik: sys v54, inv v36, keu v33, mfg v34, kar v29.
+
 # Pembaruan v16 (22 Okt 2026): dokumen legal baru, kata sandi bisa dilihat
 
 1. **Syarat dan Kebijakan (`syarat.html`) mengikuti dokumen legal ZUI System**, disesuaikan untuk ZUI ERP: Syarat Layanan, Kebijakan Privasi (UU PDP No. 27/2022), Kebijakan Pengembalian Dana (dengan tabel harga), dan Kontak & Alamat (alamat PT, email bantuan dan informasi, WhatsApp, jam layanan). Di HP, daftar isi menjadi empat tombol.
